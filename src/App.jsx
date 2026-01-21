@@ -6,6 +6,7 @@ import DashboardPemohon from './pages/DashboardPemohon';
 import FormPengajuanBaru from './pages/FormPengajuanBaru';
 import SuratListPage from './pages/SuratListPage';
 import VerifikasiSuratPage from './pages/VerifikasiSuratPage';
+import UserManagementPage from './pages/UserManagementPage';
 import DetailSuratModal from './components/features/DetailSuratModal';
 import { useAuth } from './hooks/useAuth';
 import { suratMasuk } from './constants/mockData';
@@ -47,6 +48,8 @@ const App = () => {
           return <SuratListPage title="Surat Dalam Proses" data={suratMasuk.filter(s => !s.status.includes('Selesai'))} onDetailClick={setSelectedSurat} />;
         case 'selesai':
           return <SuratListPage title="Surat Selesai" data={suratMasuk.filter(s => s.status.includes('Selesai'))} onDetailClick={setSelectedSurat} />;
+        case 'kelola-akun':
+          return <UserManagementPage />;
         default:
           return <DashboardAdmin data={suratMasuk} onDetailClick={setSelectedSurat} />;
       }

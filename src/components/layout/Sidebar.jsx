@@ -1,4 +1,4 @@
-import { Home, FileText, Clock, CheckCircle, Send, LogOut, ClipboardCheck } from 'lucide-react';
+import { Home, FileText, Clock, CheckCircle, Send, LogOut, ClipboardCheck, Users } from 'lucide-react';
 import { useState } from 'react';
 
 const Sidebar = ({ isOpen, onClose, activeTab, onTabChange, userRole }) => {
@@ -9,7 +9,8 @@ const Sidebar = ({ isOpen, onClose, activeTab, onTabChange, userRole }) => {
         { id: 'verifikasi-surat', label: 'Verifikasi Surat', icon: ClipboardCheck },
         { id: 'surat-masuk', label: 'Semua Surat', icon: FileText },
         { id: 'dalam-proses', label: 'Dalam Proses', icon: Clock },
-        { id: 'selesai', label: 'Selesai', icon: CheckCircle }
+        { id: 'selesai', label: 'Selesai', icon: CheckCircle },
+        { id: 'kelola-akun', label: 'Kelola Akun Kab/Kota', icon: Users }
     ];
 
     const pemohonMenuItems = [

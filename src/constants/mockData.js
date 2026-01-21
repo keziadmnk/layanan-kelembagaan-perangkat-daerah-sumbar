@@ -1,6 +1,7 @@
 export const suratMasuk = [
     {
         id: 'REG-2025-001',
+        no: 1,
         pemohon: 'Kab. Padang Pariaman',
         tanggal: '2025-01-05',
         status: 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi',
@@ -9,12 +10,14 @@ export const suratMasuk = [
         tahapan: 2,
         catatan: 'Tim sedang menyusun draft rekomendasi hasil evaluasi kelembagaan',
         moduleId: 'evaluasi-kelembagaan',
+        nama_layanan: 'Evaluasi Kelembagaan',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-002',
+        no: 2,
         pemohon: 'Kota Bukittinggi',
         tanggal: '2025-01-06',
         status: 'Pelaksanaan Rapat',
@@ -23,12 +26,14 @@ export const suratMasuk = [
         tahapan: 1,
         catatan: 'Rapat fasilitasi Ranperda sedang berlangsung',
         moduleId: 'ranperda',
+        nama_layanan: 'Fasilitasi Ranperda',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-003',
+        no: 3,
         pemohon: 'Kab. Agam',
         tanggal: '2025-01-07',
         status: 'Perlu Perbaikan',
@@ -37,6 +42,7 @@ export const suratMasuk = [
         tahapan: 0,
         catatan: 'Dokumen dikembalikan untuk perbaikan',
         moduleId: 'evaluasi-kelembagaan',
+        nama_layanan: 'Evaluasi Kelembagaan',
         isVerified: false,
         revisionNotes: 'Mohon lengkapi dokumen berikut:\n1. Surat Rekomendasi dari Kementerian Teknis belum dilampirkan\n2. ABK yang sudah disahkan kepala daerah tidak terbaca dengan jelas, mohon upload ulang dengan kualitas lebih baik\n3. Matriks pengelompokan urusan belum sesuai format yang ditentukan',
         revisionHistory: [
@@ -49,6 +55,7 @@ export const suratMasuk = [
     },
     {
         id: 'REG-2025-004',
+        no: 4,
         pemohon: 'Kab. Padang Pariaman',
         tanggal: '2025-01-08',
         status: 'Proses Penandatanganan',
@@ -57,12 +64,14 @@ export const suratMasuk = [
         tahapan: 3,
         catatan: 'Dokumen hasil fasilitasi pembentukan UPTD sedang dalam proses penandatanganan',
         moduleId: 'uptd',
+        nama_layanan: 'Pembentukan UPTD',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-005',
+        no: 5,
         pemohon: 'Kota Padang',
         tanggal: '2025-01-09',
         status: 'Penjadwalan Rapat',
@@ -71,12 +80,14 @@ export const suratMasuk = [
         tahapan: 0,
         catatan: 'Sedang menjadwalkan rapat fasilitasi Ranperda dengan stakeholder terkait',
         moduleId: 'ranperda',
+        nama_layanan: 'Fasilitasi Ranperda',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-006',
+        no: 6,
         pemohon: 'Kab. Solok',
         tanggal: '2025-01-10',
         status: 'Proses Penandatanganan',
@@ -85,12 +96,14 @@ export const suratMasuk = [
         tahapan: 3,
         catatan: 'Dokumen hasil pembentukan UPTD sedang dalam proses penandatanganan Gubernur',
         moduleId: 'uptd',
+        nama_layanan: 'Pembentukan UPTD',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-007',
+        no: 7,
         pemohon: 'Kab. Lima Puluh Kota',
         tanggal: '2025-01-09',
         status: 'Menunggu Verifikasi',
@@ -99,12 +112,14 @@ export const suratMasuk = [
         tahapan: 0,
         catatan: 'Menunggu verifikasi kelengkapan dokumen oleh admin',
         moduleId: 'evaluasi-kelembagaan',
+        nama_layanan: 'Evaluasi Kelembagaan',
         isVerified: false,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-008',
+        no: 8,
         pemohon: 'Kab. Padang Pariaman',
         tanggal: '2025-01-04',
         status: 'Perlu Perbaikan',
@@ -113,6 +128,7 @@ export const suratMasuk = [
         tahapan: 0,
         catatan: 'Dokumen dikembalikan untuk revisi dan perbaikan',
         moduleId: 'ranperda',
+        nama_layanan: 'Fasilitasi Ranperda',
         isVerified: false,
         revisionNotes: 'Setelah dilakukan verifikasi, ditemukan beberapa hal yang perlu diperbaiki:\n\n1. Draft Ranperda/Ranperkada yang diajukan tidak sesuai dengan template yang ditentukan. Mohon gunakan template resmi dari Biro Organisasi.\n\n2. Surat Hasil Harmonisasi dari Kanwil Hukum dan HAM yang dilampirkan sudah kadaluarsa (lebih dari 6 bulan). Mohon ajukan harmonisasi ulang dan lampirkan hasil terbaru.\n\n3. Pada bagian konsideran, terdapat inkonsistensi dengan peraturan perundang-undangan yang lebih tinggi. Mohon disesuaikan dengan UU No. 23 Tahun 2014 tentang Pemerintahan Daerah.\n\n4. Format penomoran pasal tidak konsisten. Mohon diperbaiki sesuai dengan pedoman teknis penyusunan peraturan daerah.\n\nSilakan lakukan perbaikan dan unggah kembali dokumen yang sudah diperbaiki melalui sistem.',
         revisionHistory: [
@@ -125,6 +141,7 @@ export const suratMasuk = [
     },
     {
         id: 'REG-2025-009',
+        no: 9,
         pemohon: 'Kota Payakumbuh',
         tanggal: '2025-01-08',
         status: 'Menunggu Verifikasi',
@@ -133,12 +150,14 @@ export const suratMasuk = [
         tahapan: 0,
         catatan: 'Surat baru diterima, belum diverifikasi',
         moduleId: 'uptd',
+        nama_layanan: 'Pembentukan UPTD',
         isVerified: false,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-010',
+        no: 10,
         pemohon: 'Kab. Pasaman',
         tanggal: '2025-01-07',
         status: 'Menunggu Verifikasi',
@@ -147,12 +166,14 @@ export const suratMasuk = [
         tahapan: 0,
         catatan: 'Menunggu verifikasi awal oleh admin',
         moduleId: 'evaluasi-kelembagaan',
+        nama_layanan: 'Evaluasi Kelembagaan',
         isVerified: false,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-011',
+        no: 11,
         pemohon: 'Kab. Sijunjung',
         tanggal: '2025-01-06',
         status: 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi',
@@ -161,12 +182,14 @@ export const suratMasuk = [
         tahapan: 2,
         catatan: 'Tim sedang menyusun draft rekomendasi hasil evaluasi kelembagaan',
         moduleId: 'evaluasi-kelembagaan',
+        nama_layanan: 'Evaluasi Kelembagaan',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-012',
+        no: 12,
         pemohon: 'Kota Solok',
         tanggal: '2025-01-05',
         status: 'Selesai - Terbit Rekomendasi',
@@ -175,12 +198,14 @@ export const suratMasuk = [
         tahapan: 4,
         catatan: 'Proses selesai, rekomendasi pembentukan UPTD sudah diterbitkan',
         moduleId: 'uptd',
+        nama_layanan: 'Pembentukan UPTD',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-013',
+        no: 13,
         pemohon: 'Kab. Dharmasraya',
         tanggal: '2025-01-10',
         status: 'Menunggu Verifikasi',
@@ -189,12 +214,14 @@ export const suratMasuk = [
         tahapan: 0,
         catatan: 'Menunggu admin memverifikasi kelengkapan dokumen',
         moduleId: 'ranperda',
+        nama_layanan: 'Fasilitasi Ranperda',
         isVerified: false,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-014',
+        no: 14,
         pemohon: 'Kab. Pasaman Barat',
         tanggal: '2025-01-08',
         status: 'Pelaksanaan Rapat',
@@ -203,12 +230,14 @@ export const suratMasuk = [
         tahapan: 1,
         catatan: 'Sedang dalam pelaksanaan rapat evaluasi kelembagaan',
         moduleId: 'evaluasi-kelembagaan',
+        nama_layanan: 'Evaluasi Kelembagaan',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
     },
     {
         id: 'REG-2025-015',
+        no: 15,
         pemohon: 'Kab. Tanah Datar',
         tanggal: '2025-01-09',
         status: 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi',
@@ -217,6 +246,7 @@ export const suratMasuk = [
         tahapan: 2,
         catatan: 'Sedang menyusun draft hasil fasilitasi Ranperda',
         moduleId: 'ranperda',
+        nama_layanan: 'Fasilitasi Ranperda',
         isVerified: true,
         revisionNotes: null,
         revisionHistory: []
