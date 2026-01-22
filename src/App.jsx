@@ -56,13 +56,13 @@ const App = () => {
     } else {
       switch (activeTab) {
         case 'dashboard':
-          return <DashboardPemohon data={suratPemohon} onDetailClick={setSelectedSurat} onNewSubmission={handleNewSubmission} />;
+          return <DashboardPemohon onDetailClick={setSelectedSurat} onNewSubmission={handleNewSubmission} />;
         case 'pengajuan-baru':
-          return <FormPengajuanBaru selectedModuleId={selectedModuleForSubmission} onCancel={() => setActiveTab('dashboard')} />;
+          return <FormPengajuanBaru selectedModuleId={selectedModuleForSubmission} onCancel={() => setActiveTab('dashboard')} onNavigateToRiwayat={() => setActiveTab('riwayat')} />;
         case 'riwayat':
-          return <SuratListPage title="Riwayat Pengajuan" data={suratPemohon} onDetailClick={setSelectedSurat} />;
+          return <SuratListPage title="Riwayat Pengajuan" onDetailClick={setSelectedSurat} />;
         default:
-          return <DashboardPemohon data={suratPemohon} onDetailClick={setSelectedSurat} onNewSubmission={handleNewSubmission} />;
+          return <DashboardPemohon onDetailClick={setSelectedSurat} onNewSubmission={handleNewSubmission} />;
       }
     }
   };

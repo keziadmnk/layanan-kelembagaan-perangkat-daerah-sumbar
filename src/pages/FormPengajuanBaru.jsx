@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Send, ArrowLeft } from 'lucide-react';
 import FileUpload from '../components/common/FileUpload';
+import SuccessModal from '../components/common/SuccessModal';
 
 const API_BASE_URL = 'http://localhost:3001/api';
 
-const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess }) => {
+const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateToRiwayat }) => {
     const [modulLayanan, setModulLayanan] = useState([]);
     const [selectedLayanan, setSelectedLayanan] = useState(selectedModuleId || '');
     const [persyaratanDokumen, setPersyaratanDokumen] = useState([]);
     const [selectedModulInfo, setSelectedModulInfo] = useState(null);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [submissionResult, setSubmissionResult] = useState(null);
 
     // Form data
     const [namaKabupaten, setNamaKabupaten] = useState('');
@@ -142,7 +145,9 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess }) => {
 
             console.log('✅ Pengajuan berhasil dibuat:', result.data);
 
-            alert(`Pengajuan berhasil dibuat!\n\nNomor Registrasi: ${result.data.nomor_registrasi}\nStatus: ${result.data.status_pengajuan}`);
+            // Store result and show modal
+            setSubmissionResult(result.data);
+            setShowSuccessModal(true);
 
             // Reset form
             setNamaKabupaten('');
@@ -168,6 +173,14 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess }) => {
         if (namaModul.toLowerCase().includes('ranperda')) return '📋';
         if (namaModul.toLowerCase().includes('uptd')) return '🏢';
         return '📄';
+    };
+
+    const handleModalClose = () => {
+        setShowSuccessModal(false);
+        // Navigate to riwayat pengajuan
+        if (onNavigateToRiwayat) {
+            onNavigateToRiwayat();
+        }
     };
 
     return (
@@ -292,6 +305,13 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess }) => {
                     </button>
                 </div>
             </form>
+
+            <SuccessModal
+                isOpen={showSuccessModal}
+                onClose={handleModalClose}
+                nomorRegistrasi={submissionResult?.nomor_registrasi}
+                status={submissionResult?.status_pengajuan}
+            />
         </div>
     );
 };

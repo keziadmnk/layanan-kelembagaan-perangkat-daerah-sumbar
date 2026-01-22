@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FileText, Clock, CheckCircle } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
 import SuratTable from '../components/features/SuratTable';
@@ -6,20 +6,56 @@ import ModuleCard from '../components/common/ModuleCard';
 import ModuleSelector from '../components/features/ModuleSelector';
 import { modules } from '../constants/modules';
 
-const DashboardPemohon = ({ data, onDetailClick, onNewSubmission }) => {
-    const [selectedModule, setSelectedModule] = useState(null);
+const API_BASE_URL = 'http://localhost:3001/api';
 
+const DashboardPemohon = ({ onDetailClick, onNewSubmission }) => {
+    const [selectedModule, setSelectedModule] = useState(null);
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    // Fetch data pengajuan dari backend
+    useEffect(() => {
+        fetchPengajuan();
+    }, []);
+
+    const fetchPengajuan = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            // TODO: Ganti dengan id_user dari session/auth
+            const id_user = 1;
+
+            const response = await fetch(`${API_BASE_URL}/pengajuan/user/${id_user}`);
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'Gagal mengambil data');
+            }
+
+            setData(result.data);
+            console.log('✅ Data pengajuan di dashboard loaded:', result.data);
+        } catch (err) {
+            console.error('❌ Error fetching pengajuan:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Filter data berdasarkan modul yang dipilih
     const filteredData = selectedModule
-        ? data.filter(s => s.moduleId === selectedModule)
+        ? data.filter(s => s.id_modul === selectedModule)
         : data;
 
     const getModuleStats = (moduleId) => {
-        const moduleData = data.filter(s => s.moduleId === moduleId);
+        const moduleData = data.filter(s => s.id_modul === moduleId);
         return {
             total: moduleData.length,
-            inProgress: moduleData.filter(s => !s.status.includes('Selesai') && s.dokumenLengkap).length,
-            completed: moduleData.filter(s => s.status.includes('Selesai')).length,
-            pending: moduleData.filter(s => !s.dokumenLengkap).length
+            inProgress: moduleData.filter(s => s.status_pengajuan && !s.status_pengajuan.includes('Selesai')).length,
+            completed: moduleData.filter(s => s.status_pengajuan && s.status_pengajuan.includes('Selesai')).length,
+            pending: moduleData.filter(s => s.progress_persen === 0).length
         };
     };
 
@@ -51,14 +87,14 @@ const DashboardPemohon = ({ data, onDetailClick, onNewSubmission }) => {
                 <StatCard label="Total Pengajuan" value={data.length} icon={FileText} />
                 <StatCard
                     label="Dalam Proses"
-                    value={data.filter(s => !s.status.includes('Selesai')).length}
+                    value={data.filter(s => s.status_pengajuan && !s.status_pengajuan.includes('Selesai')).length}
                     icon={Clock}
                     valueColor="text-yellow-600"
                     iconColor="text-yellow-500"
                 />
                 <StatCard
                     label="Selesai"
-                    value={data.filter(s => s.status.includes('Selesai')).length}
+                    value={data.filter(s => s.status_pengajuan && s.status_pengajuan.includes('Selesai')).length}
                     icon={CheckCircle}
                     valueColor="text-green-600"
                     iconColor="text-green-500"
@@ -73,7 +109,27 @@ const DashboardPemohon = ({ data, onDetailClick, onNewSubmission }) => {
                     <ModuleSelector selectedModule={selectedModule} onModuleChange={setSelectedModule} />
                 </div>
                 <div className="p-6">
-                    <SuratTable data={filteredData} isPemohon={true} onDetailClick={onDetailClick} />
+                    {loading ? (
+                        <div className="text-center py-8">
+                            <p className="text-gray-500">Memuat data...</p>
+                        </div>
+                    ) : error ? (
+                        <div className="text-center py-8">
+                            <p className="text-red-500">Error: {error}</p>
+                            <button
+                                onClick={fetchPengajuan}
+                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                            >
+                                Coba Lagi
+                            </button>
+                        </div>
+                    ) : data.length === 0 ? (
+                        <div className="text-center py-8">
+                            <p className="text-gray-500">Belum ada pengajuan</p>
+                        </div>
+                    ) : (
+                        <SuratTable data={filteredData} isPemohon={true} onDetailClick={onDetailClick} />
+                    )}
                 </div>
             </div>
         </div>
