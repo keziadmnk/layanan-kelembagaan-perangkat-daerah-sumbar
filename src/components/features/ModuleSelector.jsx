@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react';
+import { modulLayananAPI } from '../../services/api';
 
-const API_BASE_URL = 'http://localhost:3001/api';
-
-const ModuleSelector = ({ selectedModule, onModuleChange }) => {
-    const [modules, setModules] = useState([]);
-    const [loading, setLoading] = useState(false);
+const ModuleSelector = ({ selectedModule, onModuleChange, modules: modulesFromProps }) => {
+    const [modules, setModules] = useState(modulesFromProps || []);
+    const [loading, setLoading] = useState(!modulesFromProps);
 
     useEffect(() => {
-        fetchModules();
-    }, []);
+        if (!modulesFromProps) {
+            fetchModules();
+        } else {
+            setModules(modulesFromProps);
+        }
+    }, [modulesFromProps]);
 
     const fetchModules = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/pengajuan/modul-layanan`);
-            const result = await response.json();
+            const result = await modulLayananAPI.getAll();
 
             if (result.success) {
                 setModules(result.data);
@@ -26,7 +28,6 @@ const ModuleSelector = ({ selectedModule, onModuleChange }) => {
         }
     };
 
-    // Helper untuk icon
     const getIcon = (namaModul) => {
         if (namaModul.toLowerCase().includes('evaluasi')) return '🏛️';
         if (namaModul.toLowerCase().includes('ranperda')) return '📋';
@@ -34,7 +35,6 @@ const ModuleSelector = ({ selectedModule, onModuleChange }) => {
         return '📄';
     };
 
-    // Helper untuk short name
     const getShortName = (namaModul) => {
         if (namaModul.toLowerCase().includes('evaluasi')) return 'Evaluasi Kelembagaan';
         if (namaModul.toLowerCase().includes('ranperda')) return 'Ranperda/Ranperkada';
@@ -43,7 +43,7 @@ const ModuleSelector = ({ selectedModule, onModuleChange }) => {
     };
 
     if (loading) {
-        return <div className="text-gray-500 text-sm">Loading modules...</div>;
+        return <div className="text-gray-500 text-sm">Memuat modul...</div>;
     }
 
     return (
@@ -55,7 +55,7 @@ const ModuleSelector = ({ selectedModule, onModuleChange }) => {
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
             >
-                Semua 
+                Semua
             </button>
             {modules.map((module) => (
                 <button

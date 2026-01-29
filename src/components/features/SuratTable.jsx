@@ -2,10 +2,9 @@ import { Eye } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
 import SearchBar from '../common/SearchBar';
 
-const SuratTable = ({ data, isPemohon = false, onDetailClick }) => {
+const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClick }) => {
     // Helper untuk mendapatkan icon berdasarkan nama layanan
     const getModuleIcon = (namaLayanan) => {
-        // ✅ NULL SAFETY: Cek apakah namaLayanan ada nilainya
         if (!namaLayanan) return '📄';
 
         const lower = namaLayanan.toLowerCase();
@@ -17,7 +16,6 @@ const SuratTable = ({ data, isPemohon = false, onDetailClick }) => {
 
     // Helper untuk mendapatkan warna badge berdasarkan nama layanan
     const getModuleColor = (namaLayanan) => {
-        // ✅ NULL SAFETY: Jika undefined/null, return default
         if (!namaLayanan) return 'bg-gray-100 text-gray-700 border-gray-300';
 
         const lower = namaLayanan.toLowerCase();
@@ -25,6 +23,26 @@ const SuratTable = ({ data, isPemohon = false, onDetailClick }) => {
         if (lower.includes('ranperda')) return 'bg-green-100 text-green-700 border-green-300';
         if (lower.includes('uptd')) return 'bg-purple-100 text-purple-700 border-purple-300';
         return 'bg-gray-100 text-gray-700 border-gray-300';
+    };
+
+    // Helper untuk mendapatkan badge tahapan proses
+    const getTahapanBadge = (tahapan) => {
+        if (!tahapan) return <span className="text-gray-500 text-sm">-</span>;
+
+        const badges = {
+            'Penjadwalan Rapat': 'bg-yellow-100 text-yellow-800 border-yellow-300',
+            'Pelaksanaan Rapat Fasilitasi': 'bg-orange-100 text-orange-800 border-orange-300',
+            'Penyusunan Draft Rekomendasi/Hasil Fasilitasi': 'bg-blue-100 text-blue-800 border-blue-300',
+            'Proses Penandatanganan': 'bg-green-100 text-green-800 border-green-300'
+        };
+
+        const colorClass = badges[tahapan] || 'bg-gray-100 text-gray-800 border-gray-300';
+
+        return (
+            <span className={`px-3 py-1 rounded-full text-xs font-medium border ${colorClass}`}>
+                {tahapan}
+            </span>
+        );
     };
 
     return (
@@ -50,7 +68,7 @@ const SuratTable = ({ data, isPemohon = false, onDetailClick }) => {
                                 Tanggal
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
+                                {showTahapan ? 'Tahapan Proses' : 'Status'}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Progress
@@ -81,7 +99,7 @@ const SuratTable = ({ data, isPemohon = false, onDetailClick }) => {
                                         {surat.tanggal}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <StatusBadge status={surat.status} dokumenLengkap={true} />
+                                        {showTahapan ? getTahapanBadge(surat.tahapan_proses) : <StatusBadge status={surat.status} dokumenLengkap={true} />}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center gap-2">
@@ -107,7 +125,7 @@ const SuratTable = ({ data, isPemohon = false, onDetailClick }) => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" className="px-6 py-8 text-center text-gray-500">
+                                <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
                                     Tidak ada data
                                 </td>
                             </tr>

@@ -1,6 +1,7 @@
-import { Menu, Bell, User } from 'lucide-react';
+import { Menu, Bell, User, LogOut } from 'lucide-react';
+import PropTypes from 'prop-types';
 
-const Header = ({ onToggleSidebar, userInfo, userRole, onRoleChange, showRoleSwitch, setShowRoleSwitch, sidebarOpen }) => {
+const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUserMenu, sidebarOpen }) => {
     return (
         <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
             <div className="flex items-center justify-between px-4 lg:px-6 py-4">
@@ -40,46 +41,46 @@ const Header = ({ onToggleSidebar, userInfo, userRole, onRoleChange, showRoleSwi
 
                     <div className="relative">
                         <button
-                            onClick={() => setShowRoleSwitch(!showRoleSwitch)}
+                            onClick={() => setShowUserMenu(!showUserMenu)}
                             className="flex items-center gap-2 lg:gap-3 pl-3 lg:pl-4 border-l border-gray-200 hover:bg-blue-50 rounded-r-lg transition-all p-2"
                         >
                             <div className="text-right hidden md:block">
-                                <p className="text-xs lg:text-sm font-medium text-gray-900">{userInfo.name}</p>
-                                <p className="text-xs text-gray-600">{userInfo.email}</p>
+                                <p className="text-xs lg:text-sm font-medium text-gray-900">
+                                    {userInfo.kabupaten_kota || userInfo.username}
+                                </p>
+                                <p className="text-xs text-gray-600 capitalize">
+                                    {userInfo.role}
+                                </p>
                             </div>
                             <div className="w-8 h-8 lg:w-10 lg:h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                                 <User className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
                             </div>
                         </button>
 
-                        {showRoleSwitch && (
+                        {showUserMenu && (
                             <>
                                 <div
                                     className="fixed inset-0 z-40"
-                                    onClick={() => setShowRoleSwitch(false)}
+                                    onClick={() => setShowUserMenu(false)}
                                 />
                                 <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2 z-50">
+                                    <div className="px-4 py-3 border-b border-gray-100">
+                                        <p className="font-medium text-sm text-gray-900">
+                                            {userInfo.kabupaten_kota || userInfo.username}
+                                        </p>
+                                        <p className="text-xs text-gray-500 capitalize">
+                                            {userInfo.role}
+                                        </p>
+                                    </div>
                                     <button
                                         onClick={() => {
-                                            onRoleChange('admin');
-                                            setShowRoleSwitch(false);
+                                            onLogout();
+                                            setShowUserMenu(false);
                                         }}
-                                        className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition-all ${userRole === 'admin' ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
-                                            }`}
+                                        className="w-full px-4 py-3 text-left hover:bg-red-50 transition-all text-red-600 flex items-center gap-2"
                                     >
-                                        <p className="font-medium text-sm">Admin Biro Organisasi</p>
-                                        <p className="text-xs text-gray-500">Kelola semua surat</p>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            onRoleChange('pemohon');
-                                            setShowRoleSwitch(false);
-                                        }}
-                                        className={`w-full px-4 py-3 text-left hover:bg-blue-50 transition-all ${userRole === 'pemohon' ? 'bg-blue-50 text-blue-700' : 'text-gray-700'
-                                            }`}
-                                    >
-                                        <p className="font-medium text-sm">Kab. Padang Pariaman</p>
-                                        <p className="text-xs text-gray-500">Lihat pengajuan saya</p>
+                                        <LogOut className="w-4 h-4" />
+                                        <span className="font-medium text-sm">Logout</span>
                                     </button>
                                 </div>
                             </>
@@ -91,4 +92,14 @@ const Header = ({ onToggleSidebar, userInfo, userRole, onRoleChange, showRoleSwi
     );
 };
 
+Header.propTypes = {
+    onToggleSidebar: PropTypes.func.isRequired,
+    userInfo: PropTypes.object.isRequired,
+    onLogout: PropTypes.func.isRequired,
+    showUserMenu: PropTypes.bool.isRequired,
+    setShowUserMenu: PropTypes.func.isRequired,
+    sidebarOpen: PropTypes.bool.isRequired
+};
+
 export default Header;
+

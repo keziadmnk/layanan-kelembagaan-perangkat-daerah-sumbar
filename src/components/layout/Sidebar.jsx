@@ -1,13 +1,16 @@
 import { Home, FileText, Clock, CheckCircle, Send, LogOut, ClipboardCheck, Users } from 'lucide-react';
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-const Sidebar = ({ isOpen, onClose, activeTab, onTabChange, userRole }) => {
+const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
     const [hoveredItem, setHoveredItem] = useState(null);
+    const location = useLocation();
 
     const adminMenuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home },
-        { id: 'verifikasi-surat', label: 'Verifikasi Surat', icon: ClipboardCheck },
         { id: 'surat-masuk', label: 'Semua Surat', icon: FileText },
+        { id: 'verifikasi-surat', label: 'Verifikasi Surat', icon: ClipboardCheck },
         { id: 'dalam-proses', label: 'Dalam Proses', icon: Clock },
         { id: 'selesai', label: 'Selesai', icon: CheckCircle },
         { id: 'kelola-akun', label: 'Kelola Akun Kab/Kota', icon: Users }
@@ -60,7 +63,8 @@ const Sidebar = ({ isOpen, onClose, activeTab, onTabChange, userRole }) => {
                 <nav className="p-3 space-y-1.5 mt-2">
                     {menuItems.map((item) => {
                         const Icon = item.icon;
-                        const isActive = activeTab === item.id;
+                        const currentPath = location.pathname.replace('/', '') || 'dashboard';
+                        const isActive = currentPath === item.id;
                         const isHovered = hoveredItem === item.id;
 
                         return (
@@ -116,6 +120,13 @@ const Sidebar = ({ isOpen, onClose, activeTab, onTabChange, userRole }) => {
             </aside>
         </>
     );
+};
+
+Sidebar.propTypes = {
+    isOpen: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onTabChange: PropTypes.func.isRequired,
+    userRole: PropTypes.string,
 };
 
 export default Sidebar;

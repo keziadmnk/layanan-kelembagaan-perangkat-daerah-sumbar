@@ -9,12 +9,11 @@ const UserManagementPage = () => {
     const [showFormModal, setShowFormModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [formMode, setFormMode] = useState('create'); // create or edit
+    const [formMode, setFormMode] = useState('create'); 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch users from API
     useEffect(() => {
         fetchUsers();
     }, []);

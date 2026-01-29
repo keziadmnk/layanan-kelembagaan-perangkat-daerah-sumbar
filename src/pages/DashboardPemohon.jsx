@@ -1,50 +1,51 @@
 import { useState, useEffect } from 'react';
 import { FileText, Clock, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import StatCard from '../components/common/StatCard';
 import SuratTable from '../components/features/SuratTable';
 import ModuleCard from '../components/common/ModuleCard';
 import ModuleSelector from '../components/features/ModuleSelector';
-import { modules } from '../constants/modules';
+import { pengajuanAPI, modulLayananAPI } from '../services/api';
+import { useAuthContext } from '../contexts/AuthContext';
 
-const API_BASE_URL = 'http://localhost:3001/api';
-
-const DashboardPemohon = ({ onDetailClick, onNewSubmission }) => {
+const DashboardPemohon = ({ onDetailClick }) => {
+    const { user } = useAuthContext();
+    const navigate = useNavigate();
     const [selectedModule, setSelectedModule] = useState(null);
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [modules, setModules] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Fetch data pengajuan dari backend
     useEffect(() => {
-        fetchPengajuan();
-    }, []);
+        if (user?.id) {
+            fetchData();
+        }
+    }, [user]);
 
-    const fetchPengajuan = async () => {
+    const fetchData = async () => {
         try {
             setLoading(true);
             setError(null);
+            const [pengajuanRes, modulRes] = await Promise.all([
+                pengajuanAPI.getByUser(user.id),
+                modulLayananAPI.getAll()
+            ]);
 
-            // TODO: Ganti dengan id_user dari session/auth
-            const id_user = 1;
-
-            const response = await fetch(`${API_BASE_URL}/pengajuan/user/${id_user}`);
-            const result = await response.json();
-
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || 'Gagal mengambil data');
+            if (pengajuanRes.success) {
+                setData(pengajuanRes.data);
             }
-
-            setData(result.data);
-            console.log('✅ Data pengajuan di dashboard loaded:', result.data);
+            if (modulRes.success) {
+                setModules(modulRes.data);
+            }
         } catch (err) {
-            console.error('❌ Error fetching pengajuan:', err);
-            setError(err.message);
+            console.error('Error fetching data:', err);
+            setError(err.message || 'Gagal memuat data');
         } finally {
             setLoading(false);
         }
     };
 
-    // Filter data berdasarkan modul yang dipilih
     const filteredData = selectedModule
         ? data.filter(s => s.id_modul === selectedModule)
         : data;
@@ -53,16 +54,43 @@ const DashboardPemohon = ({ onDetailClick, onNewSubmission }) => {
         const moduleData = data.filter(s => s.id_modul === moduleId);
         return {
             total: moduleData.length,
-            inProgress: moduleData.filter(s => s.status_pengajuan && !s.status_pengajuan.includes('Selesai')).length,
-            completed: moduleData.filter(s => s.status_pengajuan && s.status_pengajuan.includes('Selesai')).length,
-            pending: moduleData.filter(s => s.progress_persen === 0).length
+            inProgress: moduleData.filter(s => s.status && !s.status.includes('Selesai')).length,
+            completed: moduleData.filter(s => s.status && s.status.includes('Selesai')).length,
+            pending: moduleData.filter(s => s.progress === 0).length
         };
     };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Memuat data...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">Error: {error}</p>
+                    <button
+                        onClick={fetchData}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                        Coba Lagi
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
             <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-8 rounded-lg shadow-lg">
-                <h2 className="text-2xl font-bold mb-2">Selamat Datang, Kab. Padang Pariaman</h2>
+                <h2 className="text-2xl font-bold mb-2">Selamat Datang, {user?.kabupaten_kota || 'Pemohon'}</h2>
                 <p className="text-blue-100">Pantau status pengajuan Anda atau ajukan layanan baru</p>
             </div>
 
@@ -72,14 +100,21 @@ const DashboardPemohon = ({ onDetailClick, onNewSubmission }) => {
                     <p className="text-sm text-gray-600">Klik untuk mengajukan layanan baru</p>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {modules.map(module => (
-                        <ModuleCard
-                            key={module.id}
-                            module={module}
-                            stats={getModuleStats(module.id)}
-                            onClick={() => onNewSubmission(module.id)}
-                        />
-                    ))}
+                    {modules.map(module => {
+                        const moduleInfo = {
+                            id_modul: module.id_modul,
+                            nama_modul: module.nama_modul,
+                            deskripsi: module.deskripsi
+                        };
+                        return (
+                            <ModuleCard
+                                key={module.id_modul}
+                                module={moduleInfo}
+                                stats={getModuleStats(module.id_modul)}
+                                onClick={() => navigate('/pengajuan-baru', { state: { selectedModuleId: module.id_modul } })}
+                            />
+                        );
+                    })}
                 </div>
             </div>
 
@@ -87,14 +122,14 @@ const DashboardPemohon = ({ onDetailClick, onNewSubmission }) => {
                 <StatCard label="Total Pengajuan" value={data.length} icon={FileText} />
                 <StatCard
                     label="Dalam Proses"
-                    value={data.filter(s => s.status_pengajuan && !s.status_pengajuan.includes('Selesai')).length}
+                    value={data.filter(s => s.status && !s.status.includes('Selesai')).length}
                     icon={Clock}
                     valueColor="text-yellow-600"
                     iconColor="text-yellow-500"
                 />
                 <StatCard
                     label="Selesai"
-                    value={data.filter(s => s.status_pengajuan && s.status_pengajuan.includes('Selesai')).length}
+                    value={data.filter(s => s.status && s.status.includes('Selesai')).length}
                     icon={CheckCircle}
                     valueColor="text-green-600"
                     iconColor="text-green-500"
@@ -106,24 +141,10 @@ const DashboardPemohon = ({ onDetailClick, onNewSubmission }) => {
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-xl font-bold text-gray-900">Pengajuan Saya</h2>
                     </div>
-                    <ModuleSelector selectedModule={selectedModule} onModuleChange={setSelectedModule} />
+                    <ModuleSelector selectedModule={selectedModule} onModuleChange={setSelectedModule} modules={modules} />
                 </div>
                 <div className="p-6">
-                    {loading ? (
-                        <div className="text-center py-8">
-                            <p className="text-gray-500">Memuat data...</p>
-                        </div>
-                    ) : error ? (
-                        <div className="text-center py-8">
-                            <p className="text-red-500">Error: {error}</p>
-                            <button
-                                onClick={fetchPengajuan}
-                                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                            >
-                                Coba Lagi
-                            </button>
-                        </div>
-                    ) : data.length === 0 ? (
+                    {data.length === 0 ? (
                         <div className="text-center py-8">
                             <p className="text-gray-500">Belum ada pengajuan</p>
                         </div>

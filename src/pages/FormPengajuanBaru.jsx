@@ -1,31 +1,32 @@
 import { useState, useEffect } from 'react';
 import { Send, ArrowLeft } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import FileUpload from '../components/common/FileUpload';
 import SuccessModal from '../components/common/SuccessModal';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const API_BASE_URL = 'http://localhost:3001/api';
 
-const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateToRiwayat }) => {
+const FormPengajuanBaru = ({ onSuccess }) => {
+    const { user } = useAuthContext();  
+    const navigate = useNavigate();
+    const location = useLocation();
+    const initialModuleId = location.state?.selectedModuleId || '';
     const [modulLayanan, setModulLayanan] = useState([]);
-    const [selectedLayanan, setSelectedLayanan] = useState(selectedModuleId || '');
+    const [selectedLayanan, setSelectedLayanan] = useState(initialModuleId);
     const [persyaratanDokumen, setPersyaratanDokumen] = useState([]);
     const [selectedModulInfo, setSelectedModulInfo] = useState(null);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [submissionResult, setSubmissionResult] = useState(null);
-
-    // Form data
     const [namaKabupaten, setNamaKabupaten] = useState('');
     const [catatanPemohon, setCatatanPemohon] = useState('');
     const [uploadedFiles, setUploadedFiles] = useState({});
 
-    // Fetch modul layanan saat component mount
     useEffect(() => {
         fetchModulLayanan();
     }, []);
-
-    // Fetch persyaratan saat modul dipilih
     useEffect(() => {
         if (selectedLayanan) {
             fetchPersyaratanDokumen(selectedLayanan);
@@ -94,14 +95,10 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateTo
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Validasi nama kabupaten
         if (!namaKabupaten.trim()) {
             alert('Harap isi Nama Kabupaten/Kota');
             return;
         }
-
-        // Validasi dokumen wajib
         const dokumentWajib = persyaratanDokumen.filter(p => p.wajib);
         const uploadedIds = Object.keys(uploadedFiles).map(Number);
         const missingDocs = dokumentWajib.filter(
@@ -113,11 +110,9 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateTo
             alert(`Harap upload semua dokumen wajib:\n\n- ${missingNames}`);
             return;
         }
-
-        // Prepare data
         const dokumen_upload = Object.values(uploadedFiles);
         const pengajuanData = {
-            id_user: 1, // TODO: Get from auth context/session
+            id_user: user?.id, 
             id_modul: Number(selectedLayanan),
             nama_kabupaten: namaKabupaten,
             catatan_pemohon: catatanPemohon || null,
@@ -145,29 +140,24 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateTo
 
             console.log('✅ Pengajuan berhasil dibuat:', result.data);
 
-            // Store result and show modal
             setSubmissionResult(result.data);
             setShowSuccessModal(true);
-
-            // Reset form
             setNamaKabupaten('');
             setCatatanPemohon('');
             setSelectedLayanan('');
             setUploadedFiles({});
 
-            // Callback ke parent
             if (onSuccess) {
                 onSuccess(result.data);
             }
         } catch (error) {
-            console.error('❌ Error submitting pengajuan:', error);
+            console.error('Error submitting pengajuan:', error);
             alert(`Gagal mengajukan surat:\n\n${error.message}`);
         } finally {
             setSubmitting(false);
         }
     };
 
-    // Icon mapping berdasarkan nama modul
     const getModuleIcon = (namaModul) => {
         if (namaModul.toLowerCase().includes('evaluasi')) return '🏛️';
         if (namaModul.toLowerCase().includes('ranperda')) return '📋';
@@ -177,10 +167,11 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateTo
 
     const handleModalClose = () => {
         setShowSuccessModal(false);
-        // Navigate to riwayat pengajuan
-        if (onNavigateToRiwayat) {
-            onNavigateToRiwayat();
-        }
+        navigate('/riwayat');
+    };
+
+    const handleCancel = () => {
+        navigate('/dashboard');
     };
 
     return (
@@ -188,7 +179,7 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateTo
             <div className="p-6 border-b border-gray-200">
                 <div className="flex items-center gap-3 mb-3">
                     <button
-                        onClick={onCancel}
+                        onClick={handleCancel}
                         className="text-gray-600 hover:text-gray-900"
                         disabled={submitting}
                     >
@@ -297,7 +288,7 @@ const FormPengajuanBaru = ({ onCancel, selectedModuleId, onSuccess, onNavigateTo
                     </button>
                     <button
                         type="button"
-                        onClick={onCancel}
+                        onClick={handleCancel}
                         className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
                         disabled={submitting}
                     >
