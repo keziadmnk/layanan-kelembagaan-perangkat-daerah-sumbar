@@ -36,7 +36,6 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
             }
         } catch (err) {
             console.error('Error fetching dokumen:', err);
-            // Set empty array on error
             setDokumenList([]);
         } finally {
             setLoadingDokumen(false);
@@ -195,11 +194,11 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
     return (
         <>
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                    <div className="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10">
+            <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+                <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                    <div className="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10 rounded-t-xl">
                         <h2 className="text-2xl font-bold text-gray-900">Detail Pengajuan Surat</h2>
-                        <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                        <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
                             <X className="w-6 h-6" />
                         </button>
                     </div>
@@ -270,42 +269,42 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
                         {/* Update Tahapan Proses - Untuk admin di halaman Dalam Proses */}
                         {userRole === 'admin' && !isVerificationMode && surat.status === 'Dalam Proses' && (
-                            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-lg p-5">
+                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-5">
                                 <div className="flex items-start gap-3 mb-4">
-                                    <div className="bg-purple-100 rounded-full p-2">
-                                        <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="bg-blue-100 rounded-full p-2">
+                                        <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                                         </svg>
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-bold text-purple-900 mb-1">Kelola Tahapan Proses</h3>
-                                        <p className="text-sm text-purple-800 mb-4">
+                                        <h3 className="font-bold text-blue-900 mb-1">Kelola Tahapan Proses</h3>
+                                        <p className="text-sm text-blue-800 mb-4">
                                             Update tahapan proses pengajuan surat sesuai dengan progress yang sedang dikerjakan.
                                         </p>
 
                                         <div className="space-y-3">
                                             <div>
-                                                <label className="block text-sm font-medium text-purple-900 mb-2">
+                                                <label className="block text-sm font-medium text-blue-900 mb-2">
                                                     Tahapan Saat Ini: <span className="font-bold">{surat.tahapan_proses || '-'}</span>
                                                 </label>
                                                 <select
                                                     value={selectedTahapan}
                                                     onChange={(e) => setSelectedTahapan(e.target.value)}
                                                     disabled={isUpdatingTahapan}
-                                                    className="w-full px-4 py-3 border-2 border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white text-gray-900 font-medium"
+                                                    className="w-full px-4 py-3 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 font-medium"
                                                 >
                                                     <option value="">-- Pilih Tahapan Baru --</option>
-                                                    <option value="Penjadwalan Rapat">📅 Penjadwalan Rapat</option>
-                                                    <option value="Pelaksanaan Rapat Fasilitasi">🤝 Pelaksanaan Rapat Fasilitasi</option>
-                                                    <option value="Penyusunan Draft Rekomendasi/Hasil Fasilitasi">📝 Penyusunan Draft Rekomendasi/Hasil Fasilitasi</option>
-                                                    <option value="Proses Penandatanganan">✍️ Proses Penandatanganan</option>
+                                                    <option value="Penjadwalan Rapat">Penjadwalan Rapat</option>
+                                                    <option value="Pelaksanaan Rapat Fasilitasi">Pelaksanaan Rapat Fasilitasi</option>
+                                                    <option value="Penyusunan Draft Rekomendasi/Hasil Fasilitasi">Penyusunan Draft Rekomendasi/Hasil Fasilitasi</option>
+                                                    <option value="Proses Penandatanganan">Proses Penandatanganan</option>
                                                 </select>
                                             </div>
 
                                             <button
                                                 onClick={handleUpdateTahapan}
                                                 disabled={isUpdatingTahapan || !selectedTahapan || selectedTahapan === surat.tahapan_proses}
-                                                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 px-4 rounded-lg hover:from-purple-700 hover:to-indigo-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
+                                                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-900 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
                                             >
                                                 {isUpdatingTahapan ? (
                                                     <>

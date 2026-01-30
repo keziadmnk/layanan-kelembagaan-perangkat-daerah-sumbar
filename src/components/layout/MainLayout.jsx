@@ -37,7 +37,7 @@ const MainLayout = () => {
                 sidebarOpen={sidebarOpen}
             />
 
-            <div className="relative">
+            <div className="relative pt-[73px]">
                 <Sidebar
                     isOpen={sidebarOpen}
                     onClose={() => setSidebarOpen(false)}
@@ -46,10 +46,9 @@ const MainLayout = () => {
                 />
 
                 <main
-                    className={`transition-all duration-300 ease-in-out ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'
-                        } p-4 lg:p-8 min-h-screen`}
+                    className={`transition-all duration-300 ease-in-out p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-73px)] ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'}`}
                 >
-                    <div className="max-w-7xl mx-auto">
+                    <div className="max-w-7xl mx-auto w-full">
                         <Outlet />
                     </div>
                 </main>

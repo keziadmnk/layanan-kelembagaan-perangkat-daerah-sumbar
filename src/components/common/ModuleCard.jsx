@@ -1,4 +1,4 @@
-const ModuleCard = ({ module, stats, onClick }) => {
+const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
     const getIcon = (namaModul) => {
         if (namaModul.toLowerCase().includes('evaluasi')) return '🏛️';
         if (namaModul.toLowerCase().includes('ranperda')) return '📋';
@@ -13,51 +13,93 @@ const ModuleCard = ({ module, stats, onClick }) => {
         return namaModul;
     };
 
-    const getColor = (namaModul) => {
+    const getAccentColor = (namaModul) => {
         if (namaModul.toLowerCase().includes('evaluasi')) return 'blue';
         if (namaModul.toLowerCase().includes('ranperda')) return 'green';
         if (namaModul.toLowerCase().includes('uptd')) return 'purple';
         return 'blue';
     };
 
-    const colorClasses = {
-        blue: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
-        green: 'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
-        purple: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700'
+    const accentClasses = {
+        blue: {
+            border: 'border-blue-200',
+            borderSelected: 'border-blue-400',
+            iconBg: 'bg-blue-50',
+            iconBgSelected: 'bg-blue-100',
+            iconText: 'text-blue-600',
+            badge: 'bg-blue-600',
+            statBg: 'bg-blue-50',
+            statBgSelected: 'bg-blue-100',
+            statText: 'text-blue-700'
+        },
+        green: {
+            border: 'border-green-200',
+            borderSelected: 'border-green-400',
+            iconBg: 'bg-green-50',
+            iconBgSelected: 'bg-green-100',
+            iconText: 'text-green-600',
+            badge: 'bg-green-600',
+            statBg: 'bg-green-50',
+            statBgSelected: 'bg-green-100',
+            statText: 'text-green-700'
+        },
+        purple: {
+            border: 'border-purple-200',
+            borderSelected: 'border-purple-400',
+            iconBg: 'bg-purple-50',
+            iconBgSelected: 'bg-purple-100',
+            iconText: 'text-purple-600',
+            badge: 'bg-purple-600',
+            statBg: 'bg-purple-50',
+            statBgSelected: 'bg-purple-100',
+            statText: 'text-purple-700'
+        }
     };
 
     const icon = getIcon(module.nama_modul);
     const shortName = getShortName(module.nama_modul);
-    const color = getColor(module.nama_modul);
+    const accent = getAccentColor(module.nama_modul);
+    const colors = accentClasses[accent];
 
     return (
         <div
             onClick={onClick}
-            className={`bg-gradient-to-br ${colorClasses[color]} text-white p-6 rounded-lg shadow-lg cursor-pointer transition-all duration-200 hover:shadow-xl hover:scale-105`}
+            className={`bg-white rounded-xl p-6 cursor-pointer transition-all duration-200 ${
+                isSelected 
+                    ? `border-2 ${colors.borderSelected} shadow-lg` 
+                    : `border-2 ${colors.border} hover:shadow-lg`
+            }`}
         >
+            {/* Header with Icon and Badge */}
             <div className="flex items-start justify-between mb-4">
-                <div className="text-4xl">{icon}</div>
+                <div className={`${isSelected ? colors.iconBgSelected : colors.iconBg} w-14 h-14 rounded-lg flex items-center justify-center text-3xl transition-colors duration-200`}>
+                    {icon}
+                </div>
                 {stats && (
-                    <div className="bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                    <div className={`${colors.badge} text-white px-3 py-1.5 rounded-lg`}>
                         <span className="text-sm font-semibold">{stats.total} Surat</span>
                     </div>
                 )}
             </div>
-            <h3 className="text-lg font-bold mb-2">{shortName}</h3>
-            <p className="text-sm text-white text-opacity-90">{module.deskripsi}</p>
+
+            {/* Title and Description */}
+            <h3 className="text-lg font-bold text-gray-900 mb-2">{shortName}</h3>
+            <p className="text-sm text-gray-600 leading-relaxed mb-4">{module.deskripsi}</p>
+
+            {/* Stats */}
             {stats && (
-                <div className="mt-4 pt-4 border-t border-white border-opacity-20 grid grid-cols-3 gap-2 text-center">
-                    <div>
-                        <div className="text-xs opacity-80">Proses</div>
-                        <div className="text-lg font-bold">{stats.inProgress}</div>
+                <div className="grid grid-cols-3 gap-3">
+                    <div className={`${isSelected ? colors.statBgSelected : colors.statBg} rounded-lg p-3 text-center transition-colors duration-200`}>
+                        <div className="text-xs font-medium text-gray-600 mb-1">Proses</div>
+                        <div className={`text-2xl font-bold ${colors.statText}`}>{stats.inProgress}</div>
                     </div>
-                    <div>
-                        <div className="text-xs opacity-80">Selesai</div>
-                        <div className="text-lg font-bold">{stats.completed}</div>
+                    <div className={`${isSelected ? 'bg-gray-100' : 'bg-gray-50'} rounded-lg p-3 text-center transition-colors duration-200`}>
+                        <div className="text-xs font-medium text-gray-600 mb-1">Selesai</div>
+                        <div className="text-2xl font-bold text-gray-900">{stats.completed}</div>
                     </div>
-                    <div>
-                        <div className="text-xs opacity-80">Pending</div>
-                        <div className="text-lg font-bold">{stats.pending}</div>
+                    <div className={`${isSelected ? 'bg-gray-100' : 'bg-gray-50'} rounded-lg p-3 text-center transition-colors duration-200`}>
+                        <div className="text-xs font-medium text-gray-600 mb-1">Pending</div>
+                        <div className="text-2xl font-bold text-gray-900">{stats.pending}</div>
                     </div>
                 </div>
             )}

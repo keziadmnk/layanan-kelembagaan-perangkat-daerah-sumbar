@@ -1,31 +1,60 @@
-import { Eye } from 'lucide-react';
+import { Eye, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
+import { useState } from 'react';
 import StatusBadge from '../common/StatusBadge';
 import SearchBar from '../common/SearchBar';
 
 const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClick }) => {
-    // Helper untuk mendapatkan icon berdasarkan nama layanan
-    const getModuleIcon = (namaLayanan) => {
-        if (!namaLayanan) return '📄';
+    const [searchQuery, setSearchQuery] = useState('');
+    const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
 
-        const lower = namaLayanan.toLowerCase();
-        if (lower.includes('evaluasi')) return '🏛️';
-        if (lower.includes('ranperda')) return '📋';
-        if (lower.includes('uptd')) return '🏢';
-        return '📄';
+    // search query (pemohon dan layanan)
+    const filteredData = data.filter(surat => {
+        if (!searchQuery.trim()) return true;
+        
+        const pemohonName = surat.pemohon?.toLowerCase() || '';
+        const namaLayanan = surat.nama_layanan?.toLowerCase() || '';
+        const query = searchQuery.toLowerCase();
+        
+        return pemohonName.includes(query) || namaLayanan.includes(query);
+    });
+
+    // Sorting data
+    const sortedData = [...filteredData].sort((a, b) => {
+        if (!sortConfig.key) return 0;
+
+        if (sortConfig.key === 'tanggal') {
+            const dateA = new Date(a.tanggal);
+            const dateB = new Date(b.tanggal);
+            return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+        }
+
+        if (sortConfig.key === 'progress') {
+            const progressA = a.progress || 0;
+            const progressB = b.progress || 0;
+            return sortConfig.direction === 'asc' ? progressA - progressB : progressB - progressA;
+        }
+
+        return 0;
+    });
+
+    // Toggle sorting
+    const handleSort = (key) => {
+        setSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
     };
 
-    // Helper untuk mendapatkan warna badge berdasarkan nama layanan
-    const getModuleColor = (namaLayanan) => {
-        if (!namaLayanan) return 'bg-gray-100 text-gray-700 border-gray-300';
-
-        const lower = namaLayanan.toLowerCase();
-        if (lower.includes('evaluasi')) return 'bg-blue-100 text-blue-700 border-blue-300';
-        if (lower.includes('ranperda')) return 'bg-green-100 text-green-700 border-green-300';
-        if (lower.includes('uptd')) return 'bg-purple-100 text-purple-700 border-purple-300';
-        return 'bg-gray-100 text-gray-700 border-gray-300';
+    // Get sort icon
+    const getSortIcon = (columnKey) => {
+        if (sortConfig.key !== columnKey) {
+            return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
+        }
+        return sortConfig.direction === 'asc' 
+            ? <ArrowUp className="w-4 h-4 text-blue-600" />
+            : <ArrowDown className="w-4 h-4 text-blue-600" />;
     };
 
-    // Helper untuk mendapatkan badge tahapan proses
     const getTahapanBadge = (tahapan) => {
         if (!tahapan) return <span className="text-gray-500 text-sm">-</span>;
 
@@ -47,7 +76,13 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
 
     return (
         <div className="space-y-4">
-            <SearchBar />
+            {!isPemohon && <SearchBar value={searchQuery} onChange={setSearchQuery} placeholder="Cari pemohon atau layanan" />}
+
+            {searchQuery && !isPemohon && (
+                <div className="text-sm text-gray-600">
+                    Menampilkan {sortedData.length} dari {data.length} surat
+                </div>
+            )}
 
             <div className="overflow-x-auto">
                 <table className="w-full">
@@ -56,22 +91,34 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 No
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Layanan
-                            </th>
                             {!isPemohon && (
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Pemohon
                                 </th>
                             )}
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tanggal
+                                Layanan
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <button 
+                                    onClick={() => handleSort('tanggal')}
+                                    className="flex items-center gap-2 hover:text-gray-700 transition-colors"
+                                >
+                                    Tanggal
+                                    {getSortIcon('tanggal')}
+                                </button>
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 {showTahapan ? 'Tahapan Proses' : 'Status'}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Progress
+                                <button 
+                                    onClick={() => handleSort('progress')}
+                                    className="flex items-center gap-2 hover:text-gray-700 transition-colors"
+                                >
+                                    Progress
+                                    {getSortIcon('progress')}
+                                </button>
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Aksi
@@ -79,23 +126,21 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {data && data.length > 0 ? (
-                            data.map((surat) => (
+                        {sortedData && sortedData.length > 0 ? (
+                            sortedData.map((surat, index) => (
                                 <tr key={surat.id_pengajuan} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {surat.no}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getModuleColor(surat.nama_layanan)}`}>
-                                            {getModuleIcon(surat.nama_layanan)} {surat.nama_layanan}
-                                        </span>
+                                        {index + 1}
                                     </td>
                                     {!isPemohon && (
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {surat.pemohon || '-'}
                                         </td>
                                     )}
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        {surat.nama_layanan || '-'}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {surat.tanggal}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
@@ -109,7 +154,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                                                     style={{ width: `${surat.progress}%` }}
                                                 />
                                             </div>
-                                            <span className="text-sm text-gray-600 font-medium">{surat.progress}%</span>
+                                            <span className="text-sm text-gray-900 font-medium">{surat.progress}%</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -126,7 +171,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                         ) : (
                             <tr>
                                 <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                                    Tidak ada data
+                                    {searchQuery ? `Tidak ada hasil untuk "${searchQuery}"` : 'Tidak ada data'}
                                 </td>
                             </tr>
                         )}

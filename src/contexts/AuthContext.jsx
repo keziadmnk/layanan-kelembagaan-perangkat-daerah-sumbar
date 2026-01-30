@@ -52,6 +52,12 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
     };
 
+    const updateUser = (updatedUserData) => {
+        const newUserData = { ...user, ...updatedUserData };
+        setUser(newUserData);
+        localStorage.setItem('user', JSON.stringify(newUserData));
+    };
+
     const isAdmin = user?.role === 'admin';
     const isPemohon = user?.role === 'kab/kota';
 
@@ -64,7 +70,8 @@ export const AuthProvider = ({ children }) => {
             isAdmin,
             isPemohon,
             login,
-            logout
+            logout,
+            updateUser
         }}>
             {children}
         </AuthContext.Provider>

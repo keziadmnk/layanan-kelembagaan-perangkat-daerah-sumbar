@@ -12,12 +12,25 @@ import FormPengajuanBaru from './pages/FormPengajuanBaru';
 import SuratListPage from './pages/SuratListPage';
 import VerifikasiSuratPage from './pages/VerifikasiSuratPage';
 import UserManagementPage from './pages/UserManagementPage';
+import ProfilePage from './pages/ProfilePage';
 import DetailSuratModal from './components/features/DetailSuratModal';
 
 const AppRoutes = () => {
-  const { user, isAuthenticated } = useAuthContext();
+  const { user, isAuthenticated, loading } = useAuthContext();
   const location = useLocation(); 
   const [selectedSurat, setSelectedSurat] = useState(null);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Memuat...</p>
+        </div>
+      </div>
+    );
+  }
+  
   if (!isAuthenticated) {
     return (
       <Routes>
@@ -61,6 +74,7 @@ const AppRoutes = () => {
               />
             } />
             <Route path="/kelola-akun" element={<UserManagementPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
@@ -96,6 +110,7 @@ const AppRoutes = () => {
               onDetailClick={setSelectedSurat}
             />
           } />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>

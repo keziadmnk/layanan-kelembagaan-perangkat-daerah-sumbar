@@ -204,5 +204,29 @@ export const uploadAPI = {
     }
 };
 
+export const profileAPI = {
+    updateProfile: async (formData) => {
+        try {
+            const response = await api.put('/profile', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal memperbarui profile' };
+        }
+    },
+
+    updatePassword: async (passwordData) => {
+        try {
+            const response = await api.put('/profile/password', passwordData);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal memperbarui password' };
+        }
+    }
+};
+
 export default api;
 

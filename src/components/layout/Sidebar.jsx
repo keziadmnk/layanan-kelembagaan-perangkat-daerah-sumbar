@@ -41,26 +41,10 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
             )}
 
             <aside
-                className={`${isOpen ? 'w-64' : 'w-20'
-                    } fixed top-0 left-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-40 overflow-hidden shadow-lg`}
+                className={`${isOpen ? 'w-64' : 'w-20 -translate-x-full lg:translate-x-0'
+                    } fixed top-[73px] left-0 h-[calc(100vh-73px)] bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-40 overflow-y-auto overflow-x-hidden shadow-lg`}
             >
-                <div className={`p-4 border-b border-gray-200 h-20 flex items-center ${isOpen ? 'justify-start' : 'justify-center'}`}>
-                    <div className="flex items-center gap-3">
-                        <img
-                            src="/biro-organisasi-logo.png"
-                            alt="Logo"
-                            className="h-10 w-10 object-contain"
-                        />
-                        {isOpen && (
-                            <div>
-                                <h2 className="font-bold text-sm text-gray-900">Biro Organisasi</h2>
-                                <p className="text-xs text-gray-600">Setda Prov. Sumbar</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <nav className="p-3 space-y-1.5 mt-2">
+                <nav className="p-3 space-y-1.5 mt-4">
                     {menuItems.map((item) => {
                         const Icon = item.icon;
                         const currentPath = location.pathname.replace('/', '') || 'dashboard';
@@ -86,7 +70,7 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
                                     </span>
                                 )}
                                 {!isOpen && isHovered && (
-                                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-50 shadow-xl">
+                                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-[60] shadow-xl pointer-events-none">
                                         {item.label}
                                         <div className="absolute top-1/2 -left-1 w-2 h-2 bg-gray-900 transform -translate-y-1/2 rotate-45"></div>
                                     </div>
@@ -109,7 +93,7 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
                                 </span>
                             )}
                             {!isOpen && hoveredItem === 'logout' && (
-                                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-50 shadow-xl">
+                                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-[60] shadow-xl pointer-events-none">
                                     Keluar
                                     <div className="absolute top-1/2 -left-1 w-2 h-2 bg-gray-900 transform -translate-y-1/2 rotate-45"></div>
                                 </div>

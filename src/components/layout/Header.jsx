@@ -1,40 +1,47 @@
-import { Menu, Bell, User, LogOut } from 'lucide-react';
+import { Menu, Bell, User, LogOut, UserCircle } from 'lucide-react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUserMenu, sidebarOpen }) => {
+    const navigate = useNavigate();
+
+    const handleProfileClick = () => {
+        setShowUserMenu(false);
+        navigate('/profile');
+    };
+
     return (
-        <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <header className="bg-white shadow-sm border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
             <div className="flex items-center justify-between px-4 lg:px-6 py-4">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 sm:gap-4">
                     <button
                         onClick={onToggleSidebar}
-                        className={`p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 ${sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'
-                            }`}
+                        className="p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-300 flex-shrink-0"
                     >
-                        <Menu className="w-6 h-6" />
+                        <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                         <img
                             src="/biro-organisasi-logo.png"
                             alt="Logo Biro Organisasi"
-                            className="h-10 w-10 object-contain"
+                            className="h-8 w-8 sm:h-10 sm:w-10 object-contain flex-shrink-0"
                         />
-                        <div className="hidden sm:block">
-                            <h1 className="text-lg lg:text-xl font-bold text-gray-900">
-                                Sistem Tracking Evaluasi Kelembagaan
+                        <div className="hidden md:block">
+                            <h1 className="text-sm lg:text-lg xl:text-xl font-bold text-gray-900 leading-tight">
+                                Sistem Pengajuan dan Tracking Layanan Kelembagaan
                             </h1>
-                            <p className="text-xs lg:text-sm text-gray-600">
+                            <p className="text-xs lg:text-sm text-gray-600 leading-tight">
                                 Biro Organisasi Setda Provinsi Sumatera Barat
                             </p>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <button className="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                        <Bell className="w-5 h-5 lg:w-6 lg:h-6" />
-                        <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 rounded-full text-white text-xs flex items-center justify-center">
+                <div className="flex items-center gap-2 sm:gap-3">
+                    <button className="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all flex-shrink-0">
+                        <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
+                        <span className="absolute top-1 right-1 w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full text-white text-[10px] sm:text-xs flex items-center justify-center">
                             3
                         </span>
                     </button>
@@ -42,18 +49,18 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                     <div className="relative">
                         <button
                             onClick={() => setShowUserMenu(!showUserMenu)}
-                            className="flex items-center gap-2 lg:gap-3 pl-3 lg:pl-4 border-l border-gray-200 hover:bg-blue-50 rounded-r-lg transition-all p-2"
+                            className="flex items-center gap-2 sm:gap-3 pl-2 sm:pl-3 lg:pl-4 border-l border-gray-200 hover:bg-blue-50 rounded-r-lg transition-all p-2"
                         >
-                            <div className="text-right hidden md:block">
-                                <p className="text-xs lg:text-sm font-medium text-gray-900">
+                            <div className="text-right hidden lg:block">
+                                <p className="text-xs lg:text-sm font-medium text-gray-900 truncate max-w-[150px] xl:max-w-[200px]">
                                     {userInfo.kabupaten_kota || userInfo.username}
                                 </p>
                                 <p className="text-xs text-gray-600 capitalize">
                                     {userInfo.role}
                                 </p>
                             </div>
-                            <div className="w-8 h-8 lg:w-10 lg:h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                                <User className="w-4 h-4 lg:w-6 lg:h-6 text-white" />
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                                <User className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                             </div>
                         </button>
 
@@ -72,6 +79,13 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                                             {userInfo.role}
                                         </p>
                                     </div>
+                                    <button
+                                        onClick={handleProfileClick}
+                                        className="w-full px-4 py-3 text-left hover:bg-blue-50 transition-all text-gray-700 flex items-center gap-2"
+                                    >
+                                        <UserCircle className="w-4 h-4" />
+                                        <span className="font-medium text-sm">Lihat Profile</span>
+                                    </button>
                                     <button
                                         onClick={() => {
                                             onLogout();
