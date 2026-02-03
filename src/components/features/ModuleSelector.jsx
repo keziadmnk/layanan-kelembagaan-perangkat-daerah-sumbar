@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { modulLayananAPI } from '../../services/api';
+import { Building, ClipboardList, Building2, FileText } from 'lucide-react';
 
 const ModuleSelector = ({ selectedModule, onModuleChange, modules: modulesFromProps }) => {
     const [modules, setModules] = useState(modulesFromProps || []);
@@ -29,10 +30,11 @@ const ModuleSelector = ({ selectedModule, onModuleChange, modules: modulesFromPr
     };
 
     const getIcon = (namaModul) => {
-        if (namaModul.toLowerCase().includes('evaluasi')) return '🏛️';
-        if (namaModul.toLowerCase().includes('ranperda')) return '📋';
-        if (namaModul.toLowerCase().includes('uptd')) return '🏢';
-        return '📄';
+        const iconProps = { className: "w-4 h-4" };
+        if (namaModul.toLowerCase().includes('evaluasi')) return <Building {...iconProps} />;
+        if (namaModul.toLowerCase().includes('ranperda')) return <ClipboardList {...iconProps} />;
+        if (namaModul.toLowerCase().includes('uptd')) return <Building2 {...iconProps} />;
+        return <FileText {...iconProps} />;
     };
 
     const getShortName = (namaModul) => {
@@ -51,8 +53,8 @@ const ModuleSelector = ({ selectedModule, onModuleChange, modules: modulesFromPr
             <button
                 onClick={() => onModuleChange(null)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${selectedModule === null
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
             >
                 Semua
@@ -62,8 +64,8 @@ const ModuleSelector = ({ selectedModule, onModuleChange, modules: modulesFromPr
                     key={module.id_modul}
                     onClick={() => onModuleChange(module.id_modul)}
                     className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${selectedModule === module.id_modul
-                            ? 'bg-blue-600 text-white shadow-md'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                 >
                     <span>{getIcon(module.nama_modul)}</span>

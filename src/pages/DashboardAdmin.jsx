@@ -62,17 +62,17 @@ const DashboardAdmin = ({ onDetailClick }) => {
         perluPerbaikan: filteredData.filter(s => s.status === 'Perlu Perbaikan').length,
         dalamProses: filteredData.filter(s => s.status === 'Dalam Proses').length,
         selesai: filteredData.filter(s => s.status === 'Selesai').length,
-        
+
         // Average progress
-        averageProgress: filteredData.length > 0 
-            ? Math.round(filteredData.reduce((acc, s) => acc + (s.progress || 0), 0) / filteredData.length) 
+        averageProgress: filteredData.length > 0
+            ? Math.round(filteredData.reduce((acc, s) => acc + (s.progress || 0), 0) / filteredData.length)
             : 0,
-        
+
         // Completion rate
         completionRate: filteredData.length > 0
             ? Math.round((filteredData.filter(s => s.status === 'Selesai').length / filteredData.length) * 100)
             : 0,
-        
+
         // Top pemohon
         topPemohon: (() => {
             const pemohonCount = {};
@@ -85,7 +85,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 5);
         })(),
-        
+
         // Progress distribution
         progressDistribution: {
             low: filteredData.filter(s => (s.progress || 0) < 25).length,
@@ -202,7 +202,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
                                 <span className="text-sm font-semibold text-gray-900">{analytics.averageProgress}%</span>
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-2">
-                                <div 
+                                <div
                                     className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${analytics.averageProgress}%` }}
                                 />
@@ -214,7 +214,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
                                 <span className="text-sm font-semibold text-gray-900">{analytics.completionRate}%</span>
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-2">
-                                <div 
+                                <div
                                     className="bg-green-600 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${analytics.completionRate}%` }}
                                 />
@@ -302,7 +302,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
                         // Map card to analytics panel
                         const cardMapping = ['performa', 'distribusi', 'pemohon'];
                         const cardType = cardMapping[index];
-                        
+
                         return (
                             <ModuleCard
                                 key={module.id_modul}

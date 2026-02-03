@@ -8,10 +8,11 @@ const FileUpload = ({
     required = false,
     format = 'PDF (max. 10MB)',
     id_persyaratan,
-    onFileUploaded
+    onFileUploaded,
+    existingFile = null  // Add prop for existing file from database
 }) => {
     const [uploading, setUploading] = useState(false);
-    const [uploadedFile, setUploadedFile] = useState(null);
+    const [uploadedFile, setUploadedFile] = useState(existingFile);
     const [error, setError] = useState(null);
     const fileInputRef = useRef(null);
 
@@ -149,19 +150,37 @@ const FileUpload = ({
                     />
                 </div>
             ) : (
-                <div className="border-2 border-green-300 bg-green-50 rounded-lg p-4 flex items-center justify-between">
+                <div className={`border-2 rounded-lg p-4 flex items-center justify-between ${uploadedFile.isExisting
+                    ? 'border-blue-300 bg-blue-50'
+                    : 'border-green-300 bg-green-50'
+                    }`}>
                     <div className="flex items-center gap-2">
-                        <Check className="w-5 h-5 text-green-600" />
+                        <Check className={`w-5 h-5 ${uploadedFile.isExisting ? 'text-blue-600' : 'text-green-600'}`} />
                         <div>
-                            <p className="text-sm font-medium text-green-900">{uploadedFile.nama_file}</p>
-                            <p className="text-xs text-green-700">File berhasil diupload</p>
+                            <p className={`text-sm font-medium ${uploadedFile.isExisting ? 'text-blue-900' : 'text-green-900'}`}>
+                                {uploadedFile.nama_file}
+                            </p>
+                            <p className={`text-xs ${uploadedFile.isExisting ? 'text-blue-700' : 'text-green-700'}`}>
+                                {uploadedFile.isExisting && uploadedFile.created_at
+                                    ? `Diupload: ${new Date(uploadedFile.created_at).toLocaleDateString('id-ID', {
+                                        day: 'numeric',
+                                        month: 'short',
+                                        year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}`
+                                    : uploadedFile.isExisting
+                                        ? format
+                                        : 'File berhasil diupload'
+                                }
+                            </p>
                         </div>
                     </div>
                     <button
                         type="button"
                         onClick={handleRemove}
                         className="text-red-500 hover:text-red-700"
-                        title="Hapus file"
+                        title={uploadedFile.isExisting ? "Replace file" : "Hapus file"}
                     >
                         <X className="w-5 h-5" />
                     </button>

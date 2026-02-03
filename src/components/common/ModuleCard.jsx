@@ -1,9 +1,12 @@
+import { Building, ClipboardList, Building2, FileText } from 'lucide-react';
+
 const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
     const getIcon = (namaModul) => {
-        if (namaModul.toLowerCase().includes('evaluasi')) return '🏛️';
-        if (namaModul.toLowerCase().includes('ranperda')) return '📋';
-        if (namaModul.toLowerCase().includes('uptd')) return '🏢';
-        return '📄';
+        const iconProps = { className: "w-7 h-7" };
+        if (namaModul.toLowerCase().includes('evaluasi')) return <Building {...iconProps} />;
+        if (namaModul.toLowerCase().includes('ranperda')) return <ClipboardList {...iconProps} />;
+        if (namaModul.toLowerCase().includes('uptd')) return <Building2 {...iconProps} />;
+        return <FileText {...iconProps} />;
     };
 
     const getShortName = (namaModul) => {
@@ -64,11 +67,10 @@ const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
     return (
         <div
             onClick={onClick}
-            className={`bg-white rounded-xl p-6 cursor-pointer transition-all duration-200 ${
-                isSelected 
-                    ? `border-2 ${colors.borderSelected} shadow-lg` 
+            className={`bg-white rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected
+                    ? `border-2 ${colors.borderSelected} shadow-lg`
                     : `border-2 ${colors.border} hover:shadow-lg`
-            }`}
+                }`}
         >
             {/* Header with Icon and Badge */}
             <div className="flex items-start justify-between mb-4">

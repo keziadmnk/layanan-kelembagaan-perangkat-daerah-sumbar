@@ -1,13 +1,44 @@
 import { Menu, Bell, User, LogOut, UserCircle } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { notifikasiAPI } from '../../services/api';
 
 const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUserMenu, sidebarOpen }) => {
     const navigate = useNavigate();
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    const fetchUnreadCount = useCallback(async () => {
+        if (!userInfo?.id) return;
+
+        try {
+            const response = await notifikasiAPI.getUnreadCount(userInfo.id);
+            if (response.success) {
+                setUnreadCount(response.data.count);
+            }
+        } catch (error) {
+            // Silent fail - don't break the app if notification API is not available
+            console.error('Error fetching unread count:', error);
+            setUnreadCount(0);
+        }
+    }, [userInfo?.id]);
+
+    useEffect(() => {
+        if (userInfo?.id) {
+            fetchUnreadCount();
+            // Poll every 30 seconds
+            const interval = setInterval(fetchUnreadCount, 30000);
+            return () => clearInterval(interval);
+        }
+    }, [userInfo?.id, fetchUnreadCount]);
 
     const handleProfileClick = () => {
         setShowUserMenu(false);
         navigate('/profile');
+    };
+
+    const handleNotificationClick = () => {
+        navigate('/notifikasi');
     };
 
     return (
@@ -39,11 +70,16 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                 </div>
 
                 <div className="flex items-center gap-2 sm:gap-3">
-                    <button className="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all flex-shrink-0">
+                    <button
+                        onClick={handleNotificationClick}
+                        className="relative p-2 text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all flex-shrink-0"
+                    >
                         <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
-                        <span className="absolute top-1 right-1 w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded-full text-white text-[10px] sm:text-xs flex items-center justify-center">
-                            3
-                        </span>
+                        {unreadCount > 0 && (
+                            <span className="absolute top-1 right-1 min-w-[16px] h-4 sm:min-w-[18px] sm:h-[18px] bg-red-500 rounded-full text-white text-[10px] sm:text-xs flex items-center justify-center px-1 font-medium">
+                                {unreadCount > 99 ? '99+' : unreadCount}
+                            </span>
+                        )}
                     </button>
 
                     <div className="relative">

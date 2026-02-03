@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import SuratTable from '../components/features/SuratTable';
 import ModuleSelector from '../components/features/ModuleSelector';
 import { pengajuanAPI, modulLayananAPI } from '../services/api';
+import { useAuthContext } from '../contexts/AuthContext';
 
 const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) => {
+    const { user } = useAuthContext();
     const [selectedModule, setSelectedModule] = useState(null);
     const [data, setData] = useState([]);
     const [modules, setModules] = useState([]);
@@ -12,16 +14,26 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
 
     useEffect(() => {
         fetchData();
-    }, [status]);
+    }, [status, user]);
 
     const fetchData = async () => {
         try {
             setLoading(true);
             setError(null);
-            const [pengajuanRes, modulRes] = await Promise.all([
-                status ? pengajuanAPI.getByStatus(status) : pengajuanAPI.getAll(),
-                modulLayananAPI.getAll()
-            ]);
+
+            let pengajuanRes;
+
+            // Jika user adalah kab/kota (non-admin), ambil hanya pengajuan miliknya
+            if (user?.role === 'kab/kota') {
+                pengajuanRes = await pengajuanAPI.getByUser(user.id);
+            } else {
+                // Jika admin, ambil semua atau berdasarkan status
+                pengajuanRes = status
+                    ? await pengajuanAPI.getByStatus(status)
+                    : await pengajuanAPI.getAll();
+            }
+
+            const modulRes = await modulLayananAPI.getAll();
 
             if (pengajuanRes.success) {
                 setData(pengajuanRes.data);
@@ -40,6 +52,9 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
     const filteredData = selectedModule
         ? data.filter(s => s.id_modul === selectedModule)
         : data;
+
+    // Tentukan apakah user adalah pemohon (kab/kota)
+    const isPemohon = user?.role === 'kab/kota';
 
     return (
         <div className="bg-white rounded-lg shadow border border-gray-200">
@@ -68,7 +83,7 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
                         <p className="text-gray-500">Tidak ada data pengajuan</p>
                     </div>
                 ) : (
-                    <SuratTable data={filteredData} showTahapan={showTahapan} onDetailClick={onDetailClick} />
+                    <SuratTable data={filteredData} isPemohon={isPemohon} showTahapan={showTahapan} onDetailClick={onDetailClick} />
                 )}
             </div>
         </div>
@@ -76,3 +91,4 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
 };
 
 export default SuratListPage;
+

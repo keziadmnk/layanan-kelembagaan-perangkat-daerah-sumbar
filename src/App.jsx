@@ -9,15 +9,17 @@ import LoginPage from './pages/LoginPage';
 import DashboardAdmin from './pages/DashboardAdmin';
 import DashboardPemohon from './pages/DashboardPemohon';
 import FormPengajuanBaru from './pages/FormPengajuanBaru';
+import FormRevisi from './pages/FormRevisi';
 import SuratListPage from './pages/SuratListPage';
 import VerifikasiSuratPage from './pages/VerifikasiSuratPage';
 import UserManagementPage from './pages/UserManagementPage';
 import ProfilePage from './pages/ProfilePage';
+import NotificationPage from './pages/NotificationPage';
 import DetailSuratModal from './components/features/DetailSuratModal';
 
 const AppRoutes = () => {
   const { user, isAuthenticated, loading } = useAuthContext();
-  const location = useLocation(); 
+  const location = useLocation();
   const [selectedSurat, setSelectedSurat] = useState(null);
 
   if (loading) {
@@ -30,7 +32,7 @@ const AppRoutes = () => {
       </div>
     );
   }
-  
+
   if (!isAuthenticated) {
     return (
       <Routes>
@@ -75,6 +77,7 @@ const AppRoutes = () => {
             } />
             <Route path="/kelola-akun" element={<UserManagementPage />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/notifikasi" element={<NotificationPage />} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Route>
@@ -104,6 +107,7 @@ const AppRoutes = () => {
             />
           } />
           <Route path="/pengajuan-baru" element={<FormPengajuanBaru />} />
+          <Route path="/revisi/:id" element={<FormRevisi />} />
           <Route path="/riwayat" element={
             <SuratListPage
               title="Riwayat Pengajuan"
@@ -111,6 +115,7 @@ const AppRoutes = () => {
             />
           } />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/notifikasi" element={<NotificationPage />} />
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>

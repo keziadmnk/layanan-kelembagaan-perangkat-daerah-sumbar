@@ -168,6 +168,25 @@ export const pengajuanAPI = {
             throw error.response?.data || { message: 'Gagal mengambil catatan revisi' };
         }
     },
+
+    getById: async (id) => {
+        try {
+            const response = await api.get(`/pengajuan/${id}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal mengambil detail pengajuan' };
+        }
+    },
+
+    submitRevisi: async (id, data) => {
+        try {
+            const response = await api.put(`/pengajuan/revisi/${id}`, data);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal mengirim revisi' };
+        }
+    },
+
     selesaikanPengajuan: async (idPengajuan, file) => {
         try {
             const formData = new FormData();
@@ -228,5 +247,53 @@ export const profileAPI = {
     }
 };
 
+export const notifikasiAPI = {
+    getByUser: async (userId) => {
+        try {
+            const response = await api.get(`/notifikasi/user/${userId}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal mengambil notifikasi' };
+        }
+    },
+
+    getUnreadCount: async (userId) => {
+        try {
+            const response = await api.get(`/notifikasi/user/${userId}/unread-count`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal mengambil jumlah notifikasi' };
+        }
+    },
+
+    markAsRead: async (id) => {
+        try {
+            const response = await api.put(`/notifikasi/${id}/read`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal menandai notifikasi' };
+        }
+    },
+
+    markAllAsRead: async (userId) => {
+        try {
+            const response = await api.put(`/notifikasi/user/${userId}/read-all`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal menandai semua notifikasi' };
+        }
+    },
+
+    delete: async (id) => {
+        try {
+            const response = await api.delete(`/notifikasi/${id}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal menghapus notifikasi' };
+        }
+    }
+};
+
 export default api;
+
 

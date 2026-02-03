@@ -33,9 +33,12 @@ const DashboardPemohon = ({ onDetailClick }) => {
             ]);
 
             if (pengajuanRes.success) {
+                console.log('📊 Data Pengajuan:', pengajuanRes.data);
+                console.log('📋 Status yang ada:', pengajuanRes.data.map(d => ({ id: d.id_pengajuan, status: d.status, modul: d.id_modul })));
                 setData(pengajuanRes.data);
             }
             if (modulRes.success) {
+                console.log('📦 Data Modul:', modulRes.data);
                 setModules(modulRes.data);
             }
         } catch (err) {
@@ -54,9 +57,9 @@ const DashboardPemohon = ({ onDetailClick }) => {
         const moduleData = data.filter(s => s.id_modul === moduleId);
         return {
             total: moduleData.length,
-            inProgress: moduleData.filter(s => s.status && !s.status.includes('Selesai')).length,
+            inProgress: moduleData.filter(s => s.status && !s.status.includes('Selesai') && s.status !== 'Perlu Perbaikan').length,
             completed: moduleData.filter(s => s.status && s.status.includes('Selesai')).length,
-            pending: moduleData.filter(s => s.progress === 0).length
+            pending: moduleData.filter(s => s.status === 'Perlu Perbaikan').length
         };
     };
 
@@ -94,6 +97,37 @@ const DashboardPemohon = ({ onDetailClick }) => {
                 <p className="text-blue-100">Pantau status pengajuan Anda atau ajukan layanan baru</p>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <StatCard
+                    label="Total Pengajuan"
+                    value={data.length}
+                    icon={FileText}
+                    valueColor="text-gray-900"
+                    iconColor="text-gray-500"
+                />
+                <StatCard
+                    label="Dalam Proses"
+                    value={data.filter(s => s.status && !s.status.includes('Selesai') && s.status !== 'Perlu Perbaikan').length}
+                    icon={Clock}
+                    valueColor="text-blue-600"
+                    iconColor="text-blue-500"
+                />
+                <StatCard
+                    label="Selesai"
+                    value={data.filter(s => s.status && s.status.includes('Selesai')).length}
+                    icon={CheckCircle}
+                    valueColor="text-green-600"
+                    iconColor="text-green-500"
+                />
+                <StatCard
+                    label="Pending"
+                    value={data.filter(s => s.status === 'Perlu Perbaikan').length}
+                    icon={Clock}
+                    valueColor="text-red-600"
+                    iconColor="text-red-500"
+                />
+            </div>
+
             <div>
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-bold text-gray-900">Layanan yang Tersedia</h3>
@@ -118,23 +152,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard label="Total Pengajuan" value={data.length} icon={FileText} />
-                <StatCard
-                    label="Dalam Proses"
-                    value={data.filter(s => s.status && !s.status.includes('Selesai')).length}
-                    icon={Clock}
-                    valueColor="text-yellow-600"
-                    iconColor="text-yellow-500"
-                />
-                <StatCard
-                    label="Selesai"
-                    value={data.filter(s => s.status && s.status.includes('Selesai')).length}
-                    icon={CheckCircle}
-                    valueColor="text-green-600"
-                    iconColor="text-green-500"
-                />
-            </div>
+
 
             <div className="bg-white rounded-lg shadow border border-gray-200">
                 <div className="p-6 border-b border-gray-200">

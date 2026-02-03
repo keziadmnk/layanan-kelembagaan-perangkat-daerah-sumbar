@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, FileText, ArrowUpDown, ArrowUp, ArrowDown, Eye } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
 import SearchBar from '../components/common/SearchBar';
+import Pagination from '../components/common/Pagination';
 import { pengajuanAPI } from '../services/api';
 
 const VerifikasiSuratPage = ({ onDetailClick }) => {
@@ -10,6 +11,8 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetchData();
@@ -75,9 +78,26 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         if (sortConfig.key !== columnKey) {
             return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
         }
-        return sortConfig.direction === 'asc' 
+        return sortConfig.direction === 'asc'
             ? <ArrowUp className="w-4 h-4 text-blue-600" />
             : <ArrowDown className="w-4 h-4 text-blue-600" />;
+    };
+
+    // Pagination calculations
+    const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedData = sortedData.slice(startIndex, endIndex);
+
+    // Handle search - reset to page 1 when searching
+    const handleSearchChange = (value) => {
+        setSearchTerm(value);
+        setCurrentPage(1);
+    };
+
+    // Handle page change
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
     };
 
     if (loading) {
@@ -144,7 +164,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
 
             <SearchBar
                 value={searchTerm}
-                onChange={setSearchTerm}
+                onChange={handleSearchChange}
                 placeholder="Cari pemohon atau layanan"
             />
 
@@ -163,7 +183,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                                     Layanan
                                 </th>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                    <button 
+                                    <button
                                         onClick={() => handleSort('tanggal')}
                                         className="flex items-center gap-2 hover:text-gray-900 transition-colors"
                                     >
@@ -180,7 +200,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {sortedData.length === 0 ? (
+                            {paginatedData.length === 0 ? (
                                 <tr>
                                     <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
                                         <FileText className="mx-auto h-12 w-12 text-gray-400 mb-3" />
@@ -189,14 +209,14 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                                     </td>
                                 </tr>
                             ) : (
-                                sortedData.map((surat, index) => (
+                                paginatedData.map((surat, index) => (
                                     <tr
                                         key={surat.id_pengajuan}
                                         className="hover:bg-blue-50 transition-colors duration-150 cursor-pointer"
                                         onClick={() => onDetailClick(surat)}
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <span className="font-semibold text-gray-900">{index + 1}</span>
+                                            <span className="font-semibold text-gray-900">{startIndex + index + 1}</span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {surat.pemohon || '-'}
@@ -213,8 +233,8 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                                         </td>
                                         <td className="px-6 py-4">
                                             <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${surat.status === 'Menunggu Verifikasi'
-                                                    ? 'bg-yellow-100 text-yellow-800'
-                                                    : 'bg-red-100 text-red-800'
+                                                ? 'bg-yellow-100 text-yellow-800'
+                                                : 'bg-red-100 text-red-800'
                                                 }`}>
                                                 {surat.status === 'Menunggu Verifikasi' && (
                                                     <AlertCircle className="h-3 w-3 mr-1" />
@@ -243,6 +263,17 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination */}
+                {paginatedData.length > 0 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                        itemsPerPage={itemsPerPage}
+                        totalItems={sortedData.length}
+                    />
+                )}
             </div>
         </div>
     );

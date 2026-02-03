@@ -22,7 +22,7 @@ const SuccessModal = ({ isOpen, onClose, nomorRegistrasi, status }) => {
                 }
             `}</style>
 
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm p-4">
                 <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform animate-scale-in">
                     <div className="p-8 text-center">
                         <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Users, Search, Plus, Edit, Trash2, MapPin, User } from 'lucide-react';
 import UserFormModal from '../components/features/UserFormModal';
 import DeleteConfirmModal from '../components/common/DeleteConfirmModal';
+import Pagination from '../components/common/Pagination';
 import { userAPI } from '../services/api';
 
 const UserManagementPage = () => {
@@ -9,10 +10,12 @@ const UserManagementPage = () => {
     const [showFormModal, setShowFormModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [formMode, setFormMode] = useState('create'); 
+    const [formMode, setFormMode] = useState('create');
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetchUsers();
@@ -40,6 +43,23 @@ const UserManagementPage = () => {
 
         return matchSearch;
     });
+
+    // Pagination calculations
+    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+    // Handle search - reset to page 1 when searching
+    const handleSearchChange = (value) => {
+        setSearchTerm(value);
+        setCurrentPage(1);
+    };
+
+    // Handle page change
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     const handleCreate = () => {
         setFormMode('create');
@@ -143,7 +163,7 @@ const UserManagementPage = () => {
                         type="text"
                         placeholder="Cari kabupaten/kota atau username..."
                         value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                 </div>
@@ -189,7 +209,7 @@ const UserManagementPage = () => {
                                     </td>
                                 </tr>
                             ) : (
-                                filteredUsers.map((user) => (
+                                paginatedUsers.map((user) => (
                                     <tr key={user.id} className="hover:bg-blue-50 transition-colors duration-150">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2 text-gray-700">
@@ -234,6 +254,17 @@ const UserManagementPage = () => {
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination */}
+                {!loading && paginatedUsers.length > 0 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={handlePageChange}
+                        itemsPerPage={itemsPerPage}
+                        totalItems={filteredUsers.length}
+                    />
+                )}
             </div>
 
             {/* Modals */}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Send, ArrowLeft } from 'lucide-react';
+import { Send, ArrowLeft, Building, ClipboardList, Building2, FileText } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import FileUpload from '../components/common/FileUpload';
 import SuccessModal from '../components/common/SuccessModal';
@@ -8,7 +8,7 @@ import { useAuthContext } from '../contexts/AuthContext';
 const API_BASE_URL = 'http://localhost:3001/api';
 
 const FormPengajuanBaru = ({ onSuccess }) => {
-    const { user } = useAuthContext();  
+    const { user } = useAuthContext();
     const navigate = useNavigate();
     const location = useLocation();
     const initialModuleId = location.state?.selectedModuleId || '';
@@ -20,9 +20,11 @@ const FormPengajuanBaru = ({ onSuccess }) => {
     const [submitting, setSubmitting] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [submissionResult, setSubmissionResult] = useState(null);
-    const [namaKabupaten, setNamaKabupaten] = useState('');
     const [catatanPemohon, setCatatanPemohon] = useState('');
     const [uploadedFiles, setUploadedFiles] = useState({});
+
+    // Kabupaten/kota otomatis dari user yang login
+    const namaKabupaten = user?.kabupaten_kota || '';
 
     useEffect(() => {
         fetchModulLayanan();
@@ -76,7 +78,6 @@ const FormPengajuanBaru = ({ onSuccess }) => {
 
     const handleLayananChange = (e) => {
         setSelectedLayanan(e.target.value);
-        setNamaKabupaten('');
         setCatatanPemohon('');
         setUploadedFiles({});
     };
@@ -95,8 +96,8 @@ const FormPengajuanBaru = ({ onSuccess }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!namaKabupaten.trim()) {
-            alert('Harap isi Nama Kabupaten/Kota');
+        if (!namaKabupaten || !namaKabupaten.trim()) {
+            alert('Data kabupaten/kota tidak ditemukan. Silakan login ulang.');
             return;
         }
         const dokumentWajib = persyaratanDokumen.filter(p => p.wajib);
@@ -112,7 +113,7 @@ const FormPengajuanBaru = ({ onSuccess }) => {
         }
         const dokumen_upload = Object.values(uploadedFiles);
         const pengajuanData = {
-            id_user: user?.id, 
+            id_user: user?.id,
             id_modul: Number(selectedLayanan),
             nama_kabupaten: namaKabupaten,
             catatan_pemohon: catatanPemohon || null,
@@ -142,7 +143,6 @@ const FormPengajuanBaru = ({ onSuccess }) => {
 
             setSubmissionResult(result.data);
             setShowSuccessModal(true);
-            setNamaKabupaten('');
             setCatatanPemohon('');
             setSelectedLayanan('');
             setUploadedFiles({});
@@ -159,10 +159,11 @@ const FormPengajuanBaru = ({ onSuccess }) => {
     };
 
     const getModuleIcon = (namaModul) => {
-        if (namaModul.toLowerCase().includes('evaluasi')) return '🏛️';
-        if (namaModul.toLowerCase().includes('ranperda')) return '📋';
-        if (namaModul.toLowerCase().includes('uptd')) return '🏢';
-        return '📄';
+        const iconProps = { className: "w-8 h-8" };
+        if (namaModul.toLowerCase().includes('evaluasi')) return <Building {...iconProps} />;
+        if (namaModul.toLowerCase().includes('ranperda')) return <ClipboardList {...iconProps} />;
+        if (namaModul.toLowerCase().includes('uptd')) return <Building2 {...iconProps} />;
+        return <FileText {...iconProps} />;
     };
 
     const handleModalClose = () => {
@@ -203,16 +204,16 @@ const FormPengajuanBaru = ({ onSuccess }) => {
             <form onSubmit={handleSubmit} className="p-6 space-y-6">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Nama Kabupaten/Kota <span className="text-red-500">*</span>
+                        Nama Kabupaten/Kota
                     </label>
                     <input
                         type="text"
                         value={namaKabupaten}
-                        onChange={(e) => setNamaKabupaten(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        placeholder="Contoh: Kabupaten Padang Pariaman"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700 cursor-not-allowed"
+                        placeholder="Kabupaten/Kota akan terisi otomatis"
                         required
-                        disabled={submitting}
+                        disabled
+                        readOnly
                     />
                 </div>
 
@@ -300,7 +301,6 @@ const FormPengajuanBaru = ({ onSuccess }) => {
             <SuccessModal
                 isOpen={showSuccessModal}
                 onClose={handleModalClose}
-                nomorRegistrasi={submissionResult?.nomor_registrasi}
                 status={submissionResult?.status_pengajuan}
             />
         </div>

@@ -12,23 +12,40 @@ export const AuthProvider = ({ children }) => {
         const initAuth = async () => {
             const savedUser = localStorage.getItem('user');
             const savedToken = localStorage.getItem('token');
+            const savedRole = localStorage.getItem('sessionRole');
 
             if (savedUser && savedToken) {
                 try {
+                    const parsedUser = JSON.parse(savedUser);
+
+                    // CRITICAL: Validate role hasn't been tampered
+                    if (savedRole && parsedUser.role !== savedRole) {
+                        console.error('⚠️ SECURITY: Role mismatch detected! Clearing session...');
+                        localStorage.removeItem('user');
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('sessionRole');
+                        setLoading(false);
+                        return;
+                    }
+
                     const { authAPI } = await import('../services/api');
                     const response = await authAPI.verifyToken();
 
                     if (response.success) {
-                        setUser(JSON.parse(savedUser));
+                        console.log('✅ Auth restored:', { username: parsedUser.username, role: parsedUser.role });
+                        setUser(parsedUser);
                         setToken(savedToken);
                     } else {
+                        console.log('❌ Token invalid, clearing...');
                         localStorage.removeItem('user');
                         localStorage.removeItem('token');
+                        localStorage.removeItem('sessionRole');
                     }
                 } catch (error) {
-                    console.log('Token verification failed, clearing auth...', error);
+                    console.log('❌ Token verification failed, clearing auth...', error);
                     localStorage.removeItem('user');
                     localStorage.removeItem('token');
+                    localStorage.removeItem('sessionRole');
                 }
             }
 
@@ -39,21 +56,35 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData, authToken) => {
+        console.log('🔐 LOGIN:', { username: userData.username, role: userData.role });
         setUser(userData);
         setToken(authToken);
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('token', authToken);
+        // Lock the session role
+        localStorage.setItem('sessionRole', userData.role);
     };
 
     const logout = () => {
+        console.log('🚪 LOGOUT:', user?.username);
         setUser(null);
         setToken(null);
         localStorage.removeItem('user');
         localStorage.removeItem('token');
+        localStorage.removeItem('sessionRole');
     };
 
     const updateUser = (updatedUserData) => {
+        // CRITICAL: Never allow role to be changed during update
+        const currentRole = user?.role;
         const newUserData = { ...user, ...updatedUserData };
+
+        // Force keep original role
+        if (currentRole) {
+            newUserData.role = currentRole;
+        }
+
+        console.log('👤 UPDATE USER:', { username: newUserData.username, role: newUserData.role });
         setUser(newUserData);
         localStorage.setItem('user', JSON.stringify(newUserData));
     };

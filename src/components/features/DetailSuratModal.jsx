@@ -79,7 +79,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
             if (result.success) {
                 alert(`Dokumen dari ${surat.pemohon} diterima dan akan diproses lebih lanjut`);
                 onClose();
-                window.location.reload(); 
+                window.location.reload();
             }
         } catch (err) {
             alert(`Error: ${err.message}`);
@@ -101,7 +101,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                 alert(`Dokumen dikembalikan kepada ${surat.pemohon} untuk perbaikan`);
                 setShowRevisionModal(false);
                 onClose();
-                window.location.reload(); 
+                window.location.reload();
             }
         } catch (err) {
             alert(`Error: ${err.message}`);
@@ -194,7 +194,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
     return (
         <>
-            <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+            <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
                 <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                     <div className="p-6 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10 rounded-t-xl">
                         <h2 className="text-2xl font-bold text-gray-900">Detail Pengajuan Surat</h2>
@@ -205,11 +205,13 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
                     <div className="p-6 space-y-6">
                         <div className="grid grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
-                            <div>
-                                <p className="text-sm text-gray-600">Pemohon</p>
-                                <p className="font-semibold text-gray-900">{surat.pemohon}</p>
-                            </div>
-                            <div>
+                            {userRole === 'admin' && (
+                                <div>
+                                    <p className="text-sm text-gray-600">Pemohon</p>
+                                    <p className="font-semibold text-gray-900">{surat.pemohon}</p>
+                                </div>
+                            )}
+                            <div className={userRole === 'admin' ? '' : 'col-span-2'}>
                                 <p className="text-sm text-gray-600">Tanggal Pengajuan</p>
                                 <p className="font-semibold text-gray-900">
                                     {new Date(surat.tanggal).toLocaleDateString('id-ID', {
@@ -219,13 +221,19 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                     })}
                                 </p>
                             </div>
+                            {userRole === 'kab/kota' && (
+                                <div className="col-span-2">
+                                    <p className="text-sm text-gray-600">Jenis Layanan</p>
+                                    <p className="font-semibold text-gray-900">{surat.nama_layanan || '-'}</p>
+                                </div>
+                            )}
                             <div className="col-span-2">
                                 <p className="text-sm text-gray-600">Status Saat Ini</p>
                                 <div className="mt-1">
                                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${surat.status === 'Menunggu Verifikasi' ? 'bg-yellow-100 text-yellow-800' :
                                         surat.status === 'Perlu Perbaikan' ? 'bg-red-100 text-red-800' :
                                             surat.status === 'Dalam Proses' ? 'bg-blue-100 text-blue-800' :
-                                                surat.status === 'Selesai' ? 'bg-green-100 text-green-800' :
+                                                surat.status === 'Selesai' ? 'bg-red-100 text-red-800' :
                                                     'bg-gray-100 text-gray-800'
                                         }`}>
                                         {surat.status}
@@ -236,7 +244,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                         {userRole === 'admin' && isVerificationMode && surat.status === 'Menunggu Verifikasi' && (
                             <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-5">
                                 <div className="flex items-start gap-3 mb-4">
-                                    <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
+                                    <AlertCircle className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
                                     <div>
                                         <h3 className="font-bold text-blue-900 mb-1">Verifikasi Kelengkapan Dokumen</h3>
                                         <p className="text-sm text-blue-800">
@@ -269,7 +277,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
                         {/* Update Tahapan Proses - Untuk admin di halaman Dalam Proses */}
                         {userRole === 'admin' && !isVerificationMode && surat.status === 'Dalam Proses' && (
-                            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-5">
+                            <div className="bg-linear-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-5">
                                 <div className="flex items-start gap-3 mb-4">
                                     <div className="bg-blue-100 rounded-full p-2">
                                         <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -304,7 +312,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                             <button
                                                 onClick={handleUpdateTahapan}
                                                 disabled={isUpdatingTahapan || !selectedTahapan || selectedTahapan === surat.tahapan_proses}
-                                                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-900 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
+                                                className="w-full bg-linear-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-900 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
                                             >
                                                 {isUpdatingTahapan ? (
                                                     <>
@@ -326,7 +334,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
                         {/* Selesaikan Pengajuan - Untuk admin di tahapan Proses Penandatanganan */}
                         {userRole === 'admin' && !isVerificationMode && surat.status === 'Dalam Proses' && surat.tahapan_proses === 'Proses Penandatanganan' && (
-                            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg p-5">
+                            <div className="bg-linear-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg p-5">
                                 <div className="flex items-start gap-3 mb-4">
                                     <div className="bg-green-100 rounded-full p-2">
                                         <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -368,7 +376,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                             <button
                                                 onClick={handleSelesaikanPengajuan}
                                                 disabled={isSelesaikan || !fileRekomendasi}
-                                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 font-semibold flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
+                                                className="w-full bg-linear-to-r from-green-600 to-emerald-600 text-white py-3 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 font-semibold flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
                                             >
                                                 {isSelesaikan ? (
                                                     <>
@@ -392,7 +400,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                         {userRole === 'kab/kota' && surat.catatan_revisi && (
                             <div className="bg-red-50 border-2 border-red-200 rounded-lg p-5">
                                 <div className="flex items-start gap-3 mb-3">
-                                    <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-1" />
+                                    <AlertCircle className="w-6 h-6 text-red-600 shrink-0 mt-1" />
                                     <div className="flex-1">
                                         <h3 className="font-bold text-red-900 mb-2">Dokumen Perlu Diperbaiki</h3>
                                         <p className="text-sm text-red-800 whitespace-pre-line">{surat.catatan_revisi}</p>
@@ -481,7 +489,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                             {/* Content - File yang diupload */}
                                             <div className="flex items-center justify-between p-3 bg-white hover:bg-gray-50 transition-colors">
                                                 <div className="flex items-center gap-3 flex-1">
-                                                    <FileText className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                                                    <FileText className="w-5 h-5 text-blue-600 shrink-0" />
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-sm font-medium text-gray-900 truncate">
                                                             {dok.nama_file}
@@ -522,7 +530,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
                         {/* Dokumen Rekomendasi - Hanya muncul untuk admin jika status Selesai */}
                         {userRole === 'admin' && surat.status === 'Selesai' && surat.file_surat_rekomendasi && (
-                            <div className="bg-gradient-to-r from-emerald-50 to-green-50 border-2 border-green-200 rounded-lg p-5">
+                            <div className="bg-linear-to-r from-emerald-50 to-green-50 border-2 border-green-200 rounded-lg p-5">
                                 <div className="flex items-center gap-3 mb-4">
                                     <div className="bg-green-100 rounded-full p-2">
                                         <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -611,6 +619,108 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                 </div>
                             </div>
                         )}
+
+                        {/* Dokumen Rekomendasi - Untuk Pemohon (Kab/Kota) jika status Selesai */}
+                        {userRole === 'kab/kota' && surat.status === 'Selesai' && surat.file_surat_rekomendasi && (
+                            <div className="bg-linear-to-br from-emerald-50 via-green-50 to-teal-50 border-2 border-green-300 rounded-xl p-6 shadow-lg">
+                                <div className="flex items-center gap-4 mb-5">
+                                    <div className="bg-linear-to-br from-green-500 to-emerald-600 rounded-full p-3 shadow-md">
+                                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-xl font-bold text-green-900 flex items-center gap-2">
+                                            🎉 Pengajuan Anda Telah Selesai!
+                                        </h3>
+                                        <p className="text-sm text-green-700 mt-1">Surat rekomendasi hasil pengajuan sudah tersedia untuk Anda</p>
+                                    </div>
+                                </div>
+
+                                <div className="border-2 border-green-300 rounded-xl overflow-hidden bg-white shadow-md">
+                                    <div className="flex items-center justify-between p-5 hover:bg-green-50 transition-all duration-200">
+                                        <div className="flex items-center gap-4 flex-1">
+                                            <div className="bg-linear-to-br from-green-100 to-emerald-100 rounded-xl p-3 shadow-sm">
+                                                <FileText className="w-8 h-8 text-green-600" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <p className="text-base font-bold text-gray-900 mb-1">
+                                                    📄 Surat Rekomendasi
+                                                </p>
+                                                <p className="text-xs text-gray-500">
+                                                    📅 Diselesaikan pada: {surat.tanggal_selesai ? new Date(surat.tanggal_selesai).toLocaleDateString('id-ID', {
+                                                        day: 'numeric',
+                                                        month: 'long',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit'
+                                                    }) : '-'}
+                                                </p>
+                                                <div className="mt-3 flex items-center gap-2">
+                                                    <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                                        ✅ Selesai
+                                                    </span>
+                                                    <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                                                        📄 Dokumen Final
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col gap-3 ml-4">
+                                            <button
+                                                onClick={() => {
+                                                    const baseURL = 'http://localhost:3001';
+                                                    window.open(`${baseURL}${surat.file_surat_rekomendasi}`, '_blank');
+                                                }}
+                                                className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white flex items-center gap-2 px-5 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-xl font-semibold transform hover:scale-105"
+                                            >
+                                                <Eye className="w-5 h-5" />
+                                                <span>Lihat Dokumen</span>
+                                            </button>
+                                            <button
+                                                onClick={async () => {
+                                                    try {
+                                                        const baseURL = 'http://localhost:3001';
+                                                        const fileUrl = `${baseURL}${surat.file_surat_rekomendasi}`;
+                                                        const response = await fetch(fileUrl);
+                                                        const blob = await response.blob();
+                                                        const blobUrl = window.URL.createObjectURL(blob);
+                                                        const link = document.createElement('a');
+                                                        link.href = blobUrl;
+                                                        link.download = `Surat_Rekomendasi_${surat.id_pengajuan}.pdf`;
+                                                        document.body.appendChild(link);
+                                                        link.click();
+                                                        document.body.removeChild(link);
+                                                        window.URL.revokeObjectURL(blobUrl);
+                                                    } catch (error) {
+                                                        console.error('Error downloading file:', error);
+                                                        alert('Gagal mengunduh file. Silakan coba lagi.');
+                                                    }
+                                                }}
+                                                className="bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white flex items-center gap-2 px-5 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-xl font-semibold transform hover:scale-105"
+                                            >
+                                                <Download className="w-5 h-5" />
+                                                <span>Download PDF</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="mt-4 bg-linear-to-r from-green-100 to-emerald-100 border-l-4 border-green-500 rounded-lg p-4 shadow-sm">
+                                    <div className="flex items-start gap-3">
+                                        <div className="text-green-600 text-xl mt-0.5">💡</div>
+                                        <div>
+                                            <p className="text-sm font-semibold text-green-900 mb-1">Informasi Penting:</p>
+                                            <p className="text-xs text-green-800 leading-relaxed">
+                                                Surat rekomendasi ini merupakan dokumen final hasil dari proses pengajuan yang telah Anda ajukan.
+                                                Silakan download dan simpan dokumen ini untuk keperluan administrasi Anda.
+                                                Jika memerlukan salinan tambahan, Anda dapat mengunduhnya kembali kapan saja.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -619,7 +729,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                 isOpen={showRevisionModal}
                 onClose={() => setShowRevisionModal(false)}
                 onSubmit={handleRevision}
-                suratId={surat.nomor_registrasi}
+                suratId={surat.id_pengajuan}
                 pemohon={surat.pemohon}
             />
         </>
