@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { X, Eye, Download, FileText, AlertCircle, Check, XCircle } from 'lucide-react';
 import StatusBadge from '../common/StatusBadge';
 import RevisionModal from './RevisionModal';
+import AdminSuccessModal from '../common/AdminSuccessModal';
+import ConfirmModal from '../common/ConfirmModal';
 import { pengajuanAPI } from '../../services/api';
 import { useAuthContext } from '../../contexts/AuthContext';
 
@@ -17,12 +19,15 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
     const [isUpdatingTahapan, setIsUpdatingTahapan] = useState(false);
     const [fileRekomendasi, setFileRekomendasi] = useState(null);
     const [isSelesaikan, setIsSelesaikan] = useState(false);
+    const [successModal, setSuccessModal] = useState({ isOpen: false, title: '', message: '', type: 'success' });
+    const [showConfirmSelesai, setShowConfirmSelesai] = useState(false);
 
     useEffect(() => {
         if (surat?.id_pengajuan) {
             fetchDokumen();
             fetchCatatanRevisi();
-            setSelectedTahapan(surat.tahapan_proses || '');
+            const tahapanStatuses = ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'];
+            setSelectedTahapan(tahapanStatuses.includes(surat.status) ? surat.status : '');
         }
     }, [surat]);
 
@@ -71,18 +76,25 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
         try {
             setIsProcessing(true);
             const result = await pengajuanAPI.updateStatus(surat.id_pengajuan, {
-                status_pengajuan: 'Dalam Proses',
-                tahapan_proses: 'Penjadwalan Rapat',
+                status_pengajuan: 'Penjadwalan Rapat',
                 progress_persen: 15
             });
 
             if (result.success) {
-                alert(`Dokumen dari ${surat.pemohon} diterima dan akan diproses lebih lanjut`);
-                onClose();
-                window.location.reload();
+                setSuccessModal({
+                    isOpen: true,
+                    title: 'Dokumen Diterima',
+                    message: `Dokumen dari ${surat.pemohon} telah diterima dan akan diproses lebih lanjut.`,
+                    type: 'success'
+                });
             }
         } catch (err) {
-            alert(`Error: ${err.message}`);
+            setSuccessModal({
+                isOpen: true,
+                title: 'Terjadi Kesalahan',
+                message: err.message,
+                type: 'error'
+            });
         } finally {
             setIsProcessing(false);
         }
@@ -98,19 +110,32 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
             });
 
             if (result.success) {
-                alert(`Dokumen dikembalikan kepada ${surat.pemohon} untuk perbaikan`);
+                setSuccessModal({
+                    isOpen: true,
+                    title: 'Dokumen Dikembalikan',
+                    message: `Dokumen telah dikembalikan kepada ${surat.pemohon} untuk perbaikan.`,
+                    type: 'success'
+                });
                 setShowRevisionModal(false);
-                onClose();
-                window.location.reload();
             }
         } catch (err) {
-            alert(`Error: ${err.message}`);
+            setSuccessModal({
+                isOpen: true,
+                title: 'Terjadi Kesalahan',
+                message: err.message,
+                type: 'error'
+            });
         }
     };
 
     const handleUpdateTahapan = async () => {
         if (!selectedTahapan) {
-            alert('Pilih tahapan terlebih dahulu');
+            setSuccessModal({
+                isOpen: true,
+                title: 'Perhatian',
+                message: 'Pilih tahapan terlebih dahulu.',
+                type: 'error'
+            });
             return;
         }
 
@@ -124,17 +149,25 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
             };
 
             const result = await pengajuanAPI.updateStatus(surat.id_pengajuan, {
-                tahapan_proses: selectedTahapan,
+                status_pengajuan: selectedTahapan,
                 progress_persen: progressMap[selectedTahapan] || surat.progress
             });
 
             if (result.success) {
-                alert('Tahapan proses berhasil diperbarui');
-                onClose();
-                window.location.reload();
+                setSuccessModal({
+                    isOpen: true,
+                    title: 'Tahapan Diperbarui',
+                    message: 'Tahapan proses berhasil diperbarui.',
+                    type: 'success'
+                });
             }
         } catch (err) {
-            alert(`Error: ${err.message}`);
+            setSuccessModal({
+                isOpen: true,
+                title: 'Terjadi Kesalahan',
+                message: err.message,
+                type: 'error'
+            });
         } finally {
             setIsUpdatingTahapan(false);
         }
@@ -142,13 +175,18 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
     const handleSelesaikanPengajuan = async () => {
         if (!fileRekomendasi) {
-            alert('Harap upload surat rekomendasi terlebih dahulu');
+            setSuccessModal({
+                isOpen: true,
+                title: 'File Belum Dipilih',
+                message: 'Harap upload surat rekomendasi terlebih dahulu.',
+                type: 'error'
+            });
             return;
         }
+        setShowConfirmSelesai(true);
+    };
 
-        if (!window.confirm('Apakah Anda yakin akan menyelesaikan pengajuan ini? Setelah diselesaikan, status tidak dapat diubah kembali.')) {
-            return;
-        }
+    const executeSelesaikanPengajuan = async () => {
 
         try {
             setIsSelesaikan(true);
@@ -156,12 +194,20 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
             const result = await pengajuanAPI.selesaikanPengajuan(surat.id_pengajuan, fileRekomendasi);
 
             if (result.success) {
-                alert('✅ Pengajuan berhasil diselesaikan!\n\nSurat rekomendasi telah diunggah dan status pengajuan diubah menjadi "Selesai".');
-                onClose();
-                window.location.reload();
+                setSuccessModal({
+                    isOpen: true,
+                    title: 'Pengajuan Diselesaikan',
+                    message: 'Surat rekomendasi telah diunggah dan status pengajuan diubah menjadi "Selesai".',
+                    type: 'success'
+                });
             }
         } catch (err) {
-            alert(`Error: ${err.message}`);
+            setSuccessModal({
+                isOpen: true,
+                title: 'Terjadi Kesalahan',
+                message: err.message,
+                type: 'error'
+            });
         } finally {
             setIsSelesaikan(false);
         }
@@ -233,7 +279,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                     <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${surat.status === 'Menunggu Verifikasi' ? 'bg-yellow-100 text-yellow-800' :
                                         surat.status === 'Perlu Perbaikan' ? 'bg-red-100 text-red-800' :
                                             surat.status === 'Dalam Proses' ? 'bg-blue-100 text-blue-800' :
-                                                surat.status === 'Selesai' ? 'bg-red-100 text-red-800' :
+                                                surat.status === 'Selesai' ? 'bg-green-100 text-green-800' :
                                                     'bg-gray-100 text-gray-800'
                                         }`}>
                                         {surat.status}
@@ -241,65 +287,33 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                 </div>
                             </div>
                         </div>
-                        {userRole === 'admin' && isVerificationMode && surat.status === 'Menunggu Verifikasi' && (
-                            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-5">
-                                <div className="flex items-start gap-3 mb-4">
-                                    <AlertCircle className="w-6 h-6 text-blue-600 shrink-0 mt-1" />
-                                    <div>
-                                        <h3 className="font-bold text-blue-900 mb-1">Verifikasi Kelengkapan Dokumen</h3>
-                                        <p className="text-sm text-blue-800">
-                                            Periksa kelengkapan dan keabsahan dokumen yang diajukan. Jika dokumen lengkap dan sesuai,
-                                            klik "Terima" untuk melanjutkan proses. Jika ada yang perlu diperbaiki, klik "Kembalikan"
-                                            dan berikan catatan perbaikan.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div className="flex gap-3">
-                                    <button
-                                        onClick={handleAccept}
-                                        disabled={isProcessing}
-                                        className="flex-1 bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400"
-                                    >
-                                        <Check className="w-5 h-5" />
-                                        Terima & Lanjutkan Proses
-                                    </button>
-                                    <button
-                                        onClick={() => setShowRevisionModal(true)}
-                                        disabled={isProcessing}
-                                        className="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400"
-                                    >
-                                        <XCircle className="w-5 h-5" />
-                                        Kembalikan untuk Perbaikan
-                                    </button>
-                                </div>
-                            </div>
-                        )}
 
-                        {/* Update Tahapan Proses - Untuk admin di halaman Dalam Proses */}
-                        {userRole === 'admin' && !isVerificationMode && surat.status === 'Dalam Proses' && (
-                            <div className="bg-linear-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg p-5">
+
+                        {/* Update Tahapan Proses - Untuk admin dengan status tahapan */}
+                        {userRole === 'admin' && !isVerificationMode && ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'].includes(surat.status) && (
+                            <div className="bg-gradient-to-r from-navy-50 to-blue-50 border-2 border-navy-200 rounded-lg p-5">
                                 <div className="flex items-start gap-3 mb-4">
-                                    <div className="bg-blue-100 rounded-full p-2">
-                                        <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <div className="bg-navy-100 rounded-full p-2">
+                                        <svg className="w-6 h-6 text-navy-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
                                         </svg>
                                     </div>
                                     <div className="flex-1">
-                                        <h3 className="font-bold text-blue-900 mb-1">Kelola Tahapan Proses</h3>
-                                        <p className="text-sm text-blue-800 mb-4">
+                                        <h3 className="font-bold text-navy-900 mb-1">Kelola Tahapan Proses</h3>
+                                        <p className="text-sm text-navy-700 mb-4">
                                             Update tahapan proses pengajuan surat sesuai dengan progress yang sedang dikerjakan.
                                         </p>
 
                                         <div className="space-y-3">
                                             <div>
-                                                <label className="block text-sm font-medium text-blue-900 mb-2">
-                                                    Tahapan Saat Ini: <span className="font-bold">{surat.tahapan_proses || '-'}</span>
+                                                <label className="block text-sm font-medium text-navy-700 mb-2">
+                                                    Tahapan Saat Ini: <span className="font-bold">{surat.status || '-'}</span>
                                                 </label>
                                                 <select
                                                     value={selectedTahapan}
                                                     onChange={(e) => setSelectedTahapan(e.target.value)}
                                                     disabled={isUpdatingTahapan}
-                                                    className="w-full px-4 py-3 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-900 font-medium"
+                                                    className="w-full px-4 py-3 border-2 border-navy-300 rounded-lg focus:border-transparent bg-white text-gray-900 font-medium"
                                                 >
                                                     <option value="">-- Pilih Tahapan Baru --</option>
                                                     <option value="Penjadwalan Rapat">Penjadwalan Rapat</option>
@@ -311,8 +325,8 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 
                                             <button
                                                 onClick={handleUpdateTahapan}
-                                                disabled={isUpdatingTahapan || !selectedTahapan || selectedTahapan === surat.tahapan_proses}
-                                                className="w-full bg-linear-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-indigo-900 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all"
+                                                disabled={isUpdatingTahapan || !selectedTahapan || selectedTahapan === surat.status}
+                                                className="w-full bg-navy-600 enabled:hover:bg-navy-700 text-white py-3 px-4 rounded-lg font-semibold flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-all shadow-sm enabled:hover:shadow-md"
                                             >
                                                 {isUpdatingTahapan ? (
                                                     <>
@@ -333,64 +347,58 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                         )}
 
                         {/* Selesaikan Pengajuan - Untuk admin di tahapan Proses Penandatanganan */}
-                        {userRole === 'admin' && !isVerificationMode && surat.status === 'Dalam Proses' && surat.tahapan_proses === 'Proses Penandatanganan' && (
-                            <div className="bg-linear-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-lg p-5">
-                                <div className="flex items-start gap-3 mb-4">
-                                    <div className="bg-green-100 rounded-full p-2">
-                                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="font-bold text-green-900 mb-1">Selesaikan Pengajuan</h3>
-                                        <p className="text-sm text-green-800 mb-4">
-                                            Upload surat rekomendasi untuk menyelesaikan pengajuan ini. Status akan berubah menjadi "Selesai" dan pengajuan tidak dapat diubah lagi.
-                                        </p>
+                        {userRole === 'admin' && !isVerificationMode && surat.status === 'Proses Penandatanganan' && (
+                            <div className="bg-green-50 border-2 border-green-300 rounded-lg p-4">
+                                <h3 className="text-lg font-bold text-green-900 mb-3">Selesaikan Pengajuan</h3>
 
-                                        <div className="space-y-3">
-                                            <div>
-                                                <label className="block text-sm font-medium text-green-900 mb-2">
-                                                    Upload Surat Rekomendasi <span className="text-red-500">*</span>
-                                                </label>
-                                                <p className="text-xs text-green-700 mb-2">Format: PDF atau Word (.doc, .docx) | Max: 10MB</p>
-                                                <input
-                                                    type="file"
-                                                    accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                                    onChange={(e) => setFileRekomendasi(e.target.files[0])}
-                                                    disabled={isSelesaikan}
-                                                    className="w-full px-4 py-3 border-2 border-green-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
-                                                />
-                                                {fileRekomendasi && (
-                                                    <p className="text-sm text-green-700 mt-2">
-                                                        ✅ File terpilih: <span className="font-semibold">{fileRekomendasi.name}</span>
-                                                    </p>
-                                                )}
-                                            </div>
-
-                                            <div className="bg-yellow-50 border border-yellow-300 rounded-lg p-3">
-                                                <p className="text-xs text-yellow-800">
-                                                    ⚠️ <strong>Perhatian:</strong> Setelah diselesaikan, status tidak dapat diubah kembali ke "Dalam Proses". Pastikan semua proses sudah lengkap sebelum menyelesaikan.
+                                <div className="border border-green-200 rounded-lg overflow-hidden bg-white">
+                                    {/* Content */}
+                                    <div className="p-4 space-y-3">
+                                        {/* File Input */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-900 mb-2">
+                                                Surat Rekomendasi <span className="text-red-500">*</span>
+                                            </label>
+                                            <input
+                                                type="file"
+                                                accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                                onChange={(e) => setFileRekomendasi(e.target.files[0])}
+                                                disabled={isSelesaikan}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white text-sm text-gray-900 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-sm file:font-medium file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
+                                            />
+                                            {fileRekomendasi && (
+                                                <p className="text-sm text-green-600 mt-2 flex items-center gap-1">
+                                                    <Check className="w-4 h-4" />
+                                                    <span className="font-medium">{fileRekomendasi.name}</span>
                                                 </p>
-                                            </div>
-
-                                            <button
-                                                onClick={handleSelesaikanPengajuan}
-                                                disabled={isSelesaikan || !fileRekomendasi}
-                                                className="w-full bg-linear-to-r from-green-600 to-emerald-600 text-white py-3 px-4 rounded-lg hover:from-green-700 hover:to-emerald-700 font-semibold flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
-                                            >
-                                                {isSelesaikan ? (
-                                                    <>
-                                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                                        Menyimpan...
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Check className="w-5 h-5" />
-                                                        Selesaikan Pengajuan
-                                                    </>
-                                                )}
-                                            </button>
+                                            )}
                                         </div>
+
+                                        {/* Warning */}
+                                        <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded">
+                                            <p className="text-xs text-yellow-800">
+                                                <strong>Perhatian:</strong> Status tidak dapat diubah kembali setelah diselesaikan.
+                                            </p>
+                                        </div>
+
+                                        {/* Button */}
+                                        <button
+                                            onClick={handleSelesaikanPengajuan}
+                                            disabled={isSelesaikan || !fileRekomendasi}
+                                            className="w-full bg-green-600 enabled:hover:bg-green-700 text-white py-2.5 px-4 rounded-lg font-semibold flex items-center justify-center gap-2 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed transition-all"
+                                        >
+                                            {isSelesaikan ? (
+                                                <>
+                                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                                    Menyimpan...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Check className="w-5 h-5" />
+                                                    Selesaikan Pengajuan
+                                                </>
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -489,7 +497,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                             {/* Content - File yang diupload */}
                                             <div className="flex items-center justify-between p-3 bg-white hover:bg-gray-50 transition-colors">
                                                 <div className="flex items-center gap-3 flex-1">
-                                                    <FileText className="w-5 h-5 text-blue-600 shrink-0" />
+                                                    <FileText className="w-5 h-5 text-navy-600 shrink-0" />
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-sm font-medium text-gray-900 truncate">
                                                             {dok.nama_file}
@@ -508,7 +516,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                 <div className="flex items-center gap-2 ml-4">
                                                     <button
                                                         onClick={() => handlePreview(dok)}
-                                                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors border border-blue-200"
+                                                        className="text-navy-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 transition-colors border border-blue-200"
                                                     >
                                                         <Eye className="w-4 h-4" />
                                                         <span className="text-sm font-medium">Lihat</span>
@@ -528,48 +536,73 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                             )}
                         </div>
 
-                        {/* Dokumen Rekomendasi - Hanya muncul untuk admin jika status Selesai */}
-                        {userRole === 'admin' && surat.status === 'Selesai' && surat.file_surat_rekomendasi && (
-                            <div className="bg-linear-to-r from-emerald-50 to-green-50 border-2 border-green-200 rounded-lg p-5">
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="bg-green-100 rounded-full p-2">
-                                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                    </div>
+                        {/* Verifikasi Kelengkapan Dokumen - Dipindahkan ke sini setelah Dokumen */}
+                        {userRole === 'admin' && isVerificationMode && surat.status === 'Menunggu Verifikasi' && (
+                            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-5">
+                                <div className="flex items-start gap-3 mb-4">
+                                    <AlertCircle className="w-6 h-6 text-navy-600 shrink-0 mt-1" />
                                     <div>
-                                        <h3 className="text-lg font-bold text-green-900">Dokumen Rekomendasi</h3>
-                                        <p className="text-sm text-green-700">Surat rekomendasi hasil proses pengajuan</p>
+                                        <h3 className="font-bold text-blue-900 mb-1">Verifikasi Kelengkapan Dokumen</h3>
+                                        <p className="text-sm text-blue-800">
+                                            Periksa kelengkapan dan keabsahan dokumen yang diajukan. Jika dokumen lengkap dan sesuai,
+                                            klik "Terima" untuk melanjutkan proses. Jika ada yang perlu diperbaiki, klik "Kembalikan"
+                                            dan berikan catatan perbaikan.
+                                        </p>
                                     </div>
                                 </div>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={handleAccept}
+                                        disabled={isProcessing}
+                                        className="flex-1 bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 transition-colors"
+                                    >
+                                        <Check className="w-5 h-5" />
+                                        Terima & Lanjutkan Proses
+                                    </button>
+                                    <button
+                                        onClick={() => setShowRevisionModal(true)}
+                                        disabled={isProcessing}
+                                        className="flex-1 bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400"
+                                    >
+                                        <XCircle className="w-5 h-5" />
+                                        Kembalikan untuk Perbaikan
+                                    </button>
+                                </div>
+                            </div>
+                        )}
 
-                                <div className="border border-green-200 rounded-lg overflow-hidden bg-white">
-                                    <div className="flex items-center justify-between p-4 hover:bg-green-50 transition-colors">
+                        {/* Dokumen Rekomendasi - Hanya muncul untuk admin jika status Selesai */}
+                        {userRole === 'admin' && surat.status === 'Selesai' && surat.file_surat_rekomendasi && (
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">Dokumen Rekomendasi</h3>
+                                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                                    {/* Header - Label Dokumen */}
+                                    <div className="bg-green-50 px-4 py-2 border-b border-green-100">
+                                        <p className="text-sm font-semibold text-green-900">
+                                            Surat Rekomendasi (Dokumen Final)
+                                        </p>
+                                        <p className="text-xs text-green-700 mt-0.5">
+                                            Diselesaikan: {surat.tanggal_selesai ? new Date(surat.tanggal_selesai).toLocaleDateString('id-ID', {
+                                                day: 'numeric',
+                                                month: 'long',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) : '-'}
+                                        </p>
+                                    </div>
+
+                                    {/* Content - File */}
+                                    <div className="flex items-center justify-between p-3 bg-white hover:bg-gray-50 transition-colors">
                                         <div className="flex items-center gap-3 flex-1">
-                                            <div className="bg-green-100 rounded-lg p-2">
-                                                <FileText className="w-6 h-6 text-green-600" />
-                                            </div>
-                                            <div className="flex-1">
-                                                <p className="text-sm font-semibold text-gray-900">
-                                                    Surat Rekomendasi - {surat.pemohon}
+                                            <FileText className="w-5 h-5 text-green-600 shrink-0" />
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-medium text-gray-900 truncate">
+                                                    Rekomendasi_{surat.pemohon?.replace(/\s+/g, '_')}.pdf
                                                 </p>
-                                                <p className="text-xs text-gray-600 mt-1">
-                                                    📅 Diselesaikan: {surat.tanggal_selesai ? new Date(surat.tanggal_selesai).toLocaleDateString('id-ID', {
-                                                        day: 'numeric',
-                                                        month: 'long',
-                                                        year: 'numeric',
-                                                        hour: '2-digit',
-                                                        minute: '2-digit'
-                                                    }) : '-'}
+                                                <p className="text-xs text-gray-500">
+                                                    Dokumen rekomendasi hasil pengajuan
                                                 </p>
-                                                <div className="mt-2 flex items-center gap-2">
-                                                    <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">
-                                                        ✅ Selesai
-                                                    </span>
-                                                    <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
-                                                        📄 Dokumen Final
-                                                    </span>
-                                                </div>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2 ml-4">
@@ -578,10 +611,10 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                     const baseURL = 'http://localhost:3001';
                                                     window.open(`${baseURL}${surat.file_surat_rekomendasi}`, '_blank');
                                                 }}
-                                                className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-4 py-2.5 rounded-lg transition-colors shadow-md hover:shadow-lg font-medium"
+                                                className="text-navy-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 transition-colors border border-blue-200"
                                             >
                                                 <Eye className="w-4 h-4" />
-                                                <span className="text-sm">Lihat</span>
+                                                <span className="text-sm font-medium">Lihat</span>
                                             </button>
                                             <button
                                                 onClick={async () => {
@@ -593,7 +626,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                         const blobUrl = window.URL.createObjectURL(blob);
                                                         const link = document.createElement('a');
                                                         link.href = blobUrl;
-                                                        link.download = `Rekomendasi_${surat.pemohon.replace(/\s+/g, '_')}.pdf`;
+                                                        link.download = `Rekomendasi_${surat.pemohon?.replace(/\s+/g, '_')}.pdf`;
                                                         document.body.appendChild(link);
                                                         link.click();
                                                         document.body.removeChild(link);
@@ -603,52 +636,44 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                         alert('Gagal mengunduh file. Silakan coba lagi.');
                                                     }
                                                 }}
-                                                className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2 px-4 py-2.5 rounded-lg transition-colors shadow-md hover:shadow-lg font-medium"
+                                                className="text-green-600 hover:text-green-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-green-50 transition-colors border border-green-200"
                                             >
                                                 <Download className="w-4 h-4" />
-                                                <span className="text-sm">Download</span>
+                                                <span className="text-sm font-medium">Download</span>
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div className="mt-3 bg-green-100 border border-green-300 rounded-lg p-3">
-                                    <p className="text-xs text-green-800">
-                                        ℹ️ <strong>Info:</strong> Dokumen ini merupakan surat rekomendasi final yang telah diupload oleh admin sebagai hasil dari proses pengajuan yang telah diselesaikan.
-                                    </p>
                                 </div>
                             </div>
                         )}
 
                         {/* Dokumen Rekomendasi - Untuk Pemohon (Kab/Kota) jika status Selesai */}
                         {userRole === 'kab/kota' && surat.status === 'Selesai' && surat.file_surat_rekomendasi && (
-                            <div className="bg-linear-to-br from-emerald-50 via-green-50 to-teal-50 border-2 border-green-300 rounded-xl p-6 shadow-lg">
-                                <div className="flex items-center gap-4 mb-5">
-                                    <div className="bg-linear-to-br from-green-500 to-emerald-600 rounded-full p-3 shadow-md">
-                                        <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900 mb-3">Dokumen Rekomendasi</h3>
+                                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                                    <div className="bg-green-50 px-4 py-3 border-b border-green-100">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-lg">🎉</span>
+                                            <p className="text-sm font-bold text-green-900">
+                                                Pengajuan Selesai!
+                                            </p>
+                                        </div>
+                                        <p className="text-xs text-green-700">
+                                            Surat rekomendasi sudah tersedia untuk diunduh
+                                        </p>
                                     </div>
-                                    <div>
-                                        <h3 className="text-xl font-bold text-green-900 flex items-center gap-2">
-                                            🎉 Pengajuan Anda Telah Selesai!
-                                        </h3>
-                                        <p className="text-sm text-green-700 mt-1">Surat rekomendasi hasil pengajuan sudah tersedia untuk Anda</p>
-                                    </div>
-                                </div>
 
-                                <div className="border-2 border-green-300 rounded-xl overflow-hidden bg-white shadow-md">
-                                    <div className="flex items-center justify-between p-5 hover:bg-green-50 transition-all duration-200">
-                                        <div className="flex items-center gap-4 flex-1">
-                                            <div className="bg-linear-to-br from-green-100 to-emerald-100 rounded-xl p-3 shadow-sm">
-                                                <FileText className="w-8 h-8 text-green-600" />
-                                            </div>
-                                            <div className="flex-1">
-                                                <p className="text-base font-bold text-gray-900 mb-1">
-                                                    📄 Surat Rekomendasi
+                                    {/* Content - File */}
+                                    <div className="flex items-center justify-between p-3 bg-white hover:bg-gray-50 transition-colors">
+                                        <div className="flex items-center gap-3 flex-1">
+                                            <FileText className="w-5 h-5 text-green-600 shrink-0" />
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-medium text-gray-900">
+                                                    Surat Rekomendasi
                                                 </p>
                                                 <p className="text-xs text-gray-500">
-                                                    📅 Diselesaikan pada: {surat.tanggal_selesai ? new Date(surat.tanggal_selesai).toLocaleDateString('id-ID', {
+                                                    Diselesaikan: {surat.tanggal_selesai ? new Date(surat.tanggal_selesai).toLocaleDateString('id-ID', {
                                                         day: 'numeric',
                                                         month: 'long',
                                                         year: 'numeric',
@@ -656,26 +681,18 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                         minute: '2-digit'
                                                     }) : '-'}
                                                 </p>
-                                                <div className="mt-3 flex items-center gap-2">
-                                                    <span className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                                        ✅ Selesai
-                                                    </span>
-                                                    <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                                                        📄 Dokumen Final
-                                                    </span>
-                                                </div>
                                             </div>
                                         </div>
-                                        <div className="flex flex-col gap-3 ml-4">
+                                        <div className="flex items-center gap-2 ml-4">
                                             <button
                                                 onClick={() => {
                                                     const baseURL = 'http://localhost:3001';
                                                     window.open(`${baseURL}${surat.file_surat_rekomendasi}`, '_blank');
                                                 }}
-                                                className="bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white flex items-center gap-2 px-5 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-xl font-semibold transform hover:scale-105"
+                                                className="text-navy-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 transition-colors border border-blue-200"
                                             >
-                                                <Eye className="w-5 h-5" />
-                                                <span>Lihat Dokumen</span>
+                                                <Eye className="w-4 h-4" />
+                                                <span className="text-sm font-medium">Lihat</span>
                                             </button>
                                             <button
                                                 onClick={async () => {
@@ -697,25 +714,11 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                         alert('Gagal mengunduh file. Silakan coba lagi.');
                                                     }
                                                 }}
-                                                className="bg-linear-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white flex items-center gap-2 px-5 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-xl font-semibold transform hover:scale-105"
+                                                className="text-green-600 hover:text-green-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-green-50 transition-colors border border-green-200"
                                             >
-                                                <Download className="w-5 h-5" />
-                                                <span>Download PDF</span>
+                                                <Download className="w-4 h-4" />
+                                                <span className="text-sm font-medium">Download</span>
                                             </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-4 bg-linear-to-r from-green-100 to-emerald-100 border-l-4 border-green-500 rounded-lg p-4 shadow-sm">
-                                    <div className="flex items-start gap-3">
-                                        <div className="text-green-600 text-xl mt-0.5">💡</div>
-                                        <div>
-                                            <p className="text-sm font-semibold text-green-900 mb-1">Informasi Penting:</p>
-                                            <p className="text-xs text-green-800 leading-relaxed">
-                                                Surat rekomendasi ini merupakan dokumen final hasil dari proses pengajuan yang telah Anda ajukan.
-                                                Silakan download dan simpan dokumen ini untuk keperluan administrasi Anda.
-                                                Jika memerlukan salinan tambahan, Anda dapat mengunduhnya kembali kapan saja.
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -731,6 +734,32 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                 onSubmit={handleRevision}
                 suratId={surat.id_pengajuan}
                 pemohon={surat.pemohon}
+            />
+
+            <AdminSuccessModal
+                isOpen={successModal.isOpen}
+                onClose={() => {
+                    setSuccessModal({ isOpen: false, title: '', message: '', type: 'success' });
+                    onClose();
+                    window.location.reload();
+                }}
+                title={successModal.title}
+                message={successModal.message}
+                type={successModal.type}
+            />
+
+            <ConfirmModal
+                isOpen={showConfirmSelesai}
+                title="Selesaikan Pengajuan?"
+                message="Apakah Anda yakin akan menyelesaikan pengajuan ini? Setelah diselesaikan, status tidak dapat diubah kembali."
+                confirmText="Ya, Selesaikan"
+                cancelText="Batal"
+                confirmColor="green"
+                onClose={() => setShowConfirmSelesai(false)}
+                onConfirm={() => {
+                    setShowConfirmSelesai(false);
+                    executeSelesaikanPengajuan();
+                }}
             />
         </>
     );

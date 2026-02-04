@@ -10,7 +10,7 @@ const StatusBadge = ({ status, dokumenLengkap, tahapan = null, showTahapan = fal
                 case 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi':
                     return 'bg-blue-100 text-blue-700 border-blue-300';
                 case 'Proses Penandatanganan':
-                    return 'bg-blue-100 text-blue-800 border-blue-300';
+                    return 'bg-purple-100 text-purple-800 border-purple-300';
                 default:
                     return 'bg-gray-100 text-gray-700 border-gray-300';
             }
@@ -27,7 +27,7 @@ const StatusBadge = ({ status, dokumenLengkap, tahapan = null, showTahapan = fal
     const getColor = () => {
         if (!dokumenLengkap) return 'bg-red-100 text-red-700 border-red-300';
         if (status === 'Perlu Perbaikan') return 'bg-red-100 text-red-700 border-red-300';
-        if (status.includes('Selesai')) return 'bg-red-100 text-red-700 border-red-300';
+        if (status.includes('Selesai')) return 'bg-green-100 text-green-700 border-green-300';
         if (status.includes('TTD')) return 'bg-gray-100 text-gray-700 border-gray-300';
         if (status.includes('Paraf')) return 'bg-blue-100 text-blue-700 border-blue-300';
         return 'bg-yellow-100 text-yellow-700 border-yellow-300';

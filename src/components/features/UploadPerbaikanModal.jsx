@@ -24,7 +24,7 @@ const UploadPerbaikanModal = ({ isOpen, onClose, surat, onSubmit }) => {
         <div className="p-6 border-b border-gray-200 flex items-center justify-between sticky top-0 bg-white">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-              <Upload className="w-5 h-5 text-blue-600" />
+              <Upload className="w-5 h-5 text-navy-600" />
             </div>
             <div>
               <h2 className="text-xl font-bold text-gray-900">
@@ -103,7 +103,7 @@ const UploadPerbaikanModal = ({ isOpen, onClose, surat, onSubmit }) => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-medium disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="flex-1 bg-navy-600 text-white py-3 px-4 rounded-lg hover:bg-navy-700 font-medium disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <Check className="w-5 h-5" />
               {isSubmitting ? "Mengirim..." : "Submit Perbaikan"}

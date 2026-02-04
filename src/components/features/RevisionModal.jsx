@@ -57,7 +57,7 @@ const RevisionModal = ({ isOpen, onClose, onSubmit, suratId, pemohon }) => {
                             value={catatan}
                             onChange={(e) => setCatatan(e.target.value)}
                             rows="8"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent resize-none"
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg  focus:border-transparent resize-none"
                             placeholder="Contoh:&#10;&#10;Mohon lengkapi/perbaiki dokumen berikut:&#10;1. Surat Pengantar dari Bupati/Wali Kota - belum dilampirkan&#10;2. ABK yang sudah disahkan - file tidak terbaca dengan jelas, mohon upload ulang dengan kualitas lebih baik&#10;3. Matriks pengelompokan urusan - belum sesuai format yang ditentukan"
                             required
                         />

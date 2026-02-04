@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FileText, Clock, CheckCircle, AlertCircle, TrendingUp, Users, Activity, XCircle } from 'lucide-react';
 import StatCard from '../components/common/StatCard';
 import SuratTable from '../components/features/SuratTable';
 import ModuleCard from '../components/common/ModuleCard';
-import ModuleSelector from '../components/features/ModuleSelector';
 import { pengajuanAPI, modulLayananAPI } from '../services/api';
 
 const DashboardAdmin = ({ onDetailClick }) => {
+    const navigate = useNavigate();
     const [selectedModule, setSelectedModule] = useState(null);
     const [selectedCard, setSelectedCard] = useState(null);
     const [data, setData] = useState([]);
@@ -47,20 +48,22 @@ const DashboardAdmin = ({ onDetailClick }) => {
 
     const getModuleStats = (moduleId) => {
         const moduleData = data.filter(s => s.id_modul === moduleId);
+        const tahapanStatuses = ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'];
         return {
             total: moduleData.length,
-            inProgress: moduleData.filter(s => s.status === 'Dalam Proses').length,
+            inProgress: moduleData.filter(s => tahapanStatuses.includes(s.status)).length,
             completed: moduleData.filter(s => s.status === 'Selesai').length,
             pending: moduleData.filter(s => s.status === 'Menunggu Verifikasi').length
         };
     };
 
     // Analytics calculations
+    const tahapanStatuses = ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'];
     const analytics = {
         // Status breakdown
         menungguVerifikasi: filteredData.filter(s => s.status === 'Menunggu Verifikasi').length,
         perluPerbaikan: filteredData.filter(s => s.status === 'Perlu Perbaikan').length,
-        dalamProses: filteredData.filter(s => s.status === 'Dalam Proses').length,
+        dalamProses: filteredData.filter(s => tahapanStatuses.includes(s.status)).length,
         selesai: filteredData.filter(s => s.status === 'Selesai').length,
 
         // Average progress
@@ -99,7 +102,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Memuat data...</p>
                 </div>
             </div>
@@ -113,7 +116,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
                     <p className="text-red-600 mb-4">Error: {error}</p>
                     <button
                         onClick={fetchData}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        className="px-4 py-2 bg-navy-600 text-white rounded-lg hover:bg-navy-700"
                     >
                         Coba Lagi
                     </button>
@@ -166,10 +169,10 @@ const DashboardAdmin = ({ onDetailClick }) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-500 mb-1">Dalam Proses</p>
-                            <p className="text-3xl font-bold text-blue-600">{analytics.dalamProses}</p>
+                            <p className="text-3xl font-bold text-navy-600">{analytics.dalamProses}</p>
                         </div>
                         <div className="bg-blue-50 p-3 rounded-lg">
-                            <Clock className="w-6 h-6 text-blue-600" />
+                            <Clock className="w-6 h-6 text-navy-600" />
                         </div>
                     </div>
                 </div>
@@ -203,7 +206,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-2">
                                 <div
-                                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                    className="bg-navy-600 h-2 rounded-full transition-all duration-300"
                                     style={{ width: `${analytics.averageProgress}%` }}
                                 />
                             </div>
@@ -322,18 +325,35 @@ const DashboardAdmin = ({ onDetailClick }) => {
             {/* Recent Submissions Table */}
             <div className="bg-white rounded-xl border border-gray-200">
                 <div className="p-6 border-b border-gray-200">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">Daftar Pengajuan</h3>
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900">Pengajuan Terbaru</h3>
+                        <span className="text-sm text-gray-500">5 pengajuan terbaru</span>
                     </div>
-                    <ModuleSelector selectedModule={selectedModule} onModuleChange={setSelectedModule} modules={modules} />
                 </div>
                 <div className="p-6">
-                    {filteredData.length === 0 ? (
+                    {data.length === 0 ? (
                         <div className="text-center py-8">
                             <p className="text-gray-500">Tidak ada data pengajuan</p>
                         </div>
                     ) : (
-                        <SuratTable data={filteredData} onDetailClick={onDetailClick} />
+                        <>
+                            <SuratTable
+                                data={data.slice(0, 5)}
+                                onDetailClick={onDetailClick}
+                                simple={true}
+                            />
+                            {data.length > 5 && (
+                                <div className="mt-6 text-center">
+                                    <button
+                                        onClick={() => navigate('/surat-masuk')}
+                                        className="inline-flex items-center gap-2 px-6 py-3 bg-navy-600 text-white font-medium rounded-lg hover:bg-navy-700 transition-colors duration-200 shadow-sm hover:shadow-md"
+                                    >
+                                        <FileText className="w-4 h-4" />
+                                        Lihat Selengkapnya
+                                    </button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

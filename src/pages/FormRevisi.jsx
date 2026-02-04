@@ -167,7 +167,7 @@ const FormRevisi = () => {
         return (
             <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
                 <div className="text-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy-600 mx-auto mb-2"></div>
                     <p className="text-gray-500">Memuat data...</p>
                 </div>
             </div>
@@ -181,7 +181,7 @@ const FormRevisi = () => {
                     <p className="text-red-500">Data pengajuan tidak ditemukan</p>
                     <button
                         onClick={() => navigate('/riwayat')}
-                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="mt-4 px-4 py-2 bg-navy-600 text-white rounded hover:bg-navy-700"
                     >
                         Kembali
                     </button>
@@ -322,7 +322,7 @@ const FormRevisi = () => {
                 <div className="flex gap-3">
                     <button
                         type="submit"
-                        className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        className="flex-1 bg-navy-600 text-white py-3 px-4 rounded-lg hover:bg-navy-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         disabled={loading || submitting}
                     >
                         <Send className="w-5 h-5" />

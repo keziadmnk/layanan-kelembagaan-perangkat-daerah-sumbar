@@ -281,7 +281,7 @@ const FormPengajuanBaru = ({ onSuccess }) => {
                 <div className="flex gap-3">
                     <button
                         type="submit"
-                        className="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        className="flex-1 bg-navy-600 text-white py-3 px-4 rounded-lg hover:bg-navy-700 font-medium flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         disabled={!selectedLayanan || loading || submitting}
                     >
                         <Send className="w-5 h-5" />

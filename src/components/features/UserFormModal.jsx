@@ -118,7 +118,7 @@ const UserFormModal = ({ mode, user, onClose, onSave }) => {
                     </div>
                     <button
                         onClick={onClose}
-                        className="text-white hover:bg-blue-800 p-2 rounded-lg transition"
+                        className="text-white hover:bg-navy-800 p-2 rounded-lg transition"
                     >
                         <X className="w-6 h-6" />
                     </button>

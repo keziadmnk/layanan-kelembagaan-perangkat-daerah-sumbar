@@ -53,7 +53,7 @@ const ModuleSelector = ({ selectedModule, onModuleChange, modules: modulesFromPr
             <button
                 onClick={() => onModuleChange(null)}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${selectedModule === null
-                    ? 'bg-blue-600 text-white shadow-md'
+                    ? 'bg-navy-600 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
             >
@@ -64,7 +64,7 @@ const ModuleSelector = ({ selectedModule, onModuleChange, modules: modulesFromPr
                     key={module.id_modul}
                     onClick={() => onModuleChange(module.id_modul)}
                     className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${selectedModule === module.id_modul
-                        ? 'bg-blue-600 text-white shadow-md'
+                        ? 'bg-navy-600 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                 >

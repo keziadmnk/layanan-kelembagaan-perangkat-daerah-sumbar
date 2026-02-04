@@ -165,7 +165,7 @@ const ProfilePage = () => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
+            <div className=" bg-navy-600  rounded-lg p-6 text-white">
                 <h1 className="text-2xl font-bold">Profile Saya</h1>
                 <p className="text-blue-100 mt-1">Kelola informasi profile dan keamanan akun Anda</p>
             </div>
@@ -201,11 +201,11 @@ const ProfilePage = () => {
                                         />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-blue-100">
-                                            <User className="w-16 h-16 text-blue-600" />
+                                            <User className="w-16 h-16 text-navy-600" />
                                         </div>
                                     )}
                                 </div>
-                                <label className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full cursor-pointer hover:bg-blue-700 transition-all shadow-lg group-hover:scale-110">
+                                <label className="absolute bottom-0 right-0 bg-navy-600 text-white p-2 rounded-full cursor-pointer hover:bg-navy-700 transition-all shadow-lg group-hover:scale-110">
                                     <Camera className="w-4 h-4" />
                                     <input
                                         type="file"
@@ -272,7 +272,7 @@ const ProfilePage = () => {
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                                    className="w-full bg-navy-600 text-white py-2.5 px-4 rounded-lg hover:bg-navy-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                                 >
                                     <Save className="w-5 h-5" />
                                     {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
@@ -399,7 +399,7 @@ const ProfilePage = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="flex-1 bg-blue-600 text-white py-2.5 px-4 rounded-lg hover:bg-blue-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                                className="flex-1 bg-navy-600 text-white py-2.5 px-4 rounded-lg hover:bg-navy-700 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                             >
                                 <Save className="w-5 h-5" />
                                 {loading ? 'Menyimpan...' : 'Simpan Password'}

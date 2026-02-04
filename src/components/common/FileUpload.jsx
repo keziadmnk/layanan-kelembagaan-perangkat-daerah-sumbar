@@ -116,7 +116,7 @@ const FileUpload = ({
                     {uploading ? (
                         <>
                             <Loader className="w-6 h-6 text-blue-500 mx-auto mb-2 animate-spin" />
-                            <p className="text-sm text-blue-600">Uploading...</p>
+                            <p className="text-sm text-navy-600">Uploading...</p>
                         </>
                     ) : error ? (
                         <>
@@ -155,7 +155,7 @@ const FileUpload = ({
                     : 'border-green-300 bg-green-50'
                     }`}>
                     <div className="flex items-center gap-2">
-                        <Check className={`w-5 h-5 ${uploadedFile.isExisting ? 'text-blue-600' : 'text-green-600'}`} />
+                        <Check className={`w-5 h-5 ${uploadedFile.isExisting ? 'text-navy-600' : 'text-green-600'}`} />
                         <div>
                             <p className={`text-sm font-medium ${uploadedFile.isExisting ? 'text-blue-900' : 'text-green-900'}`}>
                                 {uploadedFile.nama_file}

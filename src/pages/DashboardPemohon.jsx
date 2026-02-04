@@ -67,7 +67,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Memuat data...</p>
                 </div>
             </div>
@@ -81,7 +81,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
                     <p className="text-red-600 mb-4">Error: {error}</p>
                     <button
                         onClick={fetchData}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        className="px-4 py-2 bg-navy-600 text-white rounded-lg hover:bg-navy-700"
                     >
                         Coba Lagi
                     </button>
@@ -92,7 +92,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
 
     return (
         <div className="space-y-6">
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-8 rounded-lg shadow-lg">
+            <div className="bg-navy-600 text-white p-8 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold mb-2">Selamat Datang, {user?.kabupaten_kota || 'Pemohon'}</h2>
                 <p className="text-blue-100">Pantau status pengajuan Anda atau ajukan layanan baru</p>
             </div>
@@ -109,7 +109,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
                     label="Dalam Proses"
                     value={data.filter(s => s.status && !s.status.includes('Selesai') && s.status !== 'Perlu Perbaikan').length}
                     icon={Clock}
-                    valueColor="text-blue-600"
+                    valueColor="text-navy-600"
                     iconColor="text-blue-500"
                 />
                 <StatCard

@@ -124,7 +124,7 @@ const UserManagementPage = () => {
                 </div>
                 <button
                     onClick={handleCreate}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition flex items-center gap-2 shadow-lg"
+                    className="bg-navy-600 text-white px-6 py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition flex items-center gap-2 shadow-lg"
                 >
                     <Plus className="w-5 h-5" />
                     Tambah Akun Baru
@@ -150,7 +150,7 @@ const UserManagementPage = () => {
                         </p>
                     </div>
                     <div className="p-4 rounded-full bg-blue-100">
-                        <Users className="w-8 h-8 text-blue-600" />
+                        <Users className="w-8 h-8 text-navy-600" />
                     </div>
                 </div>
             </div>
@@ -191,7 +191,7 @@ const UserManagementPage = () => {
                                 <tr>
                                     <td colSpan="3" className="px-6 py-12 text-center">
                                         <div className="flex flex-col items-center justify-center">
-                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-3"></div>
+                                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600 mb-3"></div>
                                             <p className="text-gray-500">Memuat data...</p>
                                         </div>
                                     </td>
@@ -210,10 +210,10 @@ const UserManagementPage = () => {
                                 </tr>
                             ) : (
                                 paginatedUsers.map((user) => (
-                                    <tr key={user.id} className="hover:bg-blue-50 transition-colors duration-150">
+                                    <tr key={user.id} className="hover:bg-navy-50 transition-colors duration-150">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2 text-gray-700">
-                                                <User className="w-4 h-4 text-blue-600" />
+                                                <User className="w-4 h-4 text-navy-600" />
                                                 <div>
                                                     <div className="font-semibold text-gray-900">
                                                         {user.username}
@@ -234,7 +234,7 @@ const UserManagementPage = () => {
                                             <div className="flex items-center justify-center gap-2">
                                                 <button
                                                     onClick={() => handleEdit(user)}
-                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                                    className="p-2 text-navy-600 hover:bg-navy-50 rounded-lg transition-colors duration-200"
                                                     title="Edit"
                                                 >
                                                     <Edit className="w-4 h-4" />

@@ -5,7 +5,7 @@ import StatusBadge from '../common/StatusBadge';
 import SearchBar from '../common/SearchBar';
 import Pagination from '../common/Pagination';
 
-const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClick }) => {
+const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClick, simple = false }) => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
@@ -67,15 +67,16 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
             return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
         }
         return sortConfig.direction === 'asc'
-            ? <ArrowUp className="w-4 h-4 text-blue-600" />
-            : <ArrowDown className="w-4 h-4 text-blue-600" />;
+            ? <ArrowUp className="w-4 h-4 text-navy-600" />
+            : <ArrowDown className="w-4 h-4 text-navy-600" />;
     };
 
     // Pagination calculations
     const totalPages = Math.ceil(sortedData.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const paginatedData = sortedData.slice(startIndex, endIndex);
+    // Untuk mode simple, tampilkan semua data tanpa pagination
+    const paginatedData = simple ? sortedData : sortedData.slice(startIndex, endIndex);
 
     // Handle search - reset to page 1 when searching
     const handleSearchChange = (value) => {
@@ -95,7 +96,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
             'Penjadwalan Rapat': 'bg-yellow-100 text-yellow-800 border-yellow-300',
             'Pelaksanaan Rapat Fasilitasi': 'bg-orange-100 text-orange-800 border-orange-300',
             'Penyusunan Draft Rekomendasi/Hasil Fasilitasi': 'bg-blue-100 text-blue-800 border-blue-300',
-            'Proses Penandatanganan': 'bg-blue-100 text-blue-800 border-blue-300'
+            'Proses Penandatanganan': 'bg-purple-100 text-purple-800 border-purple-300'
         };
 
         const colorClass = badges[tahapan] || 'bg-gray-100 text-gray-800 border-gray-300';
@@ -145,18 +146,22 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
 
     return (
         <div className="space-y-4">
-            {/* Search Bar - untuk admin dan pemohon */}
-            <SearchBar
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder={isPemohon ? "Cari layanan" : "Cari pemohon atau layanan"}
-            />
+            {/* Search Bar - untuk admin dan pemohon (hide in simple mode) */}
+            {!simple && (
+                <>
+                    <SearchBar
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder={isPemohon ? "Cari layanan" : "Cari pemohon atau layanan"}
+                    />
 
-            {/* Search Result Count */}
-            {searchQuery && (
-                <div className="text-sm text-gray-600">
-                    Menampilkan {sortedData.length} dari {data.length} {isPemohon ? 'pengajuan' : 'surat'}
-                </div>
+                    {/* Search Result Count */}
+                    {searchQuery && (
+                        <div className="text-sm text-gray-600">
+                            Menampilkan {sortedData.length} dari {data.length} {isPemohon ? 'pengajuan' : 'surat'}
+                        </div>
+                    )}
+                </>
             )}
 
             <div className="overflow-x-auto">
@@ -184,7 +189,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                                 </button>
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {showTahapan ? 'Tahapan Proses' : 'Status'}
+                                {showTahapan ? 'Status' : 'Status'}
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 <button
@@ -220,12 +225,12 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         {showTahapan ? (
-                                            getTahapanBadge(surat.tahapan_proses)
-                                        ) : isPemohon && surat.status === 'Dalam Proses' && surat.tahapan_proses ? (
+                                            getTahapanBadge(surat.status)
+                                        ) : isPemohon && ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'].includes(surat.status) ? (
                                             <StatusBadge
-                                                status={surat.status}
+                                                status="Dalam Proses"
                                                 dokumenLengkap={true}
-                                                tahapan={surat.tahapan_proses}
+                                                tahapan={surat.status}
                                                 showTahapan={true}
                                             />
                                         ) : (
@@ -236,7 +241,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                                         <div className="flex items-center gap-2">
                                             <div className="flex-1 bg-gray-200 rounded-full h-2">
                                                 <div
-                                                    className="h-2 rounded-full bg-blue-600"
+                                                    className="h-2 rounded-full bg-navy-600"
                                                     style={{ width: `${surat.progress}%` }}
                                                 />
                                             </div>
@@ -248,7 +253,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                                             {/* Tombol Detail - Selalu ada */}
                                             <button
                                                 onClick={() => onDetailClick(surat)}
-                                                className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-blue-50 transition-colors"
+                                                className="text-navy-600 hover:text-blue-800 font-medium flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 transition-colors"
                                             >
                                                 <Eye className="w-4 h-4" />
                                                 Detail
@@ -291,8 +296,8 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                 </table>
             </div>
 
-            {/* Pagination */}
-            {paginatedData && paginatedData.length > 0 && (
+            {/* Pagination (hide in simple mode) */}
+            {!simple && paginatedData && paginatedData.length > 0 && (
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

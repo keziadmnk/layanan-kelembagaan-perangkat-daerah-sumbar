@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, FileText, ArrowUpDown, ArrowUp, ArrowDown, Eye } from 'lucide-react';
-import StatCard from '../components/common/StatCard';
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import { pengajuanAPI } from '../services/api';
@@ -12,6 +11,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedFilter, setSelectedFilter] = useState(null); // null = Semua, 'menunggu' = Menunggu Verifikasi, 'perbaikan' = Perlu Perbaikan
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -44,7 +44,16 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         }
     };
 
-    const filteredData = data.filter(surat => {
+    // Filter by status first
+    const statusFilteredData = data.filter(surat => {
+        if (selectedFilter === null) return true; // Semua
+        if (selectedFilter === 'menunggu') return surat.status === 'Menunggu Verifikasi';
+        if (selectedFilter === 'perbaikan') return surat.status === 'Perlu Perbaikan';
+        return true;
+    });
+
+    // Then filter by search term
+    const filteredData = statusFilteredData.filter(surat => {
         if (!searchTerm.trim()) return true;
         const pemohonName = surat.pemohon?.toLowerCase() || '';
         const namaLayanan = surat.nama_layanan?.toLowerCase() || '';
@@ -79,8 +88,8 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
             return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
         }
         return sortConfig.direction === 'asc'
-            ? <ArrowUp className="w-4 h-4 text-blue-600" />
-            : <ArrowDown className="w-4 h-4 text-blue-600" />;
+            ? <ArrowUp className="w-4 h-4 text-navy-600" />
+            : <ArrowDown className="w-4 h-4 text-navy-600" />;
     };
 
     // Pagination calculations
@@ -104,7 +113,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Memuat data...</p>
                 </div>
             </div>
@@ -118,7 +127,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                     <p className="text-red-600 mb-4">Error: {error}</p>
                     <button
                         onClick={fetchData}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        className="px-4 py-2 bg-navy-600 text-white rounded-lg hover:bg-navy-700"
                     >
                         Coba Lagi
                     </button>
@@ -128,48 +137,74 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Verifikasi Surat</h1>
-                    <p className="text-gray-600 mt-1">
-                        Verifikasi kelengkapan dokumen surat yang baru masuk
-                    </p>
+        <div className="bg-white rounded-lg shadow border border-gray-200">
+            <div className="p-6 border-b border-gray-200">
+                <div className="flex justify-between items-center">
+                    {/* Kiri: Judul + Kategori */}
+                    <div className="flex-1">
+                        <h2 className="text-xl font-bold text-gray-900 mb-4">Verifikasi Surat</h2>
+                        {/* Filter Status - Seperti Module Selector */}
+                        <div className="flex gap-2 flex-wrap">
+                            <button
+                                onClick={() => {
+                                    setSelectedFilter(null);
+                                    setCurrentPage(1);
+                                }}
+                                className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${selectedFilter === null
+                                    ? 'bg-navy-600 text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                            >
+                                <FileText className="w-4 h-4" />
+                                <span>Semua</span>
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setSelectedFilter('menunggu');
+                                    setCurrentPage(1);
+                                }}
+                                className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${selectedFilter === 'menunggu'
+                                    ? 'bg-navy-600 text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                            >
+                                <AlertCircle className="w-4 h-4" />
+                                <span>Menunggu Verifikasi</span>
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setSelectedFilter('perbaikan');
+                                    setCurrentPage(1);
+                                }}
+                                className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${selectedFilter === 'perbaikan'
+                                    ? 'bg-navy-600 text-white shadow-md'
+                                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                    }`}
+                            >
+                                <XCircle className="w-4 h-4" />
+                                <span>Perlu Perbaikan</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Kanan: Total Pengajuan */}
+                    <div className="text-center ml-6">
+                        <p className="text-sm text-gray-500 mb-1">Total Pengajuan</p>
+                        <p className="text-3xl font-bold text-gray-900">{filteredData.length}</p>
+                    </div>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <StatCard
-                    label="Menunggu Verifikasi"
-                    value={data.filter(s => s.status === 'Menunggu Verifikasi').length}
-                    icon={AlertCircle}
-                    valueColor="text-yellow-600"
-                    iconColor="text-yellow-500"
+            <div className="p-6">
+                <SearchBar
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Cari pemohon atau layanan"
                 />
-                <StatCard
-                    label="Perlu Perbaikan"
-                    value={data.filter(s => s.status === 'Perlu Perbaikan').length}
-                    icon={XCircle}
-                    valueColor="text-red-600"
-                    iconColor="text-red-500"
-                />
-                <StatCard
-                    label="Total Belum Verifikasi"
-                    value={data.length}
-                    icon={FileText}
-                    valueColor="text-blue-600"
-                    iconColor="text-blue-500"
-                />
-            </div>
 
-            <SearchBar
-                value={searchTerm}
-                onChange={handleSearchChange}
-                placeholder="Cari pemohon atau layanan"
-            />
-
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto mt-4">
                     <table className="w-full">
                         <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                             <tr>
@@ -212,7 +247,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                                 paginatedData.map((surat, index) => (
                                     <tr
                                         key={surat.id_pengajuan}
-                                        className="hover:bg-blue-50 transition-colors duration-150 cursor-pointer"
+                                        className="hover:bg-navy-50 transition-colors duration-150 cursor-pointer"
                                         onClick={() => onDetailClick(surat)}
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -251,7 +286,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                                                     e.stopPropagation();
                                                     onDetailClick(surat);
                                                 }}
-                                                className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                                                className="text-navy-600 hover:text-blue-800 font-medium flex items-center gap-1"
                                             >
                                                 <Eye className="w-4 h-4" />
                                                 Detail

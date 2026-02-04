@@ -72,7 +72,7 @@ const NotificationPage = () => {
     const getNotificationIcon = (tipe) => {
         switch (tipe) {
             case 'pengajuan_baru':
-                return <FileText className="w-5 h-5 text-blue-600" />;
+                return <FileText className="w-5 h-5 text-navy-600" />;
             case 'perubahan_status':
                 return <AlertCircle className="w-5 h-5 text-orange-600" />;
             default:
@@ -128,7 +128,7 @@ const NotificationPage = () => {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Memuat notifikasi...</p>
                 </div>
             </div>
@@ -148,7 +148,7 @@ const NotificationPage = () => {
                     {unreadCount > 0 && (
                         <button
                             onClick={handleMarkAllAsRead}
-                            className="flex items-center gap-2 px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="flex items-center gap-2 px-4 py-2 text-navy-600 hover:bg-navy-50 rounded-lg transition-colors"
                         >
                             <CheckCheck className="w-4 h-4" />
                             Tandai Semua Dibaca
@@ -160,7 +160,7 @@ const NotificationPage = () => {
                     <button
                         onClick={() => handleFilterChange('all')}
                         className={`px-4 py-2 font-medium transition-colors relative ${filter === 'all'
-                            ? 'text-blue-600 border-b-2 border-blue-600'
+                            ? 'text-navy-600 border-b-2 border-navy-600'
                             : 'text-gray-600 hover:text-gray-900'
                             }`}
                     >
@@ -169,7 +169,7 @@ const NotificationPage = () => {
                     <button
                         onClick={() => handleFilterChange('unread')}
                         className={`px-4 py-2 font-medium transition-colors relative ${filter === 'unread'
-                            ? 'text-blue-600 border-b-2 border-blue-600'
+                            ? 'text-navy-600 border-b-2 border-navy-600'
                             : 'text-gray-600 hover:text-gray-900'
                             }`}
                     >
@@ -178,7 +178,7 @@ const NotificationPage = () => {
                     <button
                         onClick={() => handleFilterChange('read')}
                         className={`px-4 py-2 font-medium transition-colors relative ${filter === 'read'
-                            ? 'text-blue-600 border-b-2 border-blue-600'
+                            ? 'text-navy-600 border-b-2 border-navy-600'
                             : 'text-gray-600 hover:text-gray-900'
                             }`}
                     >
@@ -216,7 +216,7 @@ const NotificationPage = () => {
                                                 {notif.judul}
                                             </h3>
                                             {!notif.is_read && (
-                                                <span className="w-2 h-2 bg-blue-600 rounded-full flex-shrink-0 mt-2"></span>
+                                                <span className="w-2 h-2 bg-navy-600 rounded-full flex-shrink-0 mt-2"></span>
                                             )}
                                         </div>
                                         <p className="text-gray-700 mb-2 text-sm">{notif.pesan}</p>
@@ -230,7 +230,7 @@ const NotificationPage = () => {
                                         {!notif.is_read && (
                                             <button
                                                 onClick={() => handleMarkAsRead(notif.id_notifikasi)}
-                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="p-2 text-navy-600 hover:bg-navy-50 rounded-lg transition-colors"
                                                 title="Tandai sudah dibaca"
                                             >
                                                 <Check className="w-4 h-4" />

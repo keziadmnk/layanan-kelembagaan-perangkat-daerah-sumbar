@@ -59,8 +59,8 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
                                 onMouseLeave={() => setHoveredItem(null)}
                                 className={`w-full flex items-center ${isOpen ? 'gap-3 px-4' : 'justify-center px-2'
                                     } py-3 rounded-xl text-left transition-all duration-200 relative ${isActive
-                                        ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
-                                        : 'text-gray-700 hover:bg-blue-50 hover:text-blue-700'
+                                        ? 'bg-navy-600 text-white shadow-lg'
+                                        : 'text-gray-700 hover:bg-navy-50 hover:text-blue-700'
                                     }`}
                             >
                                 <Icon className={`${isOpen ? 'w-5 h-5' : 'w-6 h-6'} flex-shrink-0`} />

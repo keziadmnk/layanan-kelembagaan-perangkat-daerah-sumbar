@@ -17,9 +17,6 @@ const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
     };
 
     const getAccentColor = (namaModul) => {
-        if (namaModul.toLowerCase().includes('evaluasi')) return 'blue';
-        if (namaModul.toLowerCase().includes('ranperda')) return 'green';
-        if (namaModul.toLowerCase().includes('uptd')) return 'purple';
         return 'blue';
     };
 
@@ -29,8 +26,8 @@ const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
             borderSelected: 'border-blue-400',
             iconBg: 'bg-blue-50',
             iconBgSelected: 'bg-blue-100',
-            iconText: 'text-blue-600',
-            badge: 'bg-blue-600',
+            iconText: 'text-navy-600',
+            badge: 'bg-navy-600',
             statBg: 'bg-blue-50',
             statBgSelected: 'bg-blue-100',
             statText: 'text-blue-700'
@@ -68,8 +65,8 @@ const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
         <div
             onClick={onClick}
             className={`bg-white rounded-xl p-6 cursor-pointer transition-all duration-200 ${isSelected
-                    ? `border-2 ${colors.borderSelected} shadow-lg`
-                    : `border-2 ${colors.border} hover:shadow-lg`
+                ? `border-2 ${colors.borderSelected} shadow-lg`
+                : `border-2 ${colors.border} hover:shadow-lg`
                 }`}
         >
             {/* Header with Icon and Badge */}
@@ -79,7 +76,7 @@ const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
                 </div>
                 {stats && (
                     <div className={`${colors.badge} text-white px-3 py-1.5 rounded-lg`}>
-                        <span className="text-sm font-semibold">{stats.total} Surat</span>
+                        <span className="text-sm font-semibold">{stats.total} Pengajuan</span>
                     </div>
                 )}
             </div>
