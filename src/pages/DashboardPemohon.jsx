@@ -7,6 +7,7 @@ import ModuleCard from '../components/common/ModuleCard';
 import ModuleSelector from '../components/features/ModuleSelector';
 import { pengajuanAPI, modulLayananAPI } from '../services/api';
 import { useAuthContext } from '../contexts/AuthContext';
+import dashboardImage from '../assets/dashboard.png';
 
 const DashboardPemohon = ({ onDetailClick }) => {
     const { user } = useAuthContext();
@@ -92,9 +93,21 @@ const DashboardPemohon = ({ onDetailClick }) => {
 
     return (
         <div className="space-y-6">
-            <div className="bg-navy-600 text-white p-8 rounded-lg shadow-lg">
-                <h2 className="text-2xl font-bold mb-2">Selamat Datang, {user?.kabupaten_kota || 'Pemohon'}</h2>
-                <p className="text-blue-100">Pantau status pengajuan Anda atau ajukan layanan baru</p>
+            <div className="relative p-8 rounded-lg shadow-lg overflow-hidden">
+                {/* Background Image */}
+                <img
+                    src={dashboardImage}
+                    alt="Dashboard Background"
+                    className="absolute inset-0 w-full h-full object-cover"
+                />
+                {/* Gradient Overlay - Gelap di kiri, Terang di kanan */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
+                
+                {/* Content */}
+                <div className="relative z-10">
+                    <h2 className="text-2xl font-bold mb-2 text-white">Selamat Datang, {user?.kabupaten_kota || 'Pemohon'}</h2>
+                    <p className="text-blue-100">Pantau status pengajuan Anda atau ajukan layanan baru</p>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

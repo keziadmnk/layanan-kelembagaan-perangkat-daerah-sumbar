@@ -5,6 +5,7 @@ import StatCard from '../components/common/StatCard';
 import SuratTable from '../components/features/SuratTable';
 import ModuleCard from '../components/common/ModuleCard';
 import { pengajuanAPI, modulLayananAPI } from '../services/api';
+import dashboardImage from '../assets/dashboard.png';
 
 const DashboardAdmin = ({ onDetailClick }) => {
     const navigate = useNavigate();
@@ -126,21 +127,39 @@ const DashboardAdmin = ({ onDetailClick }) => {
     }
 
     return (
-        <div className="space-y-4">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h2 className="mt-4 text-3xl font-bold text-gray-900">Selamat Datang, Admin</h2>
-                    <p className="text-gray-500 mt-1">Dashboard Monitoring dan analisis pengajuan layanan kelembagaan</p>
-                </div>
-                <div className="text-right">
-                    <p className="text-sm text-gray-500">Total Pengajuan</p>
-                    <p className="text-3xl font-bold text-gray-900">{data.length}</p>
+        <div className="space-y-6">
+            {/* Header with Background Image */}
+            <div className="relative p-8 rounded-lg shadow-lg overflow-hidden">
+                {/* Background Image */}
+                <img
+                    src={dashboardImage}
+                    alt="Dashboard Background"
+                    className="absolute inset-0 w-full h-full object-cover"
+                />
+                {/* Gradient Overlay - Gelap di kiri, Terang di kanan */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
+                
+                {/* Content */}
+                <div className="relative z-10">
+                    <h2 className="text-2xl font-bold mb-2 text-white">Selamat Datang, Admin</h2>
+                    <p className="text-blue-100">Dashboard Monitoring dan analisis pengajuan layanan kelembagaan</p>
                 </div>
             </div>
 
-            {/* Primary Stats - Minimalist Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Primary Stats - 5 Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm font-medium text-gray-500 mb-1">Total Pengajuan</p>
+                            <p className="text-3xl font-bold text-gray-900">{data.length}</p>
+                        </div>
+                        <div className="bg-gray-50 p-3 rounded-lg">
+                            <FileText className="w-6 h-6 text-gray-600" />
+                        </div>
+                    </div>
+                </div>
+
                 <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
                         <div>
