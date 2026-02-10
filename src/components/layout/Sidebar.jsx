@@ -79,27 +79,7 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
                         );
                     })}
 
-                    <div className="pt-4 mt-4 border-t border-gray-200">
-                        <button
-                            onMouseEnter={() => setHoveredItem('logout')}
-                            onMouseLeave={() => setHoveredItem(null)}
-                            className={`w-full flex items-center ${isOpen ? 'gap-3 px-4' : 'justify-center px-2'
-                                } py-3 rounded-xl text-left text-red-600 hover:bg-red-50 transition-all duration-200 relative`}
-                        >
-                            <LogOut className={`${isOpen ? 'w-5 h-5' : 'w-6 h-6'} flex-shrink-0`} />
-                            {isOpen && (
-                                <span className="whitespace-nowrap font-medium">
-                                    Keluar
-                                </span>
-                            )}
-                            {!isOpen && hoveredItem === 'logout' && (
-                                <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-[60] shadow-xl pointer-events-none">
-                                    Keluar
-                                    <div className="absolute top-1/2 -left-1 w-2 h-2 bg-gray-900 transform -translate-y-1/2 rotate-45"></div>
-                                </div>
-                            )}
-                        </button>
-                    </div>
+                    
                 </nav>
             </aside>
         </>

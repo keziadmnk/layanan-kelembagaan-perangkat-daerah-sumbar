@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bell, Check, CheckCheck, Trash2, Clock, FileText, AlertCircle } from 'lucide-react';
+import { Bell, Trash2, Clock, FileText, AlertCircle } from 'lucide-react';
 import Pagination from '../components/common/Pagination';
 import { notifikasiAPI } from '../services/api';
 import { useAuthContext } from '../contexts/AuthContext';
@@ -26,35 +26,23 @@ const NotificationPage = () => {
             const response = await notifikasiAPI.getByUser(user.id);
             if (response.success) {
                 setNotifications(response.data);
+
+                // AUTO MARK ALL AS READ - seperti web pada umumnya
+                // Begitu halaman notifikasi dibuka, semua notif yang belum dibaca langsung di-mark sebagai sudah dibaca
+                const hasUnread = response.data.some(notif => !notif.is_read);
+                if (hasUnread) {
+                    // Mark all as read di backend
+                    await notifikasiAPI.markAllAsRead(user.id);
+                    // Update state lokal
+                    setNotifications(prev =>
+                        prev.map(notif => ({ ...notif, is_read: true }))
+                    );
+                }
             }
         } catch (error) {
             console.error('Error fetching notifications:', error);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleMarkAsRead = async (id) => {
-        try {
-            await notifikasiAPI.markAsRead(id);
-            setNotifications(prev =>
-                prev.map(notif =>
-                    notif.id_notifikasi === id ? { ...notif, is_read: true } : notif
-                )
-            );
-        } catch (error) {
-            console.error('Error marking as read:', error);
-        }
-    };
-
-    const handleMarkAllAsRead = async () => {
-        try {
-            await notifikasiAPI.markAllAsRead(user.id);
-            setNotifications(prev =>
-                prev.map(notif => ({ ...notif, is_read: true }))
-            );
-        } catch (error) {
-            console.error('Error marking all as read:', error);
         }
     };
 
@@ -142,18 +130,11 @@ const NotificationPage = () => {
                     <div>
                         <h1 className="text-2xl font-bold text-gray-900">Notifikasi</h1>
                         <p className="text-sm text-gray-600">
-                            {unreadCount > 0 ? `${unreadCount} notifikasi belum dibaca` : 'Semua notifikasi sudah dibaca'}
+                            {notifications.length > 0
+                                ? `${notifications.length} notifikasi`
+                                : 'Belum ada notifikasi'}
                         </p>
                     </div>
-                    {unreadCount > 0 && (
-                        <button
-                            onClick={handleMarkAllAsRead}
-                            className="flex items-center gap-2 px-4 py-2 text-navy-600 hover:bg-navy-50 rounded-lg transition-colors"
-                        >
-                            <CheckCheck className="w-4 h-4" />
-                            Tandai Semua Dibaca
-                        </button>
-                    )}
                 </div>
 
                 <div className="flex gap-2 border-b border-gray-200">
@@ -200,24 +181,19 @@ const NotificationPage = () => {
                     paginatedNotifications.map((notif) => (
                         <div
                             key={notif.id_notifikasi}
-                            className={`bg-white rounded-lg shadow border transition-all hover:shadow-md ${notif.is_read ? 'border-gray-200' : 'border-blue-200 bg-blue-50/30'
-                                }`}
+                            className="bg-white rounded-lg shadow border border-gray-200 transition-all hover:shadow-md"
                         >
                             <div className="p-4">
                                 <div className="flex items-start gap-4">
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${notif.is_read ? 'bg-gray-100' : 'bg-blue-100'
-                                        }`}>
+                                    <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
                                         {getNotificationIcon(notif.tipe)}
                                     </div>
 
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-start justify-between gap-2 mb-1">
-                                            <h3 className={`font-semibold ${notif.is_read ? 'text-gray-900' : 'text-gray-900'}`}>
+                                            <h3 className="font-semibold text-gray-900">
                                                 {notif.judul}
                                             </h3>
-                                            {!notif.is_read && (
-                                                <span className="w-2 h-2 bg-navy-600 rounded-full flex-shrink-0 mt-2"></span>
-                                            )}
                                         </div>
                                         <p className="text-gray-700 mb-2 text-sm">{notif.pesan}</p>
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -227,15 +203,6 @@ const NotificationPage = () => {
                                     </div>
 
                                     <div className="flex items-center gap-2 flex-shrink-0">
-                                        {!notif.is_read && (
-                                            <button
-                                                onClick={() => handleMarkAsRead(notif.id_notifikasi)}
-                                                className="p-2 text-navy-600 hover:bg-navy-50 rounded-lg transition-colors"
-                                                title="Tandai sudah dibaca"
-                                            >
-                                                <Check className="w-4 h-4" />
-                                            </button>
-                                        )}
                                         <button
                                             onClick={() => handleDelete(notif.id_notifikasi)}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"

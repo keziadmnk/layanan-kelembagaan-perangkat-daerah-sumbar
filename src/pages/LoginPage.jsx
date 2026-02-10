@@ -69,11 +69,11 @@ const LoginPage = () => {
           {/* Title Section - Above Login Card with slide-in animation */}
           <div className="text-center mb-8 animate-slide-down">
             
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">
-              Sistem Pengajuan dan Tracking Layanan
+            <h1 className="text-3xl font-bold mb-2 font-bold text-navy-600 leading-tight tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }} >
+              LENTERA
             </h1>
             <p className="text-lg text-gray-600">
-              Kelembagaan Provinsi Sumatera Barat
+              Layanan Terpadu Kelembagaan Kabupaten/Kota
             </p>
           </div>
 

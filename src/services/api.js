@@ -84,6 +84,15 @@ export const userAPI = {
         } catch (error) {
             throw error.response?.data || { message: 'Gagal menghapus akun' };
         }
+    },
+
+    getKabKotaInfo: async () => {
+        try {
+            const response = await axios.get(`${API_URL}/users/kab-kota-info`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal mengambil informasi kabupaten/kota' };
+        }
     }
 };
 

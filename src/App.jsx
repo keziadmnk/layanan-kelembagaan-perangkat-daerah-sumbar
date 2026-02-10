@@ -1,10 +1,10 @@
-/** @format */
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuthContext } from './contexts/AuthContext';
 import ProtectedRoute from './components/layout/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
+import LandingPage from './pages/LandingPage';
+import KabKotaInfoPage from './pages/KabKotaInfoPage';
 import LoginPage from './pages/LoginPage';
 import DashboardAdmin from './pages/DashboardAdmin';
 import DashboardPemohon from './pages/DashboardPemohon';
@@ -36,8 +36,11 @@ const AppRoutes = () => {
   if (!isAuthenticated) {
     return (
       <Routes>
+        <Route path="/landing-page" element={<LandingPage />} />
+        <Route path="/kab-kota-info" element={<KabKotaInfoPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/landing-page" replace />} />
+        <Route path="*" element={<Navigate to="/landing-page" replace />} />
       </Routes>
     );
   }

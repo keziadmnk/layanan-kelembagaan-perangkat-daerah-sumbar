@@ -106,7 +106,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
                 {/* Content */}
                 <div className="relative z-10">
                     <h2 className="text-2xl font-bold mb-2 text-white">Selamat Datang, {user?.kabupaten_kota || 'Pemohon'}</h2>
-                    <p className="text-blue-100">Pantau status pengajuan Anda atau ajukan layanan baru</p>
+                    <p className="text-blue-100 ">Pantau Status Pengajuan Anda atau Ajukan Layanan Baru</p>
                 </div>
             </div>
 

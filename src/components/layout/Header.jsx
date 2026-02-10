@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { notifikasiAPI } from '../../services/api';
+import provSumbarLogo from '../../assets/prov-sumbar.png';
 
 const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUserMenu, sidebarOpen }) => {
     const navigate = useNavigate();
@@ -38,6 +39,9 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
     };
 
     const handleNotificationClick = () => {
+        // Set badge to 0 immediately for instant visual feedback
+        // The actual mark-as-read happens in NotificationPage
+        setUnreadCount(0);
         navigate('/notifikasi');
     };
 
@@ -52,19 +56,22 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                         <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
 
-                    <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-3 sm:gap-4">
                         <img
-                            src="/biro-organisasi-logo.png"
-                            alt="Logo Biro Organisasi"
-                            className="h-8 w-8 sm:h-10 sm:w-10 object-contain flex-shrink-0"
+                            src={provSumbarLogo}
+                            alt="Logo Pemprov Sumbar"
+                            className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0"
                         />
-                        <div className="hidden md:block">
-                            <h1 className="text-sm lg:text-lg xl:text-xl font-bold text-gray-900 leading-tight">
-                                Sistem Pengajuan dan Tracking Layanan Kelembagaan
-                            </h1>
-                            <p className="text-xs lg:text-sm text-gray-600 leading-tight">
-                                Biro Organisasi Setda Provinsi Sumatera Barat
-                            </p>
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="hidden sm:block w-[3px] h-10 sm:h-12 bg-gradient-to-b from-navy-600 to-yellow-600 rounded-full"></div>
+                            <div>
+                                <h1 className="text-base sm:text-lg lg:text-xl font-bold text-navy-600 leading-tight tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }}>
+                                    LENTERA
+                                </h1>
+                                <p className="text-[10px] sm:text-xs text-gray-600 leading-tight tracking-wider">
+                                    Layanan Terpadu Kelembagaan Kabupaten/Kota
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -130,7 +137,7 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                                         className="w-full px-4 py-3 text-left hover:bg-red-50 transition-all text-red-600 flex items-center gap-2"
                                     >
                                         <LogOut className="w-4 h-4" />
-                                        <span className="font-medium text-sm">Logout</span>
+                                        <span className="font-medium text-sm">Keluar</span>
                                     </button>
                                 </div>
                             </>

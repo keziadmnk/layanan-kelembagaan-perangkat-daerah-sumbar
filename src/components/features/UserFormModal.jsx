@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { X, Eye, EyeOff, User, MapPin } from 'lucide-react';
+import { X, Eye, EyeOff, User, MapPin, Phone, Home } from 'lucide-react';
 
 const UserFormModal = ({ mode, user, onClose, onSave }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         kabupaten_kota: '',
         username: '',
-        password: ''
+        password: '',
+        alamat: '',
+        no_hp: ''
     });
 
     const [errors, setErrors] = useState({});
@@ -42,7 +44,9 @@ const UserFormModal = ({ mode, user, onClose, onSave }) => {
             setFormData({
                 kabupaten_kota: user.kabupaten_kota || '',
                 username: user.username || '',
-                password: '' // Don't show existing password
+                password: '', // Don't show existing password
+                alamat: user.alamat || '',
+                no_hp: user.no_hp || ''
             });
         } else {
             // Set default password for new user
@@ -217,6 +221,42 @@ const UserFormModal = ({ mode, user, onClose, onSave }) => {
                             {errors.password && (
                                 <p className="text-red-500 text-xs mt-1">{errors.password}</p>
                             )}
+                        </div>
+
+                        {/* Alamat */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Alamat
+                            </label>
+                            <div className="relative">
+                                <Home className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                                <textarea
+                                    name="alamat"
+                                    value={formData.alamat}
+                                    onChange={handleChange}
+                                    placeholder="Masukkan alamat lengkap kantor..."
+                                    rows="3"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Nomor HP */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Nomor HP/Telepon
+                            </label>
+                            <div className="relative">
+                                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <input
+                                    type="tel"
+                                    name="no_hp"
+                                    value={formData.no_hp}
+                                    onChange={handleChange}
+                                    placeholder="Contoh: 0751-1234567 atau 08123456789"
+                                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                />
+                            </div>
                         </div>
                     </div>
 

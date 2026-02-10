@@ -137,12 +137,12 @@ const DashboardAdmin = ({ onDetailClick }) => {
                     className="absolute inset-0 w-full h-full object-cover"
                 />
                 {/* Gradient Overlay - Gelap di kiri, Terang di kanan */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
+                <div className="absolute inset-0 bg-linear-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
                 
                 {/* Content */}
                 <div className="relative z-10">
                     <h2 className="text-2xl font-bold mb-2 text-white">Selamat Datang, Admin</h2>
-                    <p className="text-blue-100">Dashboard Monitoring dan analisis pengajuan layanan kelembagaan</p>
+                    <p className="text-blue-100">Dashboard Layanan Terpadu Kelembagaan Kabupaten/Kota</p>
                 </div>
             </div>
 
@@ -297,7 +297,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
                                         <span className="flex items-center justify-center w-6 h-6 bg-gray-100 text-gray-700 text-xs font-semibold rounded-full">
                                             {index + 1}
                                         </span>
-                                        <span className="text-sm text-gray-900 truncate max-w-[150px]" title={pemohon}>
+                                        <span className="text-sm text-gray-900 truncate max-w-37.5" title={pemohon}>
                                             {pemohon}
                                         </span>
                                     </div>

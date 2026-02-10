@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Users, Search, Plus, Edit, Trash2, MapPin, User } from 'lucide-react';
+import { Users, Search, Plus, Edit, Trash2, MapPin, User, Phone, Home } from 'lucide-react';
 import UserFormModal from '../components/features/UserFormModal';
 import DeleteConfirmModal from '../components/common/DeleteConfirmModal';
 import Pagination from '../components/common/Pagination';
@@ -181,6 +181,12 @@ const UserManagementPage = () => {
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                     Kabupaten/Kota
                                 </th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Alamat
+                                </th>
+                                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+                                    Nomor HP
+                                </th>
                                 <th className="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                     Aksi
                                 </th>
@@ -189,7 +195,7 @@ const UserManagementPage = () => {
                         <tbody className="divide-y divide-gray-200">
                             {loading ? (
                                 <tr>
-                                    <td colSpan="3" className="px-6 py-12 text-center">
+                                    <td colSpan="5" className="px-6 py-12 text-center">
                                         <div className="flex flex-col items-center justify-center">
                                             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-navy-600 mb-3"></div>
                                             <p className="text-gray-500">Memuat data...</p>
@@ -198,7 +204,7 @@ const UserManagementPage = () => {
                                 </tr>
                             ) : filteredUsers.length === 0 ? (
                                 <tr>
-                                    <td colSpan="3" className="px-6 py-12 text-center text-gray-500">
+                                    <td colSpan="5" className="px-6 py-12 text-center text-gray-500">
                                         <Users className="mx-auto h-12 w-12 text-gray-400 mb-3" />
                                         <p className="text-lg font-medium">Tidak ada data</p>
                                         <p className="text-sm mt-1">
@@ -228,6 +234,22 @@ const UserManagementPage = () => {
                                             <div className="flex items-center gap-2">
                                                 <MapPin className="w-4 h-4 text-green-600" />
                                                 {user.kabupaten_kota}
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2">
+                                                <Home className="w-4 h-4 text-blue-600" />
+                                                <span className="text-gray-700">
+                                                    {user.alamat || <span className="text-gray-400 italic">Belum diisi</span>}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2">
+                                                <Phone className="w-4 h-4 text-purple-600" />
+                                                <span className="text-gray-700">
+                                                    {user.no_hp || <span className="text-gray-400 italic">Belum diisi</span>}
+                                                </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">
