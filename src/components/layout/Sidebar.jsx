@@ -18,7 +18,7 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
 
     const pemohonMenuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home },
-        { id: 'pengajuan-baru', label: 'Ajukan Surat Baru', icon: Send },
+        { id: 'pengajuan-baru', label: 'Ajukan Pengajuan Baru', icon: Send },
         { id: 'riwayat', label: 'Riwayat Pengajuan', icon: Clock }
     ];
 

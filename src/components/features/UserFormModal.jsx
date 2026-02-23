@@ -18,18 +18,18 @@ const UserFormModal = ({ mode, user, onClose, onSave }) => {
 
     // Daftar Kabupaten/Kota di Sumatera Barat
     const kabupatenKotaList = [
-        'Kab. Agam',
-        'Kab. Dharmasraya',
-        'Kab. Kepulauan Mentawai',
-        'Kab. Lima Puluh Kota',
-        'Kab. Padang Pariaman',
-        'Kab. Pasaman',
-        'Kab. Pasaman Barat',
-        'Kab. Pesisir Selatan',
-        'Kab. Sijunjung',
-        'Kab. Solok',
-        'Kab. Solok Selatan',
-        'Kab. Tanah Datar',
+        'Kabupaten Agam',
+        'Kabupaten Dharmasraya',
+        'Kabupaten Kepulauan Mentawai',
+        'Kabupaten Lima Puluh Kota',
+        'Kabupaten Padang Pariaman',
+        'Kabupaten Pasaman',
+        'Kabupaten Pasaman Barat',
+        'Kabupaten Pesisir Selatan',
+        'Kabupaten Sijunjung',
+        'Kabupaten Solok',
+        'Kabupaten Solok Selatan',
+        'Kabupaten Tanah Datar',
         'Kota Bukittinggi',
         'Kota Padang',
         'Kota Padang Panjang',
@@ -109,12 +109,12 @@ const UserFormModal = ({ mode, user, onClose, onSave }) => {
         <div className="fixed inset-0 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                 {/* Header */}
-                <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-center">
+                <div className="sticky top-0 bg-navy-600 text-white p-6 flex justify-between items-center">
                     <div>
                         <h2 className="text-2xl font-bold">
                             {mode === 'create' ? 'Tambah Akun Baru' : 'Edit Akun'}
                         </h2>
-                        <p className="text-blue-100 text-sm mt-1">
+                        <p className="text-navy-100 text-sm mt-1">
                             {mode === 'create'
                                 ? 'Buat akun baru untuk kabupaten/kota'
                                 : 'Ubah informasi akun'}
@@ -130,18 +130,7 @@ const UserFormModal = ({ mode, user, onClose, onSave }) => {
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    {/* Password Default Info */}
-                    {mode === 'create' && (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                            <p className="text-sm text-blue-800">
-                                <strong>Password Default:</strong> <code className="bg-blue-100 px-2 py-1 rounded font-mono">{DEFAULT_PASSWORD}</code>
-                                <br />
-                                <span className="text-xs mt-1 block">
-                                    Akun dapat login menggunakan username dan password default di atas. Disarankan untuk mengubah password setelah login pertama kali.
-                                </span>
-                            </p>
-                        </div>
-                    )}
+                    {/* Password Default Info - REMOVED */}
 
                     {/* Form Fields */}
                     <div className="space-y-4">
@@ -264,7 +253,7 @@ const UserFormModal = ({ mode, user, onClose, onSave }) => {
                     <div className="flex gap-3 pt-4 border-t border-gray-200">
                         <button
                             type="submit"
-                            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-4 rounded-lg hover:from-blue-700 hover:to-blue-800 font-medium transition shadow-lg"
+                            className="flex-1 bg-navy-600 text-white py-3 px-4 rounded-lg hover:bg-navy-700 font-medium transition shadow-lg"
                         >
                             {mode === 'create' ? 'Buat Akun' : 'Simpan Perubahan'}
                         </button>

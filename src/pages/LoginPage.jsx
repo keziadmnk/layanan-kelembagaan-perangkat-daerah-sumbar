@@ -45,7 +45,7 @@ const LoginPage = () => {
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Navy Shadow Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/70 via-[#004080]/50 to-[#0066cc]/20"></div>
         
         {/* Animated Decorative Elements */}
         <div className="absolute inset-0">

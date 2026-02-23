@@ -40,7 +40,7 @@ const KabKotaInfoPage = () => {
                         <img src={provSumbarLogo} alt="Logo Pemprov Sumbar" className="logo-image" />
                         <div className="logo-text-wrapper">
                             <div className="logo-decoration"></div>
-                            <h1 className="logo-text">BAPANTAU</h1>
+                            <h1 className="logo-text">LENTERA</h1>
                             <p className="logo-subtitle">SETDA SUMBAR</p>
                         </div>
                     </div>
@@ -134,12 +134,12 @@ const KabKotaInfoPage = () => {
                             <h4 className="footer-heading">Kontak</h4>
                             <p className="footer-text">Jl. Jend. Sudirman No. 51, Padang</p>
                             <p className="footer-text">Sumatera Barat, Indonesia</p>
-                            <p className="footer-text">Email: biroorganisasi@sumbarprov.go.id</p>
+                            <p className="footer-text">biroorganisasi.sumbarprov.go.id</p>
                         </div>
                     </div>
                     <div className="footer-bottom">
                         <p className="footer-copyright">
-                            © 2026 Biro Organisasi Setda Sumbar. All rights reserved.
+                            © 2026 Biro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
                         </p>
                     </div>
                 </div>

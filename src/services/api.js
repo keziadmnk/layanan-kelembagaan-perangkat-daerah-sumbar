@@ -235,9 +235,11 @@ export const uploadAPI = {
 export const profileAPI = {
     updateProfile: async (formData) => {
         try {
+            // Set Content-Type to undefined so axios auto-sets multipart/form-data with correct boundary
+            // NOT setting it to 'application/json' (the axios instance default) which breaks multer
             const response = await api.put('/profile', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': undefined
                 }
             });
             return response.data;

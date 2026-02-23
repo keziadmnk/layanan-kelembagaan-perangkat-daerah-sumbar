@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Bell, Trash2, Clock, FileText, AlertCircle } from 'lucide-react';
 import Pagination from '../components/common/Pagination';
 import { notifikasiAPI } from '../services/api';
@@ -14,10 +14,34 @@ const NotificationPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
+    // Use ref to keep track of notifications for cleanup
+    const notificationsRef = useRef([]);
+
+    // Update ref whenever notifications change
+    useEffect(() => {
+        notificationsRef.current = notifications;
+    }, [notifications]);
+
+    // Fetch notifications on mount
     useEffect(() => {
         if (user?.id) {
             fetchNotifications();
         }
+    }, [user?.id]);
+
+    // Cleanup: Mark all as read when leaving the page
+    useEffect(() => {
+        return () => {
+            if (user?.id && notificationsRef.current.length > 0) {
+                const hasUnread = notificationsRef.current.some(notif => !notif.is_read);
+                if (hasUnread) {
+                    // Mark all as read when user leaves the page
+                    notifikasiAPI.markAllAsRead(user.id).catch(error => {
+                        console.error('Error marking notifications as read on unmount:', error);
+                    });
+                }
+            }
+        };
     }, [user?.id]);
 
     const fetchNotifications = async () => {
@@ -26,18 +50,6 @@ const NotificationPage = () => {
             const response = await notifikasiAPI.getByUser(user.id);
             if (response.success) {
                 setNotifications(response.data);
-
-                // AUTO MARK ALL AS READ - seperti web pada umumnya
-                // Begitu halaman notifikasi dibuka, semua notif yang belum dibaca langsung di-mark sebagai sudah dibaca
-                const hasUnread = response.data.some(notif => !notif.is_read);
-                if (hasUnread) {
-                    // Mark all as read di backend
-                    await notifikasiAPI.markAllAsRead(user.id);
-                    // Update state lokal
-                    setNotifications(prev =>
-                        prev.map(notif => ({ ...notif, is_read: true }))
-                    );
-                }
             }
         } catch (error) {
             console.error('Error fetching notifications:', error);
@@ -181,21 +193,35 @@ const NotificationPage = () => {
                     paginatedNotifications.map((notif) => (
                         <div
                             key={notif.id_notifikasi}
-                            className="bg-white rounded-lg shadow border border-gray-200 transition-all hover:shadow-md"
+                            className={`bg-white rounded-lg shadow border transition-all hover:shadow-md ${!notif.is_read
+                                ? 'border-blue-200 bg-blue-50/30'
+                                : 'border-gray-200'
+                                }`}
                         >
                             <div className="p-4">
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
+                                    {/* Icon with red dot indicator for unread */}
+                                    <div className="relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
                                         {getNotificationIcon(notif.tipe)}
+                                        {!notif.is_read && (
+                                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
+                                        )}
                                     </div>
 
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-start justify-between gap-2 mb-1">
-                                            <h3 className="font-semibold text-gray-900">
+                                            <h3 className={`font-semibold ${!notif.is_read ? 'text-gray-900' : 'text-gray-700'
+                                                }`}>
                                                 {notif.judul}
+                                                {!notif.is_read && (
+                                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                        Baru
+                                                    </span>
+                                                )}
                                             </h3>
                                         </div>
-                                        <p className="text-gray-700 mb-2 text-sm">{notif.pesan}</p>
+                                        <p className={`mb-2 text-sm ${!notif.is_read ? 'text-gray-800' : 'text-gray-600'
+                                            }`}>{notif.pesan}</p>
                                         <div className="flex items-center gap-2 text-xs text-gray-500">
                                             <Clock className="w-3 h-3" />
                                             {formatDate(notif.created_at)}

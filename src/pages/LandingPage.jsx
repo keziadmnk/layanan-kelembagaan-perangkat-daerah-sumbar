@@ -169,12 +169,12 @@ const LandingPage = () => {
                             <h4 className="footer-heading">Kontak</h4>
                             <p className="footer-text">Jl. Jend. Sudirman No. 51, Padang</p>
                             <p className="footer-text">Sumatera Barat, Indonesia</p>
-                            <p className="footer-text">Email: biroorganisasi@sumbarprov.go.id</p>
+                            <p className="footer-text">biroorganisasi.sumbarprov.go.id</p>
                         </div>
                     </div>
                     <div className="footer-bottom">
                         <p className="footer-copyright">
-                            © 2026 Biro Organisasi Setda Sumbar. All rights reserved.
+                            © 2026 BBiro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
                         </p>
                     </div>
                 </div>

@@ -14,6 +14,7 @@ const UserManagementPage = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
@@ -80,12 +81,17 @@ const UserManagementPage = () => {
 
     const handleSaveUser = async (userData) => {
         try {
+            setError(null);
+            setSuccess(null);
+
             if (formMode === 'create') {
                 // Create new user
                 const response = await userAPI.create(userData);
                 if (response.success) {
                     await fetchUsers(); // Refresh the list
                     setShowFormModal(false);
+                    setSuccess(`Akun "${userData.kabupaten_kota}" berhasil ditambahkan!`);
+                    setTimeout(() => setSuccess(null), 5000); // Hide after 5 seconds
                 }
             } else {
                 // Update existing user
@@ -93,22 +99,29 @@ const UserManagementPage = () => {
                 if (response.success) {
                     await fetchUsers(); // Refresh the list
                     setShowFormModal(false);
+                    setSuccess(`Akun "${userData.kabupaten_kota}" berhasil diperbarui!`);
+                    setTimeout(() => setSuccess(null), 5000); // Hide after 5 seconds
                 }
             }
         } catch (err) {
-            alert(err.message || 'Terjadi kesalahan');
+            setError(err.message || 'Terjadi kesalahan');
         }
     };
 
     const handleConfirmDelete = async () => {
         try {
+            setError(null);
+            setSuccess(null);
+
             const response = await userAPI.delete(selectedUser.id);
             if (response.success) {
                 await fetchUsers(); // Refresh the list
                 setShowDeleteModal(false);
+                setSuccess(`Akun "${selectedUser.kabupaten_kota}" berhasil dihapus!`);
+                setTimeout(() => setSuccess(null), 5000); // Hide after 5 seconds
             }
         } catch (err) {
-            alert(err.message || 'Gagal menghapus akun');
+            setError(err.message || 'Gagal menghapus akun');
         }
     };
 
@@ -140,7 +153,18 @@ const UserManagementPage = () => {
                 </div>
             )}
 
-            {/* Stats Card */}
+            {/* Success Message */}
+            {success && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
+                    <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-green-800 text-sm">
+                        <strong>Berhasil!</strong> {success}
+                    </p>
+                </div>
+            )}
+
             <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
                 <div className="flex items-center justify-between">
                     <div>

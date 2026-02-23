@@ -9,10 +9,12 @@ const ProfilePage = () => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [showPasswordForm, setShowPasswordForm] = useState(false);
-    
+
     const [profileData, setProfileData] = useState({
         username: '',
         kabupaten_kota: '',
+        alamat: '',
+        no_hp: '',
         foto_profile: null
     });
 
@@ -35,6 +37,8 @@ const ProfilePage = () => {
             setProfileData({
                 username: user.username || '',
                 kabupaten_kota: user.kabupaten_kota || '',
+                alamat: user.alamat || '',
+                no_hp: user.no_hp || '',
                 foto_profile: user.foto_profile || null
             });
             if (user.foto_profile) {
@@ -87,6 +91,8 @@ const ProfilePage = () => {
         try {
             const formData = new FormData();
             formData.append('username', profileData.username);
+            formData.append('alamat', profileData.alamat);
+            formData.append('no_hp', profileData.no_hp);
             if (user.role === 'pemohon') {
                 formData.append('kabupaten_kota', profileData.kabupaten_kota);
             }
@@ -94,21 +100,26 @@ const ProfilePage = () => {
                 formData.append('foto_profile', profileData.foto_profile);
             }
 
+            console.log('📤 Sending profile update...');
             const response = await profileAPI.updateProfile(formData);
-            
+            console.log('📥 Response:', response);
+
             if (response.success) {
                 setSuccess('Profile berhasil diperbarui');
                 updateUser(response.data);
-                
+
                 // Update preview image jika ada foto baru
                 if (response.data.foto_profile) {
                     setPreviewImage(`http://localhost:3001/uploads/profiles/${response.data.foto_profile}`);
                 }
-                
+
                 setTimeout(() => setSuccess(null), 3000);
+            } else {
+                setError(response.message || 'Gagal memperbarui profile');
             }
         } catch (err) {
-            setError(err.response?.data?.message || 'Gagal memperbarui profile');
+            console.error('❌ Error updating profile:', err);
+            setError(err.message || 'Gagal memperbarui profile');
         } finally {
             setLoading(false);
         }
@@ -232,7 +243,7 @@ const ProfilePage = () => {
                                 {user?.role}
                             </span>
                         </div>
-                        
+
                         <form onSubmit={handleProfileUpdate} className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -253,19 +264,50 @@ const ProfilePage = () => {
                                 </div>
                             </div>
 
-                            {user?.role === 'pemohon' && (
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Kabupaten/Kota
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="kabupaten_kota"
-                                        value={profileData.kabupaten_kota}
-                                        onChange={handleInputChange}
-                                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    />
-                                </div>
+                            {user?.role === 'kab/kota' && (
+                                <>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Kabupaten/Kota
+                                        </label>
+                                        <input
+                                            type="text"
+                                            name="kabupaten_kota"
+                                            value={profileData.kabupaten_kota}
+                                            disabled
+                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 cursor-not-allowed"
+                                        />
+                                        <p className="text-xs text-gray-500 mt-1">Kabupaten/Kota tidak dapat diubah</p>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Alamat
+                                        </label>
+                                        <textarea
+                                            name="alamat"
+                                            value={profileData.alamat}
+                                            onChange={handleInputChange}
+                                            rows={3}
+                                            placeholder="Masukkan alamat lengkap"
+                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Nomor Handphone
+                                        </label>
+                                        <input
+                                            type="tel"
+                                            name="no_hp"
+                                            value={profileData.no_hp}
+                                            onChange={handleInputChange}
+                                            placeholder="Contoh: 081234567890"
+                                            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        />
+                                    </div>
+                                </>
                             )}
 
                             <div className="pt-4">
