@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import SuratTable from '../components/features/SuratTable';
 import ModuleSelector from '../components/features/ModuleSelector';
 import TahapanSelector from '../components/features/TahapanSelector';
@@ -7,6 +8,7 @@ import { useAuthContext } from '../contexts/AuthContext';
 
 const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) => {
     const { user } = useAuthContext();
+    const location = useLocation(); // Track route changes
     const [selectedModule, setSelectedModule] = useState(null);
     const [selectedTahapan, setSelectedTahapan] = useState(null);
     const [data, setData] = useState([]);
@@ -16,7 +18,24 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
 
     useEffect(() => {
         fetchData();
-    }, [status, user]);
+        setSelectedModule(null);
+        setSelectedTahapan(null);
+    }, [location.pathname, status, showTahapan, user?.id]);
+
+    useEffect(() => {
+        fetchModules();
+    }, []);
+
+    const fetchModules = async () => {
+        try {
+            const modulRes = await modulLayananAPI.getAll();
+            if (modulRes.success) {
+                setModules(modulRes.data);
+            }
+        } catch (err) {
+            console.error('Error fetching modules:', err);
+        }
+    };
 
     const fetchData = async () => {
         try {
@@ -25,29 +44,20 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
 
             let pengajuanRes;
 
-            // Jika user adalah kab/kota (non-admin), ambil hanya pengajuan miliknya
             if (user?.role === 'kab/kota') {
                 pengajuanRes = await pengajuanAPI.getByUser(user.id);
             } else {
-                // Jika admin, ambil semua atau berdasarkan status
                 pengajuanRes = status
                     ? await pengajuanAPI.getByStatus(status)
                     : await pengajuanAPI.getAll();
             }
 
-            const modulRes = await modulLayananAPI.getAll();
-
             if (pengajuanRes.success) {
-                // Jika showTahapan aktif dan tidak ada status filter, filter hanya tahapan
                 if (showTahapan && !status) {
-                    const tahapanStatuses = ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'];
-                    setData(pengajuanRes.data.filter(s => tahapanStatuses.includes(s.status)));
+                    setData(pengajuanRes.data.filter(s => s.status_verifikasi === 'Disetujui'));
                 } else {
                     setData(pengajuanRes.data);
                 }
-            }
-            if (modulRes.success) {
-                setModules(modulRes.data);
             }
         } catch (err) {
             console.error('Error fetching data:', err);
@@ -57,43 +67,24 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
         }
     };
 
-    // Filter berdasarkan module atau tahapan
     let filteredData = data;
 
     if (showTahapan) {
-        // Untuk halaman tahapan proses, filter berdasarkan status (karena tahapan sekarang adalah status)
         if (selectedTahapan) {
-            filteredData = data.filter(s => {
-                // Handle berbagai kemungkinan nama tahapan untuk Pelaksanaan Rapat
-                if (selectedTahapan === 'Pelaksanaan Rapat Evaluasi') {
-                    return s.status && (
-                        s.status.includes('Pelaksanaan Rapat') ||
-                        s.status === 'Pelaksanaan Rapat Evaluasi' ||
-                        s.status === 'Pelaksanaan Rapat Fasilitasi' ||
-                        s.status === 'Pelaksanaan Rapat Pembentukan UPTD'
-                    );
-                }
-                return s.status === selectedTahapan;
-            });
+            filteredData = data.filter(s => s.status === selectedTahapan);
         }
     } else {
-        // Untuk halaman lain (Semua Surat, Selesai), filter berdasarkan module
         if (selectedModule) {
-            filteredData = data.filter(s => {
-                // Filter berdasarkan id_modul
-                return s.id_modul === selectedModule;
-            });
+            filteredData = data.filter(s => s.id_modul === selectedModule);
         }
     }
 
-    // Tentukan apakah user adalah pemohon (kab/kota)
     const isPemohon = user?.role === 'kab/kota';
 
     return (
         <div className="bg-white rounded-lg shadow border border-gray-200">
             <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
-                    {/* Kiri: Judul + Selector */}
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-gray-900 mb-4">{title}</h2>
                         {showTahapan ? (
@@ -110,7 +101,6 @@ const SuratListPage = ({ title, status, showTahapan = false, onDetailClick }) =>
                         )}
                     </div>
 
-                    {/* Kanan: Total Pengajuan */}
                     {!loading && !error && data.length > 0 && (
                         <div className="text-center ml-6">
                             <p className="text-sm text-gray-500 mb-1">Total Pengajuan</p>

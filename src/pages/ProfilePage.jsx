@@ -93,32 +93,32 @@ const ProfilePage = () => {
             formData.append('username', profileData.username);
             formData.append('alamat', profileData.alamat);
             formData.append('no_hp', profileData.no_hp);
-            if (user.role === 'pemohon') {
-                formData.append('kabupaten_kota', profileData.kabupaten_kota);
-            }
+            
+            // Only append foto_profile if it's a new file
             if (profileData.foto_profile instanceof File) {
                 formData.append('foto_profile', profileData.foto_profile);
             }
 
-            console.log('📤 Sending profile update...');
             const response = await profileAPI.updateProfile(formData);
-            console.log('📥 Response:', response);
 
             if (response.success) {
                 setSuccess('Profile berhasil diperbarui');
                 updateUser(response.data);
 
-                // Update preview image jika ada foto baru
                 if (response.data.foto_profile) {
                     setPreviewImage(`http://localhost:3001/uploads/profiles/${response.data.foto_profile}`);
                 }
+                setProfileData(prev => ({
+                    ...prev,
+                    foto_profile: null
+                }));
 
                 setTimeout(() => setSuccess(null), 3000);
             } else {
                 setError(response.message || 'Gagal memperbarui profile');
             }
         } catch (err) {
-            console.error('❌ Error updating profile:', err);
+            console.error('Error updating profile:', err);
             setError(err.message || 'Gagal memperbarui profile');
         } finally {
             setLoading(false);

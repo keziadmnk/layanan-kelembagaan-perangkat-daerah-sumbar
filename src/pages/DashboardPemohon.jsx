@@ -22,7 +22,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
         if (user?.id) {
             fetchData();
         }
-    }, [user]);
+    }, [user?.id]);
 
     const fetchData = async () => {
         try {
@@ -34,12 +34,9 @@ const DashboardPemohon = ({ onDetailClick }) => {
             ]);
 
             if (pengajuanRes.success) {
-                console.log('📊 Data Pengajuan:', pengajuanRes.data);
-                console.log('📋 Status yang ada:', pengajuanRes.data.map(d => ({ id: d.id_pengajuan, status: d.status, modul: d.id_modul })));
                 setData(pengajuanRes.data);
             }
             if (modulRes.success) {
-                console.log('📦 Data Modul:', modulRes.data);
                 setModules(modulRes.data);
             }
         } catch (err) {

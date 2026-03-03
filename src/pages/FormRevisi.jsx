@@ -103,7 +103,7 @@ const FormRevisi = () => {
         e.preventDefault();
 
         // Validasi dokumen wajib
-        const dokumentWajib = persyaratanDokumen.filter(p => p.wajib);
+        const dokumentWajib = persyaratanDokumen.filter(p => p.is_required);
         const uploadedIds = Object.keys(uploadedFiles).map(Number);
         const missingDocs = dokumentWajib.filter(
             dok => !uploadedIds.includes(dok.id_persyaratan)
@@ -221,7 +221,7 @@ const FormRevisi = () => {
             {catatanRevisi && catatanRevisi.length > 0 && (
                 <div className="p-6 border-b border-gray-200 bg-red-50">
                     <div className="flex items-start gap-3">
-                        <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                        <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
                         <div className="flex-1">
                             <h3 className="font-bold text-red-900 mb-2">Catatan Perbaikan dari Admin</h3>
                             <div className="space-y-3">
@@ -290,7 +290,7 @@ const FormRevisi = () => {
                                     key={dok.id_persyaratan}
                                     id_persyaratan={dok.id_persyaratan}
                                     label={`${index + 1}. ${dok.nama_dokumen}`}
-                                    required={dok.wajib}
+                                    required={dok.is_required}
                                     format={`${dok.format_file} (max. 10MB)`}
                                     onFileUploaded={handleFileUploaded}
                                     existingFile={uploadedFiles[dok.id_persyaratan]}

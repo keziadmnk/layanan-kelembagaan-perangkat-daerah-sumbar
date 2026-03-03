@@ -3,6 +3,7 @@ import { CheckCircle, XCircle, AlertCircle, FileText, ArrowUpDown, ArrowUp, Arro
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
 import { pengajuanAPI } from '../services/api';
+import { getStatusColor } from '../utils/statusUtils';
 
 const VerifikasiSuratPage = ({ onDetailClick }) => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -11,7 +12,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedFilter, setSelectedFilter] = useState(null); // null = Semua, 'menunggu' = Menunggu Verifikasi, 'perbaikan' = Perlu Perbaikan
+    const [selectedFilter, setSelectedFilter] = useState(null); 
     const itemsPerPage = 10;
 
     useEffect(() => {
@@ -44,15 +45,13 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         }
     };
 
-    // Filter by status first
     const statusFilteredData = data.filter(surat => {
-        if (selectedFilter === null) return true; // Semua
+        if (selectedFilter === null) return true; 
         if (selectedFilter === 'menunggu') return surat.status === 'Menunggu Verifikasi';
         if (selectedFilter === 'perbaikan') return surat.status === 'Perlu Perbaikan';
         return true;
     });
 
-    // Then filter by search term
     const filteredData = statusFilteredData.filter(surat => {
         if (!searchTerm.trim()) return true;
         const pemohonName = surat.pemohon?.toLowerCase() || '';
@@ -61,7 +60,6 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         return pemohonName.includes(search) || namaLayanan.includes(search);
     });
 
-    // Sorting data
     const sortedData = [...filteredData].sort((a, b) => {
         if (!sortConfig.key) return 0;
 
@@ -74,7 +72,6 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         return 0;
     });
 
-    // Toggle sorting
     const handleSort = (key) => {
         setSortConfig(prevConfig => ({
             key,
@@ -82,7 +79,6 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         }));
     };
 
-    // Get sort icon
     const getSortIcon = (columnKey) => {
         if (sortConfig.key !== columnKey) {
             return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
@@ -92,19 +88,16 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
             : <ArrowDown className="w-4 h-4 text-navy-600" />;
     };
 
-    // Pagination calculations
     const totalPages = Math.ceil(sortedData.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedData = sortedData.slice(startIndex, endIndex);
 
-    // Handle search - reset to page 1 when searching
     const handleSearchChange = (value) => {
         setSearchTerm(value);
         setCurrentPage(1);
     };
 
-    // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -140,10 +133,8 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
         <div className="bg-white rounded-lg shadow border border-gray-200">
             <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
-                    {/* Kiri: Judul + Kategori */}
                     <div className="flex-1">
                         <h2 className="text-xl font-bold text-gray-900 mb-4">Verifikasi Surat</h2>
-                        {/* Filter Status - Seperti Module Selector */}
                         <div className="flex gap-2 flex-wrap">
                             <button
                                 onClick={() => {
@@ -188,8 +179,6 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                             </button>
                         </div>
                     </div>
-
-                    {/* Kanan: Total Pengajuan */}
                     <div className="text-center ml-6">
                         <p className="text-sm text-gray-500 mb-1">Total Pengajuan</p>
                         <p className="text-3xl font-bold text-gray-900">{filteredData.length}</p>
@@ -206,7 +195,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
 
                 <div className="overflow-x-auto mt-4">
                     <table className="w-full">
-                        <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                        <thead className="bg-linear-to-r from-gray-50 to-gray-100 border-b border-gray-200">
                             <tr>
                                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                                     No
@@ -267,10 +256,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                                             })}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${surat.status === 'Menunggu Verifikasi'
-                                                ? 'bg-yellow-100 text-yellow-800'
-                                                : 'bg-red-100 text-red-800'
-                                                }`}>
+                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(surat.status)}`}>
                                                 {surat.status === 'Menunggu Verifikasi' && (
                                                     <AlertCircle className="h-3 w-3 mr-1" />
                                                 )}

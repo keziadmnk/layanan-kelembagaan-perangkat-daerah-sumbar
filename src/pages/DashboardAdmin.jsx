@@ -49,48 +49,37 @@ const DashboardAdmin = ({ onDetailClick }) => {
 
     const getModuleStats = (moduleId) => {
         const moduleData = data.filter(s => s.id_modul === moduleId);
-        const tahapanStatuses = ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'];
         return {
             total: moduleData.length,
-            inProgress: moduleData.filter(s => tahapanStatuses.includes(s.status)).length,
+            inProgress: moduleData.filter(s => s.status_verifikasi === 'Disetujui').length,
             completed: moduleData.filter(s => s.status === 'Selesai').length,
             pending: moduleData.filter(s => s.status === 'Menunggu Verifikasi').length
         };
     };
 
     // Analytics calculations
-    const tahapanStatuses = ['Penjadwalan Rapat', 'Pelaksanaan Rapat Fasilitasi', 'Penyusunan Draft Rekomendasi/Hasil Fasilitasi', 'Proses Penandatanganan'];
     const analytics = {
-        // Status breakdown
-        menungguVerifikasi: filteredData.filter(s => s.status === 'Menunggu Verifikasi').length,
-        perluPerbaikan: filteredData.filter(s => s.status === 'Perlu Perbaikan').length,
-        dalamProses: filteredData.filter(s => tahapanStatuses.includes(s.status)).length,
+        menungguVerifikasi: filteredData.filter(s => s.status_verifikasi === 'Menunggu Verifikasi').length,
+        perluPerbaikan: filteredData.filter(s => s.status_verifikasi === 'Perlu Perbaikan').length,
+        dalamProses: filteredData.filter(s => s.status_verifikasi === 'Disetujui').length,
         selesai: filteredData.filter(s => s.status === 'Selesai').length,
 
-        // Average progress
         averageProgress: filteredData.length > 0
             ? Math.round(filteredData.reduce((acc, s) => acc + (s.progress || 0), 0) / filteredData.length)
             : 0,
 
-        // Completion rate
         completionRate: filteredData.length > 0
             ? Math.round((filteredData.filter(s => s.status === 'Selesai').length / filteredData.length) * 100)
             : 0,
 
-        // Top pemohon
         topPemohon: (() => {
             const pemohonCount = {};
             filteredData.forEach(s => {
-                if (s.pemohon) {
-                    pemohonCount[s.pemohon] = (pemohonCount[s.pemohon] || 0) + 1;
-                }
+                if (s.pemohon) pemohonCount[s.pemohon] = (pemohonCount[s.pemohon] || 0) + 1;
             });
-            return Object.entries(pemohonCount)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 5);
+            return Object.entries(pemohonCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
         })(),
 
-        // Progress distribution
         progressDistribution: {
             low: filteredData.filter(s => (s.progress || 0) < 25).length,
             medium: filteredData.filter(s => (s.progress || 0) >= 25 && (s.progress || 0) < 75).length,
@@ -128,25 +117,20 @@ const DashboardAdmin = ({ onDetailClick }) => {
 
     return (
         <div className="space-y-6">
-            {/* Header with Background Image */}
             <div className="relative p-8 rounded-lg shadow-lg overflow-hidden">
-                {/* Background Image */}
                 <img
                     src={dashboardImage}
                     alt="Dashboard Background"
                     className="absolute inset-0 w-full h-full object-cover"
                 />
-                {/* Gradient Overlay - Gelap di kiri, Terang di kanan */}
                 <div className="absolute inset-0 bg-linear-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
-                
-                {/* Content */}
+
                 <div className="relative z-10">
                     <h2 className="text-2xl font-bold mb-2 text-white">Selamat Datang, Admin</h2>
                     <p className="text-blue-100">Dashboard Layanan Terpadu Kelembagaan Kabupaten/Kota</p>
                 </div>
             </div>
 
-            {/* Primary Stats - 5 Cards */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between">
@@ -321,7 +305,6 @@ const DashboardAdmin = ({ onDetailClick }) => {
                             nama_modul: module.nama_modul,
                             deskripsi: module.deskripsi
                         };
-                        // Map card to analytics panel
                         const cardMapping = ['performa', 'distribusi', 'pemohon'];
                         const cardType = cardMapping[index];
 
@@ -341,7 +324,6 @@ const DashboardAdmin = ({ onDetailClick }) => {
                 </div>
             </div>
 
-            {/* Recent Submissions Table */}
             <div className="bg-white rounded-xl border border-gray-200">
                 <div className="p-6 border-b border-gray-200">
                     <div className="flex items-center justify-between">

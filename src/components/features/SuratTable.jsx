@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import StatusBadge from '../common/StatusBadge';
 import SearchBar from '../common/SearchBar';
 import Pagination from '../common/Pagination';
+import { getStatusColorWithBorder } from '../../utils/statusUtils';
 
 const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClick, simple = false }) => {
     const navigate = useNavigate();
@@ -12,7 +13,6 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
 
-    // search query (pemohon dan layanan)
     const filteredData = data.filter(surat => {
         if (!searchQuery.trim()) return true;
 
@@ -25,15 +25,12 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
 
     // Sorting data
     const sortedData = [...filteredData].sort((a, b) => {
-        // Khusus untuk pemohon: pindahkan status "Selesai" ke paling bawah
         if (isPemohon) {
             const aIsSelesai = a.status === 'Selesai';
             const bIsSelesai = b.status === 'Selesai';
 
-            // Jika salah satu selesai dan yang lain tidak, yang selesai ke bawah
             if (aIsSelesai && !bIsSelesai) return 1;
             if (!aIsSelesai && bIsSelesai) return -1;
-            // Jika keduanya selesai atau keduanya tidak, lanjutkan sorting normal
         }
 
         if (!sortConfig.key) return 0;
@@ -53,7 +50,6 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
         return 0;
     });
 
-    // Toggle sorting
     const handleSort = (key) => {
         setSortConfig(prevConfig => ({
             key,
@@ -61,7 +57,6 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
         }));
     };
 
-    // Get sort icon
     const getSortIcon = (columnKey) => {
         if (sortConfig.key !== columnKey) {
             return <ArrowUpDown className="w-4 h-4 text-gray-400" />;
@@ -71,20 +66,16 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
             : <ArrowDown className="w-4 h-4 text-navy-600" />;
     };
 
-    // Pagination calculations
     const totalPages = Math.ceil(sortedData.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    // Untuk mode simple, tampilkan semua data tanpa pagination
     const paginatedData = simple ? sortedData : sortedData.slice(startIndex, endIndex);
 
-    // Handle search - reset to page 1 when searching
     const handleSearchChange = (value) => {
         setSearchQuery(value);
         setCurrentPage(1);
     };
 
-    // Handle page change
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
@@ -92,23 +83,13 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
     const getTahapanBadge = (tahapan) => {
         if (!tahapan) return <span className="text-gray-500 text-sm">-</span>;
 
-        const badges = {
-            'Penjadwalan Rapat': 'bg-yellow-100 text-yellow-800 border-yellow-300',
-            'Pelaksanaan Rapat Fasilitasi': 'bg-orange-100 text-orange-800 border-orange-300',
-            'Penyusunan Draft Rekomendasi/Hasil Fasilitasi': 'bg-blue-100 text-blue-800 border-blue-300',
-            'Proses Penandatanganan': 'bg-purple-100 text-purple-800 border-purple-300'
-        };
-
-        const colorClass = badges[tahapan] || 'bg-gray-100 text-gray-800 border-gray-300';
-
         return (
-            <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${colorClass}`}>
+            <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-medium border ${getStatusColorWithBorder(tahapan)}`}>
                 {tahapan}
             </span>
         );
     };
 
-    // Handler untuk preview surat rekomendasi
     const handlePreviewRekomendasi = (surat) => {
         if (!surat.file_surat_rekomendasi) {
             alert('Surat rekomendasi belum tersedia');
@@ -118,7 +99,6 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
         window.open(`${baseURL}${surat.file_surat_rekomendasi}`, '_blank');
     };
 
-    // Handler untuk download surat rekomendasi
     const handleDownloadRekomendasi = async (surat) => {
         if (!surat.file_surat_rekomendasi) {
             alert('Surat rekomendasi belum tersedia');
@@ -146,7 +126,6 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
 
     return (
         <div className="space-y-4">
-            {/* Search Bar - untuk admin dan pemohon (hide in simple mode) */}
             {!simple && (
                 <>
                     <SearchBar
@@ -160,7 +139,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                         <div className="text-sm text-gray-600">
                             Menampilkan {sortedData.length} dari {data.length} {isPemohon ? 'pengajuan' : 'surat'}
                         </div>
-                    )}
+                    )}\
                 </>
             )}
 
@@ -296,7 +275,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                 </table>
             </div>
 
-            {/* Pagination (hide in simple mode) */}
+            {/* Pagination */}
             {!simple && paginatedData && paginatedData.length > 0 && (
                 <Pagination
                     currentPage={currentPage}

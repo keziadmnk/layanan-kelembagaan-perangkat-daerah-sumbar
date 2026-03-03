@@ -100,7 +100,7 @@ const FormPengajuanBaru = ({ onSuccess }) => {
             alert('Data kabupaten/kota tidak ditemukan. Silakan login ulang.');
             return;
         }
-        const dokumentWajib = persyaratanDokumen.filter(p => p.wajib);
+        const dokumentWajib = persyaratanDokumen.filter(p => p.is_required);
         const uploadedIds = Object.keys(uploadedFiles).map(Number);
         const missingDocs = dokumentWajib.filter(
             dok => !uploadedIds.includes(dok.id_persyaratan)
@@ -120,7 +120,7 @@ const FormPengajuanBaru = ({ onSuccess }) => {
             dokumen_upload: dokumen_upload,
         };
 
-        console.log('📤 Submitting pengajuan:', pengajuanData);
+        console.log('Submitting pengajuan:', pengajuanData);
 
         try {
             setSubmitting(true);
@@ -139,7 +139,7 @@ const FormPengajuanBaru = ({ onSuccess }) => {
                 throw new Error(result.message || 'Gagal membuat pengajuan');
             }
 
-            console.log('✅ Pengajuan berhasil dibuat:', result.data);
+            console.log(' Pengajuan berhasil dibuat:', result.data);
 
             setSubmissionResult(result.data);
             setShowSuccessModal(true);
@@ -250,7 +250,7 @@ const FormPengajuanBaru = ({ onSuccess }) => {
                                     key={dok.id_persyaratan}
                                     id_persyaratan={dok.id_persyaratan}
                                     label={`${index + 1}. ${dok.nama_dokumen}`}
-                                    required={dok.wajib}
+                                    required={dok.is_required}
                                     format={`${dok.format_file} (max. 10MB)`}
                                     onFileUploaded={handleFileUploaded}
                                 />

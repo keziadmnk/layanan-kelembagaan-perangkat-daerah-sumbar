@@ -202,16 +202,65 @@ export const pengajuanAPI = {
             formData.append('file_rekomendasi', file);
 
             const response = await api.post(`/pengajuan/selesaikan/${idPengajuan}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+                headers: { 'Content-Type': 'multipart/form-data' }
             });
             return response.data;
         } catch (error) {
             throw error.response?.data || { message: 'Gagal menyelesaikan pengajuan' };
         }
+    },
+
+    acceptPengajuan: async (idPengajuan) => {
+        try {
+            const response = await api.put(`/pengajuan/update/${idPengajuan}`, {
+                status_verifikasi: 'Disetujui'
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal menyetujui pengajuan' };
+        }
     }
 };
+
+export const prosesAPI = {
+    getAllProses: async () => {
+        try {
+            const response = await api.get('/proses/proses');
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal mengambil data proses' };
+        }
+    },
+
+    getLogByPengajuan: async (idPengajuan) => {
+        try {
+            const response = await api.get(`/proses/log/${idPengajuan}`);
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal mengambil log proses' };
+        }
+    },
+
+    addLogProses: async (idPengajuan, idProses, keterangan, files, isMundur = false) => {
+        try {
+            const formData = new FormData();
+            formData.append('id_proses', idProses);
+            if (keterangan) formData.append('keterangan', keterangan);
+            if (isMundur) formData.append('is_mundur', 'true');
+            if (files && files.length > 0) {
+                files.forEach(f => formData.append('bukti', f));
+            }
+
+            const response = await api.post(`/proses/log/${idPengajuan}`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            return response.data;
+        } catch (error) {
+            throw error.response?.data || { message: 'Gagal menambahkan log proses' };
+        }
+    }
+};
+
 
 export const uploadAPI = {
     upload: async (file, idPersyaratan) => {
@@ -235,16 +284,21 @@ export const uploadAPI = {
 export const profileAPI = {
     updateProfile: async (formData) => {
         try {
-            // Set Content-Type to undefined so axios auto-sets multipart/form-data with correct boundary
-            // NOT setting it to 'application/json' (the axios instance default) which breaks multer
-            const response = await api.put('/profile', formData, {
+            const response = await fetch('http://localhost:3001/api/profile', {
+                method: 'PUT',
                 headers: {
-                    'Content-Type': undefined
-                }
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: formData
             });
-            return response.data;
+            
+            const data = await response.json();
+            if (!response.ok) {
+                throw data;
+            }
+            return data;
         } catch (error) {
-            throw error.response?.data || { message: 'Gagal memperbarui profile' };
+            throw error || { message: 'Gagal memperbarui profile' };
         }
     },
 
