@@ -58,7 +58,8 @@ const NotificationPage = () => {
         }
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id, e) => {
+        e.stopPropagation(); // Jangan trigger klik card
         if (!confirm('Hapus notifikasi ini?')) return;
 
         try {
@@ -67,6 +68,30 @@ const NotificationPage = () => {
         } catch (error) {
             console.error('Error deleting notification:', error);
         }
+    };
+
+    const handleNotificationClick = (notif) => {
+        const role = user?.role;
+        let path = null;
+
+        if (notif.tipe === 'pengajuan_baru') {
+            // Admin: belum dibaca → verifikasi surat, sudah dibaca → semua surat
+            // Pemohon (jarang terjadi) → ke dashboard
+            if (role === 'admin') {
+                path = !notif.is_read ? '/verifikasi-surat' : '/surat-masuk';
+            } else {
+                path = '/dashboard';
+            }
+        } else if (notif.tipe === 'perubahan_status') {
+            // Pemohon mendapat notifikasi perubahan status → ke riwayat pengajuan
+            // Admin (jarang terjadi) → ke verifikasi surat
+            path = role === 'admin' ? '/verifikasi-surat' : '/riwayat';
+        } else {
+            // Tipe 'info' → ke dashboard masing-masing
+            path = '/dashboard';
+        }
+
+        navigate(path);
     };
 
     const getNotificationIcon = (tipe) => {
@@ -193,18 +218,19 @@ const NotificationPage = () => {
                     paginatedNotifications.map((notif) => (
                         <div
                             key={notif.id_notifikasi}
-                            className={`bg-white rounded-lg shadow border transition-all hover:shadow-md ${!notif.is_read
-                                ? 'border-blue-200 bg-blue-50/30'
+                            onClick={() => handleNotificationClick(notif)}
+                            className={`bg-white rounded-lg shadow border transition-all hover:shadow-md cursor-pointer hover:scale-[1.01] active:scale-[0.99] ${!notif.is_read
+                                ? 'border-green-200 bg-green-50/30'
                                 : 'border-gray-200'
                                 }`}
                         >
                             <div className="p-4">
                                 <div className="flex items-start gap-4">
-                                    {/* Icon with red dot indicator for unread */}
+                                    {/* Icon with green dot indicator for unread */}
                                     <div className="relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
                                         {getNotificationIcon(notif.tipe)}
                                         {!notif.is_read && (
-                                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full"></span>
+                                            <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
                                         )}
                                     </div>
 
@@ -214,7 +240,7 @@ const NotificationPage = () => {
                                                 }`}>
                                                 {notif.judul}
                                                 {!notif.is_read && (
-                                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+                                                    <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
                                                         Baru
                                                     </span>
                                                 )}
@@ -230,7 +256,7 @@ const NotificationPage = () => {
 
                                     <div className="flex items-center gap-2 flex-shrink-0">
                                         <button
-                                            onClick={() => handleDelete(notif.id_notifikasi)}
+                                            onClick={(e) => handleDelete(notif.id_notifikasi, e)}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                             title="Hapus"
                                         >
