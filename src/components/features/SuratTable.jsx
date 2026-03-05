@@ -139,7 +139,7 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
                         <div className="text-sm text-gray-600">
                             Menampilkan {sortedData.length} dari {data.length} {isPemohon ? 'pengajuan' : 'surat'}
                         </div>
-                    )}\
+                    )}
                 </>
             )}
 

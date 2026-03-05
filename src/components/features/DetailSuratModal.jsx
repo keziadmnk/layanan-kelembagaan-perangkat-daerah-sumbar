@@ -437,7 +437,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                             >
                                                 {isSelesaikan
                                                     ? <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />Menyimpan...</>
-                                                    : <><Check className="w-4 h-4" />Selesaikan Pengajuan &amp; Upload Surat Rekomendasi</>}
+                                                    : <><Check className="w-4 h-4" />Selesaikan Pengajuan </>}
                                             </button>
                                         </div>
 
