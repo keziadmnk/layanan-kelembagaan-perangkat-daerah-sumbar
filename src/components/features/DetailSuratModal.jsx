@@ -261,29 +261,45 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
         } finally { setIsSelesaikan(false); }
     };
 
-    const toRelativePath = (filePath) => {
-        if (!filePath) return '';
-        const normalized = filePath.replace(/\\/g, '/');
-        if (normalized.startsWith('/uploads/')) return normalized;
-        const match = normalized.match(/(\/uploads\/.+)$/);
-        return match ? match[1] : '';
-    };
-
+    // Buka file secara inline di tab baru melalui proxy /minio/
     const openFile = (filePath) => {
-        const rel = toRelativePath(filePath);
-        if (!rel) return;
-        window.open(`${BASE_URL}${rel}`, '_blank');
+        if (!filePath) return;
+        // file_path disimpan sebagai "/minio/..." atau URL penuh
+        const url = filePath.startsWith('http') ? filePath : `${BASE_URL}${filePath}`;
+        window.open(url, '_blank');
     };
 
-    const downloadFile = (filePath, nama) => {
-        const rel = toRelativePath(filePath);
-        if (!rel) { showSuccess('Error', 'Path file tidak valid', 'error'); return; }
-        const a = document.createElement('a');
-        a.href = `${BASE_URL}/api/proses/download?path=${encodeURIComponent(rel)}`;
-        a.download = nama || rel.split('/').pop();
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+    // Download file dengan Content-Disposition: attachment melalui endpoint download
+    const downloadFile = async (filePath, nama) => {
+        if (!filePath) { showSuccess('Error', 'Path file tidak valid', 'error'); return; }
+        try {
+            // Hapus prefix /minio/ untuk endpoint download yang butuh objectName
+            const cleanPath = filePath.startsWith('/minio/')
+                ? filePath.slice('/minio/'.length)
+                : filePath;
+            const token = localStorage.getItem('token');
+            const response = await fetch(
+                `${BASE_URL}/api/proses/download?path=${encodeURIComponent(cleanPath)}`,
+                { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+            );
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                showSuccess('Gagal Download', errData.message || 'File tidak ditemukan', 'error');
+                return;
+            }
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = nama || filePath.split('/').pop();
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Download error:', err);
+            showSuccess('Gagal Download', 'Terjadi kesalahan saat mengunduh file', 'error');
+        }
     };
 
     return (

@@ -3,6 +3,9 @@ import { User, Lock, Camera, Save, X, Eye, EyeOff } from 'lucide-react';
 import { useAuthContext } from '../contexts/AuthContext';
 import { profileAPI } from '../services/api';
 
+const BASE_URL = 'http://localhost:3001';
+const getPhotoUrl = (foto) => foto ? `${BASE_URL}${foto}` : null;
+
 const ProfilePage = () => {
     const { user, updateUser } = useAuthContext();
     const [loading, setLoading] = useState(false);
@@ -42,7 +45,7 @@ const ProfilePage = () => {
                 foto_profile: user.foto_profile || null
             });
             if (user.foto_profile) {
-                setPreviewImage(`http://localhost:3001/uploads/profiles/${user.foto_profile}`);
+                setPreviewImage(getPhotoUrl(user.foto_profile));
             }
         }
     }, [user]);
@@ -106,7 +109,7 @@ const ProfilePage = () => {
                 updateUser(response.data);
 
                 if (response.data.foto_profile) {
-                    setPreviewImage(`http://localhost:3001/uploads/profiles/${response.data.foto_profile}`);
+                    setPreviewImage(getPhotoUrl(response.data.foto_profile));
                 }
                 setProfileData(prev => ({
                     ...prev,
