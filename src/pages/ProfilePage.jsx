@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { User, Lock, Camera, Save, X, Eye, EyeOff } from 'lucide-react';
 import { useAuthContext } from '../contexts/AuthContext';
 import { profileAPI } from '../services/api';
+import { buildProtectedFileUrl } from '../utils/apiConfig';
 
-const BASE_URL = 'http://localhost:3001';
-const getPhotoUrl = (foto) => foto ? `${BASE_URL}${foto}` : null;
+const getPhotoUrl = (foto) => foto ? buildProtectedFileUrl(foto) : null;
 
 const ProfilePage = () => {
     const { user, updateUser } = useAuthContext();
@@ -187,14 +187,14 @@ const ProfilePage = () => {
             {/* Alert Messages */}
             {error && (
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-                    <X className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                    <X className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                     <p className="text-red-800 text-sm">{error}</p>
                 </div>
             )}
 
             {success && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-start gap-3">
-                    <Save className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                    <Save className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
                     <p className="text-green-800 text-sm">{success}</p>
                 </div>
             )}
@@ -472,3 +472,7 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+
+
+

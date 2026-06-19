@@ -37,7 +37,7 @@ const MainLayout = () => {
                 sidebarOpen={sidebarOpen}
             />
 
-            <div className="relative pt-[73px]">
+            <div className="relative pt-18.25">
                 <Sidebar
                     isOpen={sidebarOpen}
                     onClose={() => setSidebarOpen(false)}

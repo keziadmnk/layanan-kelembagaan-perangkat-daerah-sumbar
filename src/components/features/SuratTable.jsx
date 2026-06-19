@@ -1,13 +1,15 @@
-import { Eye, ArrowUpDown, ArrowUp, ArrowDown, Edit, Download, FileText } from 'lucide-react';
+import { Eye, ArrowUpDown, ArrowUp, ArrowDown, Edit, FileText } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import StatusBadge from '../common/StatusBadge';
 import SearchBar from '../common/SearchBar';
 import Pagination from '../common/Pagination';
 import { getStatusColorWithBorder } from '../../utils/statusUtils';
+import { createDocumentViewerUrl } from '../../utils/apiConfig';
 
 const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClick, simple = false }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchQuery, setSearchQuery] = useState('');
     const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
     const [currentPage, setCurrentPage] = useState(1);
@@ -95,33 +97,13 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
             alert('Surat rekomendasi belum tersedia');
             return;
         }
-        const baseURL = 'http://localhost:3001';
-        window.open(`${baseURL}${surat.file_surat_rekomendasi}`, '_blank');
-    };
 
-    const handleDownloadRekomendasi = async (surat) => {
-        if (!surat.file_surat_rekomendasi) {
-            alert('Surat rekomendasi belum tersedia');
-            return;
-        }
-
-        try {
-            const baseURL = 'http://localhost:3001';
-            const fileUrl = `${baseURL}${surat.file_surat_rekomendasi}`;
-            const response = await fetch(fileUrl);
-            const blob = await response.blob();
-            const blobUrl = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = blobUrl;
-            link.download = `Surat_Rekomendasi_${surat.id_pengajuan}.pdf`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(blobUrl);
-        } catch (error) {
-            console.error('Error downloading file:', error);
-            alert('Gagal mengunduh file. Silakan coba lagi.');
-        }
+        const returnTo = `${location.pathname}${location.search || ''}`;
+        navigate(createDocumentViewerUrl(
+            surat.file_surat_rekomendasi,
+            `Rekomendasi_${surat.id_pengajuan}.pdf`,
+            returnTo
+        ));
     };
 
     return (
@@ -290,3 +272,4 @@ const SuratTable = ({ data, isPemohon = false, showTahapan = false, onDetailClic
 };
 
 export default SuratTable;
+

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { X, Eye, Download, FileText, AlertCircle, Check, XCircle, Upload, ChevronDown, Clock, ArrowRight } from 'lucide-react';
 import RevisionModal from './RevisionModal';
 import AdminSuccessModal from '../common/AdminSuccessModal';
@@ -6,8 +7,7 @@ import ConfirmModal from '../common/ConfirmModal';
 import { pengajuanAPI, prosesAPI } from '../../services/api';
 import { useAuthContext } from '../../contexts/AuthContext';
 import { getStatusColor } from '../../utils/statusUtils';
-
-const BASE_URL = 'http://localhost:3001';
+import { API_URL, createDocumentViewerUrl, toDocumentProxyPath } from '../../utils/apiConfig';
 
 const TAHAPAN_PROSES = [
     { id: 1, label: 'Penjadwalan Rapat' },
@@ -36,6 +36,8 @@ const StatusBadge = ({ status }) => {
 
 const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false }) => {
     const { user } = useAuthContext();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [showRevisionModal, setShowRevisionModal] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const [dokumenList, setDokumenList] = useState([]);
@@ -261,25 +263,25 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
         } finally { setIsSelesaikan(false); }
     };
 
-    // Buka file secara inline di tab baru melalui proxy /minio/
-    const openFile = (filePath) => {
+    const openFile = (filePath, namaFile = 'Dokumen') => {
         if (!filePath) return;
-        // file_path disimpan sebagai "/minio/..." atau URL penuh
-        const url = filePath.startsWith('http') ? filePath : `${BASE_URL}${filePath}`;
-        window.open(url, '_blank');
+        const returnTo = `${location.pathname}${location.search || ''}`;
+        const viewerUrl = createDocumentViewerUrl(filePath, namaFile, returnTo);
+        onClose?.();
+        navigate(viewerUrl);
     };
 
     // Download file dengan Content-Disposition: attachment melalui endpoint download
     const downloadFile = async (filePath, nama) => {
         if (!filePath) { showSuccess('Error', 'Path file tidak valid', 'error'); return; }
         try {
-            // Hapus prefix /minio/ untuk endpoint download yang butuh objectName
-            const cleanPath = filePath.startsWith('/minio/')
-                ? filePath.slice('/minio/'.length)
-                : filePath;
+            const normalizedPath = toDocumentProxyPath(filePath);
+            const cleanPath = normalizedPath.startsWith('/dokumen/')
+                ? normalizedPath.slice('/dokumen/'.length)
+                : normalizedPath.replace(/^\/minio\//, '');
             const token = localStorage.getItem('token');
             const response = await fetch(
-                `${BASE_URL}/api/proses/download?path=${encodeURIComponent(cleanPath)}`,
+                `${API_URL}/proses/download?path=${encodeURIComponent(cleanPath)}`,
                 { headers: token ? { Authorization: `Bearer ${token}` } : {} }
             );
             if (!response.ok) {
@@ -443,7 +445,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                             </div>
 
                                             <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
-                                                ⚠️ Setelah diselesaikan, status pengajuan tidak dapat diubah kembali.
+                                                Setelah diselesaikan, status pengajuan tidak dapat diubah kembali.
                                             </p>
 
                                             <button
@@ -658,7 +660,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                                         <div key={b.id_bukti} className="flex items-center gap-2 text-xs text-gray-700 bg-gray-50 rounded px-2.5 py-1.5">
                                                                             <FileText className="w-3.5 h-3.5 text-navy-500 shrink-0" />
                                                                             <span className="flex-1 truncate">{b.nama_file}</span>
-                                                                            <button onClick={() => openFile(b.file_path)} className="text-navy-600 hover:text-navy-800 font-medium">Lihat</button>
+                                                                            <button onClick={() => openFile(b.file_path, b.nama_file)} className="text-navy-600 hover:text-navy-800 font-medium">Lihat</button>
                                                                             <button onClick={() => downloadFile(b.file_path, b.nama_file)} className="text-green-600 hover:text-green-800 font-medium">Unduh</button>
                                                                         </div>
                                                                     ))}
@@ -752,7 +754,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-2 ml-4">
-                                                    <button onClick={() => openFile(dok.path_file)} className="text-navy-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 border border-blue-200 text-sm font-medium">
+                                                    <button onClick={() => openFile(dok.path_file, dok.nama_file)} className="text-navy-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 border border-blue-200 text-sm font-medium">
                                                         <Eye className="w-4 h-4" />Lihat
                                                     </button>
                                                     <button onClick={() => downloadFile(dok.path_file, dok.nama_file)} className="text-green-600 hover:text-green-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-green-50 border border-green-200 text-sm font-medium">
@@ -785,7 +787,7 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-2 ml-4">
-                                            <button onClick={() => openFile(surat.file_surat_rekomendasi)} className="text-navy-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 border border-blue-200 text-sm font-medium">
+                                            <button onClick={() => openFile(surat.file_surat_rekomendasi, `Rekomendasi_${surat.id_pengajuan}.pdf`)} className="text-navy-600 hover:text-blue-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-navy-50 border border-blue-200 text-sm font-medium">
                                                 <Eye className="w-4 h-4" />Lihat
                                             </button>
                                             <button onClick={() => downloadFile(surat.file_surat_rekomendasi, `Rekomendasi_${surat.id_pengajuan}.pdf`)} className="text-green-600 hover:text-green-800 flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-green-50 border border-green-200 text-sm font-medium">
@@ -953,3 +955,4 @@ const DetailSuratModal = ({ surat, onClose, userRole, isVerificationMode = false
 };
 
 export default DetailSuratModal;
+

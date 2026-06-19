@@ -1,11 +1,11 @@
-import { Menu, Bell, User, LogOut, UserCircle } from 'lucide-react';
+﻿import { Menu, Bell, User, LogOut, UserCircle } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { notifikasiAPI } from '../../services/api';
 import provSumbarLogo from '../../assets/prov-sumbar.png';
 
-const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUserMenu, sidebarOpen }) => {
+const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUserMenu }) => {
     const navigate = useNavigate();
     const [unreadCount, setUnreadCount] = useState(0);
 
@@ -51,7 +51,7 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                 <div className="flex items-center gap-2 sm:gap-4">
                     <button
                         onClick={onToggleSidebar}
-                        className="p-2 text-gray-600 hover:text-navy-600 hover:bg-navy-50 rounded-lg transition-all duration-300 flex-shrink-0"
+                        className="p-2 text-gray-600 hover:text-navy-600 hover:bg-navy-50 rounded-lg transition-all duration-300 shrink-0"
                     >
                         <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
@@ -60,10 +60,10 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                         <img
                             src={provSumbarLogo}
                             alt="Logo Pemprov Sumbar"
-                            className="h-10 w-10 sm:h-12 sm:w-12 object-contain flex-shrink-0"
+                            className="h-10 w-10 sm:h-12 sm:w-12 object-contain shrink-0"
                         />
                         <div className="flex items-center gap-2 sm:gap-3">
-                            <div className="hidden sm:block w-[3px] h-10 sm:h-12 bg-gradient-to-b from-navy-600 to-yellow-600 rounded-full"></div>
+                            <div className="hidden sm:block w-0.75 h-10 sm:h-12 bg-linear-to-b from-navy-600 to-yellow-600 rounded-full"></div>
                             <div>
                                 <h1 className="text-base sm:text-lg lg:text-xl font-bold text-navy-600 leading-tight tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }}>
                                     LENTERA
@@ -79,11 +79,11 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                 <div className="flex items-center gap-2 sm:gap-3">
                     <button
                         onClick={handleNotificationClick}
-                        className="relative p-2 text-gray-600 hover:text-navy-600 hover:bg-navy-50 rounded-lg transition-all flex-shrink-0"
+                        className="relative p-2 text-gray-600 hover:text-navy-600 hover:bg-navy-50 rounded-lg transition-all shrink-0"
                     >
                         <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
                         {unreadCount > 0 && (
-                            <span className="absolute top-1 right-1 min-w-[16px] h-4 sm:min-w-[18px] sm:h-[18px] bg-red-500 rounded-full text-white text-[10px] sm:text-xs flex items-center justify-center px-1 font-medium">
+                            <span className="absolute top-1 right-1 min-w-4 h-4 sm:min-w-4.5 sm:h-4.5 bg-red-500 rounded-full text-white text-[10px] sm:text-xs flex items-center justify-center px-1 font-medium">
                                 {unreadCount > 99 ? '99+' : unreadCount}
                             </span>
                         )}
@@ -95,14 +95,14 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                             className="flex items-center gap-2 sm:gap-3 pl-2 sm:pl-3 lg:pl-4 border-l border-gray-200 hover:bg-navy-50 rounded-r-lg transition-all p-2"
                         >
                             <div className="text-right hidden lg:block">
-                                <p className="text-xs lg:text-sm font-medium text-gray-900 truncate max-w-[150px] xl:max-w-[200px]">
+                                <p className="text-xs lg:text-sm font-medium text-gray-900 truncate max-w-37.5 xl:max-w-50">
                                     {userInfo.kabupaten_kota || userInfo.username}
                                 </p>
                                 <p className="text-xs text-gray-600 capitalize">
                                     {userInfo.role}
                                 </p>
                             </div>
-                            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 bg-navy-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 bg-navy-600 rounded-full flex items-center justify-center shrink-0">
                                 <User className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
                             </div>
                         </button>
@@ -159,4 +159,5 @@ Header.propTypes = {
 };
 
 export default Header;
+
 

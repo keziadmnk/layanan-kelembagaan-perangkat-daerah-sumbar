@@ -1,4 +1,4 @@
-import { getStatusColorWithBorder, isCompletedStatus, needsRevision } from '../../utils/statusUtils';
+﻿import { getStatusColorWithBorder } from '../../utils/statusUtils';
 
 const StatusBadge = ({ status, dokumenLengkap, tahapan = null, showTahapan = false }) => {
     if (showTahapan && tahapan) {
@@ -24,3 +24,4 @@ const StatusBadge = ({ status, dokumenLengkap, tahapan = null, showTahapan = fal
 };
 
 export default StatusBadge;
+

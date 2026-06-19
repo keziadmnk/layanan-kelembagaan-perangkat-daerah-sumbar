@@ -1,6 +1,6 @@
-import { CheckCircle } from 'lucide-react';
+﻿import { CheckCircle } from 'lucide-react';
 
-const SuccessModal = ({ isOpen, onClose, nomorRegistrasi, status }) => {
+const SuccessModal = ({ isOpen, onClose }) => {
     if (!isOpen) return null;
 
     return (
@@ -36,7 +36,7 @@ const SuccessModal = ({ isOpen, onClose, nomorRegistrasi, status }) => {
                         </p>
                         <button
                             onClick={onClose}
-                            className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-3 px-6 rounded-lg hover:from-green-700 hover:to-green-800 font-medium transition-all transform hover:scale-105 shadow-lg"
+                            className="w-full bg-linear-to-r from-green-600 to-green-700 text-white py-3 px-6 rounded-lg hover:from-green-700 hover:to-green-800 font-medium transition-all transform hover:scale-105 shadow-lg"
                         >
                             OK, Lihat Riwayat Pengajuan
                         </button>
@@ -48,3 +48,4 @@ const SuccessModal = ({ isOpen, onClose, nomorRegistrasi, status }) => {
 };
 
 export default SuccessModal;
+

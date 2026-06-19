@@ -1,11 +1,10 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Send, ArrowLeft, Building, ClipboardList, Building2, FileText } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import FileUpload from '../components/common/FileUpload';
 import SuccessModal from '../components/common/SuccessModal';
 import { useAuthContext } from '../contexts/AuthContext';
-
-const API_BASE_URL = 'http://localhost:3001/api';
+import { API_URL } from '../utils/apiConfig';
 
 const FormPengajuanBaru = ({ onSuccess }) => {
     const { user } = useAuthContext();
@@ -42,12 +41,12 @@ const FormPengajuanBaru = ({ onSuccess }) => {
     const fetchModulLayanan = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/pengajuan/modul-layanan`);
+            const response = await fetch(`${API_URL}/pengajuan/modul-layanan`);
             const data = await response.json();
 
             if (data.success) {
                 setModulLayanan(data.data);
-                console.log('✅ Modul layanan loaded from database:', data.data);
+                console.log('âœ… Modul layanan loaded from database:', data.data);
             }
         } catch (error) {
             console.error('Error fetching modul layanan:', error);
@@ -60,13 +59,13 @@ const FormPengajuanBaru = ({ onSuccess }) => {
     const fetchPersyaratanDokumen = async (id_modul) => {
         try {
             setLoading(true);
-            const response = await fetch(`${API_BASE_URL}/pengajuan/persyaratan/${id_modul}`);
+            const response = await fetch(`${API_URL}/pengajuan/persyaratan/${id_modul}`);
             const data = await response.json();
 
             if (data.success) {
                 setPersyaratanDokumen(data.data.persyaratan);
                 setSelectedModulInfo(data.data.modul);
-                console.log('✅ Persyaratan loaded from database:', data.data.persyaratan);
+                console.log('âœ… Persyaratan loaded from database:', data.data.persyaratan);
             }
         } catch (error) {
             console.error('Error fetching persyaratan:', error);
@@ -125,10 +124,12 @@ const FormPengajuanBaru = ({ onSuccess }) => {
         try {
             setSubmitting(true);
 
-            const response = await fetch(`${API_BASE_URL}/pengajuan/create`, {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/pengajuan/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 },
                 body: JSON.stringify(pengajuanData),
             });
@@ -308,3 +309,8 @@ const FormPengajuanBaru = ({ onSuccess }) => {
 };
 
 export default FormPengajuanBaru;
+
+
+
+
+

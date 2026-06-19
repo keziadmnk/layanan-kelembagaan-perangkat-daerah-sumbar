@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { CheckCircle, XCircle, AlertCircle, FileText, ArrowUpDown, ArrowUp, ArrowDown, Eye } from 'lucide-react';
 import SearchBar from '../components/common/SearchBar';
 import Pagination from '../components/common/Pagination';
@@ -134,7 +134,7 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
             <div className="p-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
                     <div className="flex-1">
-                        <h2 className="text-xl font-bold text-gray-900 mb-4">Verifikasi Surat</h2>
+                        <h2 className="text-xl font-bold text-gray-900 mb-4">Verifikasi Pengajuan</h2>
                         <div className="flex gap-2 flex-wrap">
                             <button
                                 onClick={() => {
@@ -228,8 +228,8 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
                                 <tr>
                                     <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
                                         <FileText className="mx-auto h-12 w-12 text-gray-400 mb-3" />
-                                        <p className="text-lg font-medium">Tidak ada surat yang perlu diverifikasi</p>
-                                        <p className="text-sm mt-1">Semua surat telah diverifikasi</p>
+                                        <p className="text-lg font-medium">Tidak ada pengajuan yang perlu diverifikasi</p>
+                                        <p className="text-sm mt-1">Semua pengajuan telah diverifikasi</p>
                                     </td>
                                 </tr>
                             ) : (
@@ -301,3 +301,4 @@ const VerifikasiSuratPage = ({ onDetailClick }) => {
 };
 
 export default VerifikasiSuratPage;
+

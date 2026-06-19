@@ -1,5 +1,5 @@
-import axios from 'axios';
-const API_URL = 'http://localhost:3001/api';
+﻿import axios from 'axios';
+import { API_URL } from '../utils/apiConfig';
 const api = axios.create({
     baseURL: API_URL,
     headers: {
@@ -269,7 +269,7 @@ export const uploadAPI = {
             formData.append('file', file);
             formData.append('id_persyaratan', idPersyaratan);
 
-            const response = await api.post('/upload', formData, {
+            const response = await api.post('/upload/single', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -284,7 +284,7 @@ export const uploadAPI = {
 export const profileAPI = {
     updateProfile: async (formData) => {
         try {
-            const response = await fetch('http://localhost:3001/api/profile', {
+            const response = await fetch(`${API_URL}/profile`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -360,5 +360,6 @@ export const notifikasiAPI = {
 };
 
 export default api;
+
 
 

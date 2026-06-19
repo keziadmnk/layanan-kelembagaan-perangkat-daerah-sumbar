@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 @layer base {
     :root {
@@ -165,7 +165,7 @@
 
 
     /* ============================================ */
-    /* PURPLE/INDIGO → GRAY */
+    /* PURPLE/INDIGO â†’ GRAY */
     /* ============================================ */
     .bg-indigo-600 {
         background-color: var(--color-gray-dark) !important;
@@ -239,7 +239,7 @@
         border-color: var(--color-gray) !important;
     }
 
-    /* Gradients with indigo → gray gradients */
+    /* Gradients with indigo â†’ gray gradients */
     .from-indigo-600 {
         --tw-gradient-from: var(--color-gray-dark) !important;
     }
@@ -1236,6 +1236,305 @@
 
         .kabkota-table thead th:first-child {
             width: 50px;
+        }
+    }
+
+    .nav-button {
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        font-family: inherit;
+    }
+
+    /* ============================================ */
+    /* SYARAT LAYANAN PAGE STYLES */
+    /* ============================================ */
+
+    .syarat-layanan-page {
+        min-height: 100vh;
+        background: linear-gradient(180deg, #F5F7FA 0%, #ffffff 100%);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .syarat-main-section {
+        flex: 1;
+        padding: 120px 2rem 4.5rem;
+    }
+
+    .syarat-hero-panel {
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        margin-bottom: 3rem;
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, rgba(0, 51, 102, 0.98) 0%, rgba(0, 34, 68, 0.96) 100%);
+        border-radius: 20px;
+        box-shadow: 0 18px 45px rgba(0, 51, 102, 0.18);
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .syarat-hero-panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 15% 20%, rgba(212, 175, 55, 0.18) 0%, transparent 28%),
+            radial-gradient(circle at 85% 10%, rgba(255, 215, 0, 0.12) 0%, transparent 24%);
+        pointer-events: none;
+    }
+
+    .syarat-hero-panel > * {
+        position: relative;
+        z-index: 1;
+    }
+
+    .syarat-hero-panel .page-title {
+        color: white;
+    }
+
+    .syarat-hero-panel .page-subtitle {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .syarat-eyebrow {
+        color: #D4AF37;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.4px;
+        font-size: 0.78rem;
+        margin: 0 0 0.75rem;
+    }
+
+    .syarat-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        max-width: 720px;
+        margin: 2rem auto 0;
+    }
+
+    .syarat-summary-item {
+        padding: 1.25rem;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .summary-value {
+        color: #FFD700;
+        font-size: 2rem;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .summary-label {
+        color: rgba(255, 255, 255, 0.76);
+        font-size: 0.88rem;
+    }
+
+    .service-requirement-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 1.5rem;
+        animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    }
+
+    .service-requirement-card {
+        background: white;
+        border: 1px solid rgba(0, 51, 102, 0.08);
+        border-radius: 18px;
+        box-shadow: 0 8px 28px rgba(0, 51, 102, 0.08);
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .service-requirement-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 14px 34px rgba(0, 51, 102, 0.13);
+    }
+
+    .service-card-header {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 1rem;
+        padding: 1.5rem;
+        background: linear-gradient(180deg, #ffffff 0%, #F8FAFC 100%);
+        border-bottom: 1px solid #E6EBF0;
+    }
+
+    .service-requirement-icon {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .service-requirement-icon-svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .icon-tone-1 {
+        background: linear-gradient(135deg, #003366 0%, #004488 100%);
+    }
+
+    .icon-tone-2 {
+        background: linear-gradient(135deg, #D4AF37 0%, #FFC107 100%);
+        color: #001833;
+    }
+
+    .icon-tone-3 {
+        background: linear-gradient(135deg, #002244 0%, #003366 100%);
+    }
+
+    .service-number {
+        margin: 0 0 0.35rem;
+        color: #D4AF37;
+        font-size: 0.76rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .service-card-header h2 {
+        margin: 0;
+        color: #003366;
+        font-size: 1.22rem;
+        font-weight: 800;
+        line-height: 1.35;
+    }
+
+    .service-card-header p:last-child {
+        color: #6B7280;
+        margin: 0.55rem 0 0;
+        line-height: 1.55;
+        font-size: 0.92rem;
+    }
+
+    .requirement-list {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .requirement-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.85rem;
+        padding: 1rem;
+        border-radius: 14px;
+        background: #F8FAFC;
+        border: 1px solid #E6EBF0;
+    }
+
+    .requirement-index {
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+        background: #003366;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.8rem;
+    }
+
+    .requirement-content {
+        min-width: 0;
+    }
+
+    .requirement-title-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 0.65rem;
+    }
+
+    .requirement-title-row h3 {
+        margin: 0;
+        color: #1F2937;
+        font-size: 0.96rem;
+        font-weight: 700;
+        line-height: 1.4;
+    }
+
+    .required-badge,
+    .optional-badge {
+        flex-shrink: 0;
+        border-radius: 999px;
+        padding: 0.25rem 0.65rem;
+        font-size: 0.72rem;
+        font-weight: 800;
+    }
+
+    .required-badge {
+        background: #FEF3C7;
+        color: #92400E;
+        border: 1px solid #FCD34D;
+    }
+
+    .optional-badge {
+        background: #EFF6FF;
+        color: #1D4ED8;
+        border: 1px solid #BFDBFE;
+    }
+
+    .requirement-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
+        color: #6B7280;
+        font-size: 0.82rem;
+    }
+
+    .requirement-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .requirement-empty {
+        padding: 1.25rem;
+        border-radius: 14px;
+        background: #F8FAFC;
+        color: #6B7280;
+        text-align: center;
+        border: 1px dashed #CBD5E1;
+    }
+
+    @media (max-width: 768px) {
+        .syarat-main-section {
+            padding: 100px 1rem 2.5rem;
+        }
+
+        .syarat-hero-panel {
+            padding: 2.25rem 1.25rem;
+            border-radius: 16px;
+        }
+
+        .syarat-summary-grid,
+        .service-requirement-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .service-card-header {
+            grid-template-columns: 1fr;
+        }
+
+        .requirement-title-row {
+            flex-direction: column;
         }
     }
 }

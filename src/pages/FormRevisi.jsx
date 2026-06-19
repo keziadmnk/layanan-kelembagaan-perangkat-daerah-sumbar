@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Send, ArrowLeft, AlertCircle, Building, ClipboardList, Building2, FileText } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import FileUpload from '../components/common/FileUpload';
@@ -14,7 +14,6 @@ const FormRevisi = () => {
     const [pengajuan, setPengajuan] = useState(null);
     const [selectedModulInfo, setSelectedModulInfo] = useState(null);
     const [persyaratanDokumen, setPersyaratanDokumen] = useState([]);
-    const [existingDokumen, setExistingDokumen] = useState([]);
     const [catatanRevisi, setCatatanRevisi] = useState([]);
 
     const [catatanPemohon, setCatatanPemohon] = useState('');
@@ -54,7 +53,6 @@ const FormRevisi = () => {
                 // Fetch existing dokumen
                 const dokumenRes = await pengajuanAPI.getDokumen(id);
                 if (dokumenRes.success) {
-                    setExistingDokumen(dokumenRes.data);
 
                     // Pre-populate uploaded files with existing documents
                     const existingFiles = {};
@@ -118,14 +116,18 @@ const FormRevisi = () => {
         // Prepare data - only include new/changed documents
         const dokumen_upload = Object.values(uploadedFiles)
             .filter(file => !file.isExisting)
-            .map(({ isExisting, ...rest }) => rest);
+            .map(file => {
+                const rest = { ...file };
+                delete rest.isExisting;
+                return rest;
+            });
 
         const revisiData = {
             catatan_pemohon: catatanPemohon || null,
             dokumen_upload: dokumen_upload,
         };
 
-        console.log('📤 Submitting revisi:', revisiData);
+        console.log('ðŸ“¤ Submitting revisi:', revisiData);
 
         try {
             setSubmitting(true);
@@ -133,7 +135,7 @@ const FormRevisi = () => {
             const result = await pengajuanAPI.submitRevisi(id, revisiData);
 
             if (result.success) {
-                console.log('✅ Revisi berhasil disubmit:', result.data);
+                console.log('âœ… Revisi berhasil disubmit:', result.data);
                 setSubmissionResult(result.data);
                 setShowSuccessModal(true);
             }
@@ -349,3 +351,4 @@ const FormRevisi = () => {
 };
 
 export default FormRevisi;
+

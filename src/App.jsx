@@ -5,6 +5,7 @@ import ProtectedRoute from './components/layout/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import LandingPage from './pages/LandingPage';
 import KabKotaInfoPage from './pages/KabKotaInfoPage';
+import SyaratLayananPage from './pages/SyaratLayananPage';
 import LoginPage from './pages/LoginPage';
 import DashboardAdmin from './pages/DashboardAdmin';
 import DashboardPemohon from './pages/DashboardPemohon';
@@ -15,6 +16,7 @@ import VerifikasiSuratPage from './pages/VerifikasiSuratPage';
 import UserManagementPage from './pages/UserManagementPage';
 import ProfilePage from './pages/ProfilePage';
 import NotificationPage from './pages/NotificationPage';
+import DocumentViewerPage from './pages/DocumentViewerPage';
 import DetailSuratModal from './components/features/DetailSuratModal';
 
 const AppRoutes = () => {
@@ -38,6 +40,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/kab-kota-info" element={<KabKotaInfoPage />} />
+        <Route path="/syarat-layanan" element={<SyaratLayananPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/landing-page" replace />} />
         <Route path="*" element={<Navigate to="/landing-page" replace />} />
@@ -50,6 +53,11 @@ const AppRoutes = () => {
       <>
         <Routes>
           <Route path="/login" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dokumen/viewer/:viewerId" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <DocumentViewerPage />
+            </ProtectedRoute>
+          } />
           <Route element={
             <ProtectedRoute allowedRoles={['admin']}>
               <MainLayout />
@@ -59,7 +67,7 @@ const AppRoutes = () => {
             <Route path="/verifikasi-surat" element={<VerifikasiSuratPage onDetailClick={setSelectedSurat} />} />
             <Route path="/surat-masuk" element={
               <SuratListPage
-                title="Semua Surat Masuk"
+                title="Semua Pengajuan"
                 onDetailClick={setSelectedSurat}
               />
             } />
@@ -72,7 +80,7 @@ const AppRoutes = () => {
             } />
             <Route path="/selesai" element={
               <SuratListPage
-                title="Surat Selesai"
+                title="Pengajuan Selesai"
                 status="Selesai"
                 onDetailClick={setSelectedSurat}
               />
@@ -98,6 +106,11 @@ const AppRoutes = () => {
     <>
       <Routes>
         <Route path="/login" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dokumen/viewer/:viewerId" element={
+          <ProtectedRoute allowedRoles={['kab/kota']}>
+            <DocumentViewerPage />
+          </ProtectedRoute>
+        } />
         <Route element={
           <ProtectedRoute allowedRoles={['kab/kota']}>
             <MainLayout />
@@ -143,3 +156,4 @@ function App() {
 }
 
 export default App;
+

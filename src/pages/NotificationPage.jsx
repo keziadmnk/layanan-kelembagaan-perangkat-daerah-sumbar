@@ -227,7 +227,7 @@ const NotificationPage = () => {
                             <div className="p-4">
                                 <div className="flex items-start gap-4">
                                     {/* Icon with green dot indicator for unread */}
-                                    <div className="relative w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 bg-gray-100">
+                                    <div className="relative w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-gray-100">
                                         {getNotificationIcon(notif.tipe)}
                                         {!notif.is_read && (
                                             <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></span>
@@ -254,7 +254,7 @@ const NotificationPage = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                    <div className="flex items-center gap-2 shrink-0">
                                         <button
                                             onClick={(e) => handleDelete(notif.id_notifikasi, e)}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"

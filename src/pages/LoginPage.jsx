@@ -45,7 +45,7 @@ const LoginPage = () => {
           className="absolute inset-0 w-full h-full object-cover"
         />
         {/* Navy Shadow Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/70 via-[#004080]/50 to-[#0066cc]/20"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-[#003366]/70 via-[#004080]/50 to-[#0066cc]/20"></div>
         
         {/* Animated Decorative Elements */}
         <div className="absolute inset-0">
@@ -58,18 +58,18 @@ const LoginPage = () => {
       {/* Right Side - Login Form with Gradient Background */}
       <div className="flex-1 flex items-center justify-center relative overflow-hidden">
         {/* Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-blue-50"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-blue-50 via-white to-blue-50"></div>
         
         {/* Animated Decorative Gradient Circles */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#003366]/5 to-blue-200/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2 animate-float"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-100/20 to-[#003366]/5 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2 animate-float-delayed"></div>
-        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-gradient-to-br from-blue-200/10 to-transparent rounded-full blur-2xl animate-pulse-slow"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-linear-to-br from-[#003366]/5 to-blue-200/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2 animate-float"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-linear-to-tr from-blue-100/20 to-[#003366]/5 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2 animate-float-delayed"></div>
+        <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-linear-to-br from-blue-200/10 to-transparent rounded-full blur-2xl animate-pulse-slow"></div>
         
         <div className="relative z-10 w-full max-w-md px-8">
           {/* Title Section - Above Login Card with slide-in animation */}
           <div className="text-center mb-8 animate-slide-down">
             
-            <h1 className="text-3xl font-bold mb-2 font-bold text-navy-600 leading-tight tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }} >
+            <h1 className="text-3xl mb-2 font-bold text-navy-600 leading-tight tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }} >
               LENTERA
             </h1>
             <p className="text-lg text-gray-600">
@@ -146,7 +146,7 @@ const LoginPage = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-[#003366] to-[#0059b3] text-white py-3 rounded-lg font-semibold hover:from-[#002244] hover:to-[#004080] focus:outline-none focus:ring-2 focus:ring-[#003366] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                  className="w-full bg-linear-to-r from-[#003366] to-[#0059b3] text-white py-3 rounded-lg font-semibold hover:from-[#002244] hover:to-[#004080] focus:outline-none focus:ring-2 focus:ring-[#003366] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center">

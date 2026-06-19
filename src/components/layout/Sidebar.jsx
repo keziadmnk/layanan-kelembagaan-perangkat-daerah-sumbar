@@ -9,8 +9,8 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
 
     const adminMenuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: Home },
-        { id: 'surat-masuk', label: 'Semua Surat', icon: FileText },
-        { id: 'verifikasi-surat', label: 'Verifikasi Surat', icon: ClipboardCheck },
+        { id: 'surat-masuk', label: 'Semua Pengajuan', icon: FileText },
+        { id: 'verifikasi-surat', label: 'Verifikasi Pengajuan', icon: ClipboardCheck },
         { id: 'dalam-proses', label: 'Dalam Proses', icon: Clock },
         { id: 'selesai', label: 'Selesai', icon: CheckCircle },
         { id: 'kelola-akun', label: 'Kelola Akun Kab/Kota', icon: Users }
@@ -42,7 +42,7 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
 
             <aside
                 className={`${isOpen ? 'w-64' : 'w-20 -translate-x-full lg:translate-x-0'
-                    } fixed top-[73px] left-0 h-[calc(100vh-73px)] bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-40 overflow-y-auto overflow-x-hidden shadow-lg`}
+                    } fixed top-18.25 left-0 h-[calc(100vh-73px)] bg-white border-r border-gray-200 transition-all duration-300 ease-in-out z-40 overflow-y-auto overflow-x-hidden shadow-lg`}
             >
                 <nav className="p-3 space-y-1.5 mt-4">
                     {menuItems.map((item) => {
@@ -63,14 +63,14 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
                                         : 'text-gray-700 hover:bg-navy-50 hover:text-blue-700'
                                     }`}
                             >
-                                <Icon className={`${isOpen ? 'w-5 h-5' : 'w-6 h-6'} flex-shrink-0`} />
+                                <Icon className={`${isOpen ? 'w-5 h-5' : 'w-6 h-6'} shrink-0`} />
                                 {isOpen && (
                                     <span className="whitespace-nowrap font-medium">
                                         {item.label}
                                     </span>
                                 )}
                                 {!isOpen && isHovered && (
-                                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-[60] shadow-xl pointer-events-none">
+                                    <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap z-60 shadow-xl pointer-events-none">
                                         {item.label}
                                         <div className="absolute top-1/2 -left-1 w-2 h-2 bg-gray-900 transform -translate-y-1/2 rotate-45"></div>
                                     </div>

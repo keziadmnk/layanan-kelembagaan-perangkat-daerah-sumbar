@@ -1,4 +1,4 @@
-/** @format */
+﻿/** @format */
 
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -64,8 +64,9 @@ const LandingPage = () => {
                         </div>
                     </div>
                     <nav className="nav-menu">
-                        <a href="#home" className="nav-link active">Beranda</a>
-                        <a onClick={() => navigate('/kab-kota-info')} className="nav-link" style={{ cursor: 'pointer' }}>Kabupaten/Kota</a>
+                        <button type="button" onClick={() => navigate('/landing-page')} className="nav-link nav-button active">Beranda</button>
+                        <button type="button" onClick={() => navigate('/kab-kota-info')} className="nav-link nav-button">Kabupaten/Kota</button>
+                        <button type="button" onClick={() => navigate('/syarat-layanan')} className="nav-link nav-button">Syarat Layanan</button>
                         <button onClick={() => navigate('/login')} className="btn-login">
                             Masuk
                         </button>
@@ -174,7 +175,7 @@ const LandingPage = () => {
                     </div>
                     <div className="footer-bottom">
                         <p className="footer-copyright">
-                            © 2026 BBiro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
+                            Â© 2026 BBiro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
                         </p>
                     </div>
                 </div>
@@ -184,3 +185,4 @@ const LandingPage = () => {
 };
 
 export default LandingPage;
+

@@ -1,7 +1,6 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { Upload, Check, X, Loader } from 'lucide-react';
-
-const API_BASE_URL = 'http://localhost:3001/api';
+import { API_URL } from '../../utils/apiConfig';
 
 const FileUpload = ({
     label,
@@ -47,8 +46,10 @@ const FileUpload = ({
             formData.append('file', file);
             formData.append('id_persyaratan', id_persyaratan);
 
-            const response = await fetch(`${API_BASE_URL}/upload/single`, {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`${API_URL}/upload/single`, {
                 method: 'POST',
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
                 body: formData,
             });
 
@@ -73,9 +74,9 @@ const FileUpload = ({
                 });
             }
 
-            console.log('✅ File uploaded:', result.data);
+            console.log('âœ… File uploaded:', result.data);
         } catch (err) {
-            console.error('❌ Upload error:', err);
+            console.error('âŒ Upload error:', err);
             setError(err.message);
         } finally {
             setUploading(false);
@@ -191,3 +192,8 @@ const FileUpload = ({
 };
 
 export default FileUpload;
+
+
+
+
+

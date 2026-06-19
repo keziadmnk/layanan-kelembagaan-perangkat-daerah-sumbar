@@ -1,4 +1,4 @@
-/** @format */
+﻿/** @format */
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -45,8 +45,9 @@ const KabKotaInfoPage = () => {
                         </div>
                     </div>
                     <nav className="nav-menu">
-                        <a href="/landing-page" className="nav-link">Beranda</a>
-                        <a href="/kab-kota-info" className="nav-link active">Kabupaten/Kota</a>
+                        <button type="button" onClick={() => navigate('/landing-page')} className="nav-link nav-button">Beranda</button>
+                        <button type="button" onClick={() => navigate('/kab-kota-info')} className="nav-link nav-button active">Kabupaten/Kota</button>
+                        <button type="button" onClick={() => navigate('/syarat-layanan')} className="nav-link nav-button">Syarat Layanan</button>
                         <button onClick={() => navigate('/login')} className="btn-login">
                             Masuk
                         </button>
@@ -139,7 +140,7 @@ const KabKotaInfoPage = () => {
                     </div>
                     <div className="footer-bottom">
                         <p className="footer-copyright">
-                            © 2026 Biro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
+                            Â© 2026 Biro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
                         </p>
                     </div>
                 </div>
@@ -149,3 +150,4 @@ const KabKotaInfoPage = () => {
 };
 
 export default KabKotaInfoPage;
+

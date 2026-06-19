@@ -1,4 +1,4 @@
-import { Building, ClipboardList, Building2, FileText } from 'lucide-react';
+﻿import { Building, ClipboardList, Building2, FileText } from 'lucide-react';
 
 const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
     const getIcon = (namaModul) => {
@@ -16,7 +16,7 @@ const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
         return namaModul;
     };
 
-    const getAccentColor = (namaModul) => {
+    const getAccentColor = () => {
         return 'blue';
     };
 
@@ -107,3 +107,4 @@ const ModuleCard = ({ module, stats, onClick, isSelected = false }) => {
 };
 
 export default ModuleCard;
+

@@ -98,7 +98,7 @@ const DashboardPemohon = ({ onDetailClick }) => {
                     className="absolute inset-0 w-full h-full object-cover"
                 />
                 {/* Gradient Overlay - Gelap di kiri, Terang di kanan */}
-                <div className="absolute inset-0 bg-gradient-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
+                <div className="absolute inset-0 bg-linear-to-r from-[#003366]/95 via-[#004080]/70 to-[#0066cc]/40"></div>
                 
                 {/* Content */}
                 <div className="relative z-10">
