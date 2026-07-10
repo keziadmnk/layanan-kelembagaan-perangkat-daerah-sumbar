@@ -23,7 +23,8 @@ const LoginPage = () => {
       const response = await authAPI.login(username, password);
       if (response.success) {
         login(response.data.user, response.data.token);
-        navigate('/dashboard', { replace: true });
+        const destination = response.data.user?.role === 'admin' ? '/menu-layanan' : '/dashboard';
+        navigate(destination, { replace: true });
       } else {
         throw new Error(response.message || 'Login gagal');
       }

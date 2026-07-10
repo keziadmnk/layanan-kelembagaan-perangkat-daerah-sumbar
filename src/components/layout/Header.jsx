@@ -1,4 +1,4 @@
-﻿import { Menu, Bell, User, LogOut, UserCircle } from 'lucide-react';
+import { Menu, Bell, User, LogOut, UserCircle, LayoutGrid } from 'lucide-react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
@@ -36,6 +36,11 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
     const handleProfileClick = () => {
         setShowUserMenu(false);
         navigate('/profile');
+    };
+
+    const handleMenuLayananClick = () => {
+        setShowUserMenu(false);
+        navigate('/menu-layanan');
     };
 
     const handleNotificationClick = () => {
@@ -95,7 +100,7 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                             className="flex items-center gap-2 sm:gap-3 pl-2 sm:pl-3 lg:pl-4 border-l border-gray-200 hover:bg-navy-50 rounded-r-lg transition-all p-2"
                         >
                             <div className="text-right hidden lg:block">
-                                <p className="text-xs lg:text-sm font-medium text-gray-900 truncate max-w-37.5 xl:max-w-50">
+                                <p className="text-xs lg:text-sm font-bold text-gray-900 truncate max-w-37.5 xl:max-w-50">
                                     {userInfo.kabupaten_kota || userInfo.username}
                                 </p>
                                 <p className="text-xs text-gray-600 capitalize">
@@ -122,6 +127,13 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                                             {userInfo.role}
                                         </p>
                                     </div>
+                                    <button
+                                        onClick={handleMenuLayananClick}
+                                        className="w-full px-4 py-3 text-left hover:bg-navy-50 transition-all text-gray-700 flex items-center gap-2"
+                                    >
+                                        <LayoutGrid className="w-4 h-4" />
+                                        <span className="font-medium text-sm">Menu Layanan</span>
+                                    </button>
                                     <button
                                         onClick={handleProfileClick}
                                         className="w-full px-4 py-3 text-left hover:bg-navy-50 transition-all text-gray-700 flex items-center gap-2"

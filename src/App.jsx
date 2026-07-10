@@ -18,6 +18,10 @@ import ProfilePage from './pages/ProfilePage';
 import NotificationPage from './pages/NotificationPage';
 import DocumentViewerPage from './pages/DocumentViewerPage';
 import DetailSuratModal from './components/features/DetailSuratModal';
+import MenuLayananPage from './pages/MenuLayananPage';
+import UnderDevelopmentPage from './pages/UnderDevelopmentPage';
+import ScrollToTop from './components/common/ScrollToTop';
+import PanduanLayananPage from './pages/PanduanLayananPage';
 
 const AppRoutes = () => {
   const { user, isAuthenticated, loading } = useAuthContext();
@@ -41,6 +45,7 @@ const AppRoutes = () => {
         <Route path="/landing-page" element={<LandingPage />} />
         <Route path="/kab-kota-info" element={<KabKotaInfoPage />} />
         <Route path="/syarat-layanan" element={<SyaratLayananPage />} />
+        <Route path="/panduan-layanan" element={<PanduanLayananPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Navigate to="/landing-page" replace />} />
         <Route path="*" element={<Navigate to="/landing-page" replace />} />
@@ -52,7 +57,22 @@ const AppRoutes = () => {
     return (
       <>
         <Routes>
-          <Route path="/login" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/login" element={<Navigate to="/menu-layanan" replace />} />
+          <Route path="/menu-layanan" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <MenuLayananPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard-provinsi" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <UnderDevelopmentPage serviceTitle="Fasilitasi Penataan Kelembagaan Provinsi" />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard-anjab" element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <UnderDevelopmentPage serviceTitle="Fasilitasi AnJab (Analisis Jabatan)" />
+            </ProtectedRoute>
+          } />
           <Route path="/dokumen/viewer/:viewerId" element={
             <ProtectedRoute allowedRoles={['admin']}>
               <DocumentViewerPage />
@@ -63,7 +83,7 @@ const AppRoutes = () => {
               <MainLayout />
             </ProtectedRoute>
           }>
-            <Route path="/dashboard" element={<DashboardAdmin onDetailClick={setSelectedSurat} />} />
+            <Route path="/dashboard-kabkota" element={<DashboardAdmin onDetailClick={setSelectedSurat} />} />
             <Route path="/verifikasi-surat" element={<VerifikasiSuratPage onDetailClick={setSelectedSurat} />} />
             <Route path="/surat-masuk" element={
               <SuratListPage
@@ -88,8 +108,8 @@ const AppRoutes = () => {
             <Route path="/kelola-akun" element={<UserManagementPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/notifikasi" element={<NotificationPage />} />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/menu-layanan" replace />} />
+            <Route path="*" element={<Navigate to="/menu-layanan" replace />} />
           </Route>
         </Routes>
         <DetailSuratModal
@@ -149,6 +169,7 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <AppRoutes />
       </Router>
     </AuthProvider>

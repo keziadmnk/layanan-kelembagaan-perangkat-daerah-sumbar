@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AlertCircle, Building, Building2, CheckCircle, ClipboardList, FileText, RefreshCw } from 'lucide-react';
 import { modulLayananAPI } from '../services/api';
@@ -76,6 +76,7 @@ const SyaratLayananPage = () => {
                         <button type="button" onClick={() => navigate('/landing-page')} className="nav-link nav-button">Beranda</button>
                         <button type="button" onClick={() => navigate('/kab-kota-info')} className="nav-link nav-button">Kabupaten/Kota</button>
                         <button type="button" onClick={() => navigate('/syarat-layanan')} className="nav-link nav-button active">Syarat Layanan</button>
+                        <button type="button" onClick={() => navigate('/panduan-layanan')} className="nav-link nav-button">Panduan Layanan</button>
                         <button onClick={() => navigate('/login')} className="btn-login">
                             Masuk
                         </button>

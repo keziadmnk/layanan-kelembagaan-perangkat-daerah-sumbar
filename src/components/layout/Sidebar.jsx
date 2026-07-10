@@ -8,7 +8,7 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
     const location = useLocation();
 
     const adminMenuItems = [
-        { id: 'dashboard', label: 'Dashboard', icon: Home },
+        { id: 'dashboard-kabkota', label: 'Dashboard', icon: Home },
         { id: 'surat-masuk', label: 'Semua Pengajuan', icon: FileText },
         { id: 'verifikasi-surat', label: 'Verifikasi Pengajuan', icon: ClipboardCheck },
         { id: 'dalam-proses', label: 'Dalam Proses', icon: Clock },
@@ -47,7 +47,7 @@ const Sidebar = ({ isOpen, onClose, onTabChange, userRole }) => {
                 <nav className="p-3 space-y-1.5 mt-4">
                     {menuItems.map((item) => {
                         const Icon = item.icon;
-                        const currentPath = location.pathname.replace('/', '') || 'dashboard';
+                        const currentPath = location.pathname.slice(1) || 'dashboard';
                         const isActive = currentPath === item.id;
                         const isHovered = hoveredItem === item.id;
 

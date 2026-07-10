@@ -1,4 +1,4 @@
-﻿/** @format */
+/** @format */
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -48,6 +48,7 @@ const KabKotaInfoPage = () => {
                         <button type="button" onClick={() => navigate('/landing-page')} className="nav-link nav-button">Beranda</button>
                         <button type="button" onClick={() => navigate('/kab-kota-info')} className="nav-link nav-button active">Kabupaten/Kota</button>
                         <button type="button" onClick={() => navigate('/syarat-layanan')} className="nav-link nav-button">Syarat Layanan</button>
+                        <button type="button" onClick={() => navigate('/panduan-layanan')} className="nav-link nav-button">Panduan Layanan</button>
                         <button onClick={() => navigate('/login')} className="btn-login">
                             Masuk
                         </button>

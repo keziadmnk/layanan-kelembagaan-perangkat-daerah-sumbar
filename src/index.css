@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 
 @layer base {
     :root {
@@ -1535,6 +1535,765 @@
 
         .requirement-title-row {
             flex-direction: column;
+        }
+    }
+
+    /* ============================================ */
+    /* MENU LAYANAN PAGE STYLES */
+    /* ============================================ */
+
+    .menu-layanan-page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: #F5F7FA;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
+
+    /* Header */
+    .menu-layanan-header {
+        background: white;
+        border-bottom: 1px solid rgba(0, 51, 102, 0.1);
+        box-shadow: 0 2px 12px rgba(0, 51, 102, 0.06);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .menu-layanan-header-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .menu-layanan-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+    }
+
+    .menu-layanan-logo-img {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+    }
+
+    .menu-layanan-logo-text {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .menu-layanan-logo-divider {
+        width: 3px;
+        height: 44px;
+        background: linear-gradient(to bottom, #003366, #D4AF37);
+        border-radius: 2px;
+    }
+
+    .menu-layanan-logo-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #003366;
+        letter-spacing: 0.05em;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .menu-layanan-logo-subtitle {
+        font-size: 0.7rem;
+        color: #6B7280;
+        letter-spacing: 0.02em;
+        margin: 0;
+    }
+
+    .menu-layanan-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .menu-layanan-user-wrap {
+        position: relative;
+    }
+
+    .menu-layanan-user-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 51, 102, 0.1);
+        background: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .menu-layanan-user-btn:hover {
+        background: #F5F7FA;
+        border-color: rgba(0, 51, 102, 0.2);
+    }
+
+    .menu-layanan-user-info {
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+    }
+
+    .menu-layanan-user-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #111827;
+        line-height: 1.2;
+    }
+
+    .menu-layanan-user-role {
+        font-size: 0.7rem;
+        color: #6B7280;
+        line-height: 1.2;
+    }
+
+    .menu-layanan-avatar {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #003366 0%, #004488 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .menu-layanan-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+    }
+
+    .menu-layanan-dropdown {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        width: 220px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 51, 102, 0.15);
+        border: 1px solid rgba(0, 51, 102, 0.08);
+        overflow: hidden;
+        z-index: 50;
+        animation: dropdownFadeIn 0.18s ease-out;
+    }
+
+    @keyframes dropdownFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .menu-layanan-dropdown-header {
+        padding: 0.875rem 1rem;
+        border-bottom: 1px solid #F3F4F6;
+        background: #F9FAFB;
+    }
+
+    .menu-layanan-dropdown-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #111827;
+        margin: 0;
+    }
+
+    .menu-layanan-dropdown-role {
+        font-size: 0.75rem;
+        color: #6B7280;
+        margin: 0.15rem 0 0 0;
+    }
+
+    .menu-layanan-dropdown-logout {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        width: 100%;
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #DC2626;
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+
+    .menu-layanan-dropdown-logout:hover {
+        background: #FEF2F2;
+    }
+
+    /* Hero Section */
+    .menu-layanan-main {
+        flex: 1;
+    }
+
+    .menu-layanan-hero {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        min-height: 220px;
+        display: flex;
+        align-items: flex-end;
+        overflow: hidden;
+    }
+
+    .menu-layanan-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(0, 24, 51, 0.82) 0%,
+            rgba(0, 51, 102, 0.72) 50%,
+            rgba(0, 68, 136, 0.55) 100%
+        );
+    }
+
+    .menu-layanan-hero-content {
+        position: relative;
+        z-index: 2;
+        padding: 2.5rem 2rem 2.5rem;
+        max-width: 1280px;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .menu-layanan-hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(212, 175, 55, 0.2);
+        border: 1px solid rgba(212, 175, 55, 0.4);
+        color: #D4AF37;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 0.35rem 0.875rem;
+        border-radius: 100px;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(4px);
+    }
+
+    .menu-layanan-hero-heading {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.3;
+    }
+
+    .menu-layanan-hero-sub {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.75);
+        margin: 0;
+        max-width: 560px;
+        line-height: 1.6;
+    }
+
+    .menu-layanan-hero-deco-1 {
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    .menu-layanan-hero-deco-2 {
+        position: absolute;
+        bottom: -40px;
+        right: 15%;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(0, 68, 136, 0.3) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 1;
+    }
+
+    /* Cards Section */
+    .menu-layanan-section {
+        padding: 3rem 2rem;
+    }
+
+    .menu-layanan-section-inner {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .menu-layanan-section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+        margin-bottom: 2rem;
+    }
+
+    .menu-layanan-section-line {
+        width: 4px;
+        height: 28px;
+        background: linear-gradient(to bottom, #003366, #D4AF37);
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+
+    .menu-layanan-section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0;
+        letter-spacing: -0.01em;
+    }
+
+    .menu-layanan-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    /* Service Card */
+    .menu-service-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid rgba(0, 51, 102, 0.08);
+        box-shadow: 0 4px 16px rgba(0, 51, 102, 0.06);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: relative;
+        overflow: hidden;
+        animation: cardFadeUp 0.5s ease-out both;
+    }
+
+    @keyframes cardFadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .menu-service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #003366, #D4AF37);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.35s ease;
+    }
+
+    .menu-service-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 16px 40px rgba(0, 51, 102, 0.14);
+        border-color: rgba(0, 51, 102, 0.15);
+    }
+
+    .menu-service-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .menu-service-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 1.25rem;
+    }
+
+    .menu-service-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+    }
+
+    .menu-service-card:hover .menu-service-icon {
+        transform: scale(1.08) rotate(3deg);
+    }
+
+    .menu-icon-bg-1 {
+        background: linear-gradient(135deg, #003366 0%, #004488 100%);
+        box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+    }
+
+    .menu-icon-bg-2 {
+        background: linear-gradient(135deg, #D4AF37 0%, #B8962E 100%);
+        box-shadow: 0 4px 12px rgba(212, 175, 55, 0.35);
+    }
+
+    .menu-icon-bg-3 {
+        background: linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+        box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+    }
+
+    .menu-service-badge {
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        padding: 0.25rem 0.625rem;
+        border-radius: 100px;
+    }
+
+    .menu-badge-blue {
+        background: rgba(0, 51, 102, 0.08);
+        color: #003366;
+    }
+
+    .menu-badge-gold {
+        background: rgba(212, 175, 55, 0.12);
+        color: #92700A;
+    }
+
+    .menu-badge-teal {
+        background: rgba(13, 148, 136, 0.1);
+        color: #0D9488;
+    }
+
+    .menu-service-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 0.75rem 0;
+        line-height: 1.4;
+    }
+
+    .menu-service-desc {
+        font-size: 0.875rem;
+        color: #6B7280;
+        line-height: 1.65;
+        margin: 0 0 auto 0;
+        flex: 1;
+    }
+
+    .menu-service-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        margin-top: 1.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #003366;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        transition: color 0.2s ease;
+    }
+
+    .menu-service-cta:hover {
+        color: #004488;
+    }
+
+    .menu-service-cta-arrow {
+        transition: transform 0.2s ease;
+    }
+
+    .menu-service-cta:hover .menu-service-cta-arrow {
+        transform: translateX(4px);
+    }
+
+    /* Footer */
+    .menu-layanan-footer {
+        background: linear-gradient(135deg, #001833 0%, #003366 100%);
+        color: rgba(255, 255, 255, 0.6);
+        text-align: center;
+        padding: 1.25rem 2rem;
+        font-size: 0.8rem;
+        position: relative;
+    }
+
+    .menu-layanan-footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #D4AF37 0%, #FFC107 50%, #D4AF37 100%);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .menu-layanan-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .menu-layanan-hero {
+            min-height: 180px;
+        }
+
+        .menu-layanan-hero-heading {
+            font-size: 1.6rem;
+        }
+
+        .menu-layanan-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .menu-service-card {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .menu-layanan-header-inner {
+            padding: 0 1rem;
+        }
+
+        .menu-layanan-logo-subtitle {
+            display: none;
+        }
+
+        .menu-layanan-logo-divider {
+            height: 36px;
+        }
+
+        .menu-layanan-hero {
+            min-height: 160px;
+        }
+
+        .menu-layanan-hero-content {
+            padding: 1.75rem 1rem;
+        }
+
+        .menu-layanan-hero-heading {
+            font-size: 1.35rem;
+        }
+
+        .menu-layanan-hero-sub {
+            font-size: 0.875rem;
+        }
+
+        .menu-layanan-section {
+            padding: 1.75rem 1rem;
+        }
+
+        .menu-layanan-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .menu-service-card {
+            padding: 1.25rem;
+        }
+
+        .menu-service-icon {
+            width: 48px;
+            height: 48px;
+        }
+    }
+
+    /* ============================================ */
+    /* UNDER DEVELOPMENT PAGE STYLES */
+    /* ============================================ */
+
+    .underdev-main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 2rem;
+    }
+
+    .underdev-container {
+        width: 100%;
+        max-width: 640px;
+    }
+
+    .underdev-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #6B7280;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 2rem;
+        transition: color 0.2s ease;
+    }
+
+    .underdev-back-btn:hover {
+        color: #003366;
+    }
+
+    .underdev-card {
+        background: white;
+        border-radius: 24px;
+        padding: 3rem 2.5rem;
+        border: 1px solid rgba(0, 51, 102, 0.08);
+        box-shadow: 0 8px 32px rgba(0, 51, 102, 0.1);
+        text-align: center;
+        animation: cardFadeUp 0.5s ease-out both;
+    }
+
+    .underdev-icon-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .underdev-icon-ring {
+        width: 96px;
+        height: 96px;
+        background: linear-gradient(135deg, rgba(0, 51, 102, 0.06) 0%, rgba(212, 175, 55, 0.08) 100%);
+        border: 2px solid rgba(0, 51, 102, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        animation: iconPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes iconPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(0, 51, 102, 0.1); }
+        50% { box-shadow: 0 0 0 12px rgba(0, 51, 102, 0); }
+    }
+
+    .underdev-icon-color {
+        color: #003366;
+    }
+
+    .underdev-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        background: rgba(212, 175, 55, 0.1);
+        border: 1px solid rgba(212, 175, 55, 0.3);
+        color: #92700A;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.3rem 0.75rem;
+        border-radius: 100px;
+        margin-bottom: 1.25rem;
+    }
+
+    .underdev-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 0.5rem 0;
+        line-height: 1.3;
+    }
+
+    .underdev-service-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #003366;
+        background: rgba(0, 51, 102, 0.06);
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        display: inline-block;
+        margin: 0 0 1.25rem 0;
+    }
+
+    .underdev-desc {
+        font-size: 0.9375rem;
+        color: #6B7280;
+        line-height: 1.7;
+        margin: 0 0 1.75rem 0;
+    }
+
+    .underdev-info-box {
+        background: linear-gradient(135deg, #F5F7FA 0%, #EFF4F9 100%);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.75rem;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .underdev-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: 0.875rem;
+        color: #374151;
+    }
+
+    .underdev-info-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .underdev-dot-1 {
+        background: #003366;
+    }
+
+    .underdev-dot-2 {
+        background: #D4AF37;
+    }
+
+    .underdev-dot-3 {
+        background: #0D9488;
+    }
+
+    .underdev-eta {
+        font-size: 0.875rem;
+        color: #9CA3AF;
+        font-style: italic;
+        margin: 0;
+    }
+
+    @media (max-width: 640px) {
+        .underdev-main {
+            padding: 2rem 1rem;
+            align-items: flex-start;
+        }
+
+        .underdev-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .underdev-title {
+            font-size: 1.4rem;
+        }
+
+        .underdev-icon-ring {
+            width: 80px;
+            height: 80px;
         }
     }
 }
