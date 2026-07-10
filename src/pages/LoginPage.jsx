@@ -71,10 +71,10 @@ const LoginPage = () => {
           <div className="text-center mb-8 animate-slide-down">
             
             <h1 className="text-3xl mb-2 font-bold text-navy-600 leading-tight tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }} >
-              LENTERA
+              SILEGA
             </h1>
             <p className="text-lg text-gray-600">
-              Layanan Terpadu Kelembagaan Kabupaten/Kota
+              Sistem Informasi Kelembagaan yang Adaptif
             </p>
           </div>
 

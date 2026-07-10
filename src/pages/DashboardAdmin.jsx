@@ -127,7 +127,7 @@ const DashboardAdmin = ({ onDetailClick }) => {
 
                 <div className="relative z-10">
                     <h2 className="text-2xl font-bold mb-2 text-white">Selamat Datang, Admin</h2>
-                    <p className="text-blue-100">Dashboard Layanan Terpadu Kelembagaan Kabupaten/Kota</p>
+                    <p className="text-blue-100">Dashboard Sistem Informasi Kelembagaan yang Adaptif</p>
                 </div>
             </div>
 

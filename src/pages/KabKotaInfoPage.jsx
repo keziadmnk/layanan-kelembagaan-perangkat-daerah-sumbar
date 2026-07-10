@@ -40,7 +40,7 @@ const KabKotaInfoPage = () => {
                         <img src={provSumbarLogo} alt="Logo Pemprov Sumbar" className="logo-image" />
                         <div className="logo-text-wrapper">
                             <div className="logo-decoration"></div>
-                            <h1 className="logo-text">LENTERA</h1>
+                            <h1 className="logo-text">SILEGA</h1>
                             <p className="logo-subtitle">SETDA SUMBAR</p>
                         </div>
                     </div>

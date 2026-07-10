@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Building2, Landmark, ClipboardList } from 'lucide-react';
 import heroImage from '../assets/landingpage.png';
 import provSumbarLogo from '../assets/prov-sumbar.png';
 
@@ -59,7 +60,7 @@ const LandingPage = () => {
                         <img src={provSumbarLogo} alt="Logo Pemprov Sumbar" className="logo-image" />
                         <div className="logo-text-wrapper">
                             <div className="logo-decoration"></div>
-                            <h1 className="logo-text">LENTERA</h1>
+                            <h1 className="logo-text">SILEGA</h1>
                             <p className="logo-subtitle">SETDA SUMBAR</p>
                         </div>
                     </div>
@@ -85,12 +86,12 @@ const LandingPage = () => {
                             <span className="decoration-dot"></span>
                         </div>
                         <h1 className="hero-title">
-                            Layanan Terpadu<br />
+                            Sistem Informasi<br />
                             <span className="hero-title-highlight">Kelembagaan</span><br />
-                            Kabupaten/Kota
+                            yang Adaptif
                         </h1>
                         <p className="hero-subtitle">
-                            Provinsi Sumatera Barat
+                            Sekretariat Daerah Provinsi Sumatera Barat
                         </p>
                         <div className="hero-buttons">
                             <button onClick={() => navigate('/login')} className="btn-primary">
@@ -120,38 +121,31 @@ const LandingPage = () => {
                     <div className="features-grid">
                         <div className="feature-card" ref={(el) => (featureCardsRef.current[0] = el)} style={{ animationDelay: '0.1s' }}>
                             <div className="feature-icon feature-icon-1">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+                                <Building2 className="w-8 h-8 text-current" />
                             </div>
-                            <h3 className="feature-title">Pengajuan Online</h3>
+                            <h3 className="feature-title">Fasilitasi Kelembagaan Provinsi</h3>
                             <p className="feature-description">
-                                Ajukan permohonan layanan kelembagaan secara digital, cepat, dan mudah
+                                Layanan terintegrasi untuk pengawasan dan bimbingan teknis penataan kelembagaan bagi seluruh OPD Provinsi.
                             </p>
                         </div>
 
                         <div className="feature-card" ref={(el) => (featureCardsRef.current[1] = el)} style={{ animationDelay: '0.2s' }}>
                             <div className="feature-icon feature-icon-2">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
+                                <Landmark className="w-8 h-8 text-current" />
                             </div>
-                            <h3 className="feature-title">Tracking Real-time</h3>
+                            <h3 className="feature-title">Fasilitasi Kelembagaan Kab/Kota</h3>
                             <p className="feature-description">
-                                Pantau status pengajuan Anda secara real-time dengan sistem tracking otomatis
+                                Layanan terintegrasi untuk pengawasan dan bimbingan teknis penataan kelembagaan bagi Kabupaten dan Kota di wilayah Sumatera Barat.
                             </p>
                         </div>
 
                         <div className="feature-card" ref={(el) => (featureCardsRef.current[2] = el)} style={{ animationDelay: '0.3s' }}>
                             <div className="feature-icon feature-icon-3">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                                    <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
-                                </svg>
+                                <ClipboardList className="w-8 h-8 text-current" />
                             </div>
-                            <h3 className="feature-title">Manajemen Dokumen</h3>
+                            <h3 className="feature-title">Fasilitasi AnJab (Analisis Jabatan)</h3>
                             <p className="feature-description">
-                                Kelola semua dokumen kelembagaan dalam satu platform terintegrasi
+                                Layanan terintegrasi untuk analisis jabatan dan analisis beban kerja guna optimalisasi distribusi personel fungsional.
                             </p>
                         </div>
                     </div>
@@ -176,7 +170,7 @@ const LandingPage = () => {
                     </div>
                     <div className="footer-bottom">
                         <p className="footer-copyright">
-                            Â© 2026 BBiro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
+                            © 2026 Biro Organisasi Sekeretariat Daerah Sumatera Barat. All rights reserved.
                         </p>
                     </div>
                 </div>

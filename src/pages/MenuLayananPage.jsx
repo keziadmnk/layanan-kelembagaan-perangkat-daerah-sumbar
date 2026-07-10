@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Building2, MapPin, ClipboardList } from 'lucide-react';
+import { ChevronRight, Building2, Landmark, ClipboardList } from 'lucide-react';
 import AdminTopBar from '../components/layout/AdminTopBar';
 import dashboardImage from '../assets/dashboard.png';
 
@@ -17,7 +17,7 @@ const SERVICES = [
     },
     {
         id: 'kabkota',
-        icon: MapPin,
+        icon: Landmark,
         iconBg: 'menu-icon-bg-2',
         title: 'Fasilitasi Penataan Kelembagaan Kab/Kota',
         description: 'Layanan terintegrasi untuk pengawasan dan bimbingan teknis penataan kelembagaan bagi seluruh Kabupaten dan Kota di wilayah Sumatera Barat.',

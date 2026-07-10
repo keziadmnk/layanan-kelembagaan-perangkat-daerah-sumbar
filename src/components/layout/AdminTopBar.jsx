@@ -28,8 +28,8 @@ const AdminTopBar = () => {
                     <div className="menu-layanan-logo-text">
                         <div className="menu-layanan-logo-divider" />
                         <div>
-                            <h1 className="menu-layanan-logo-title">LENTERA</h1>
-                            <p className="menu-layanan-logo-subtitle">Layanan Terpadu Kelembagaan Kabupaten/Kota</p>
+                            <h1 className="menu-layanan-logo-title">SILEGA</h1>
+                            <p className="menu-layanan-logo-subtitle">Sistem Informasi Kelembagaan yang Adaptif</p>
                         </div>
                     </div>
                 </div>

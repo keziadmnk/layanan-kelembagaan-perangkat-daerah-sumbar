@@ -71,10 +71,10 @@ const Header = ({ onToggleSidebar, userInfo, onLogout, showUserMenu, setShowUser
                             <div className="hidden sm:block w-0.75 h-10 sm:h-12 bg-linear-to-b from-navy-600 to-yellow-600 rounded-full"></div>
                             <div>
                                 <h1 className="text-base sm:text-lg lg:text-xl font-bold text-navy-600 leading-tight tracking-wide" style={{ fontFamily: "'Playfair Display', serif" }}>
-                                    LENTERA
+                                    SILEGA
                                 </h1>
                                 <p className="text-[10px] sm:text-xs text-gray-600 leading-tight tracking-wider">
-                                    Layanan Terpadu Kelembagaan Kabupaten/Kota
+                                    Sistem Informasi Kelembagaan yang Adaptif
                                 </p>
                             </div>
                         </div>

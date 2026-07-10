@@ -14,7 +14,7 @@ const PanduanLayananPage = () => {
                         <div className="logo-text-wrapper">
                             <div className="logo-decoration"></div>
                             <div>
-                                <h1 className="logo-text">LENTERA</h1>
+                                <h1 className="logo-text">SILEGA</h1>
                                 <p className="logo-subtitle">SETDA SUMBAR</p>
                             </div>
                         </div>
@@ -40,63 +40,59 @@ const PanduanLayananPage = () => {
                         </div>
                         <p className="syarat-eyebrow">Dokumentasi Layanan</p>
                         <h1 className="page-title">
-                            Panduan <span className="page-title-highlight">Layanan LENTERA</span>
+                            Panduan <span className="page-title-highlight">Layanan SILEGA</span>
                         </h1>
                         <p className="page-subtitle">
-                            Dokumen panduan penggunaan layanan terpadu kelembagaan perangkat daerah Provinsi Sumatera Barat.
+                            Dokumen panduan penggunaan sistem informasi kelembagaan yang adaptif Provinsi Sumatera Barat.
                         </p>
                     </section>
 
                     {/* Under Construction Notice */}
-                    <div className="panduan-notice-wrapper">
-                        <div className="panduan-notice-card">
-                            <div className="panduan-notice-icon-wrap">
-                                <div className="panduan-notice-icon-ring">
-                                    <FileSearch className="panduan-notice-icon" />
+                    <div className="flex justify-center pb-12 w-full">
+                        <div className="underdev-card w-full bg-white rounded-3xl p-8 sm:p-12 border border-gray-100 shadow-xl flex flex-col items-center">
+                            <div className="underdev-icon-wrap flex justify-center w-full">
+                                <div className="underdev-icon-ring flex justify-center items-center">
+                                    <FileSearch className="w-12 h-12 text-navy-600" />
                                 </div>
                             </div>
 
-                            <div className="panduan-status-badge">
-                                <Clock className="w-3.5 h-3.5" />
+                            <div className="underdev-badge mx-auto mb-6 flex justify-center items-center">
+                                <Clock className="w-4 h-4" />
                                 <span>Dalam Penyusunan</span>
                             </div>
 
-                            <h2 className="panduan-notice-title">Panduan Sedang Disusun</h2>
+                            <h2 className="underdev-title text-2xl sm:text-3xl mb-4 text-center w-full">Panduan Sedang Disusun</h2>
 
-                            <p className="panduan-notice-desc">
+                            <p className="underdev-desc text-gray-600 mb-6 leading-relaxed max-w-2xl mx-auto text-center w-full">
                                 Tim kami sedang dalam proses penyusunan panduan layanan yang komprehensif.
                                 Dokumen ini akan mencakup tata cara penggunaan sistem, alur pengajuan,
                                 serta informasi teknis yang dibutuhkan pengguna.
                             </p>
 
-                            <p className="panduan-notice-eta">
+                            <p className="underdev-eta text-sm text-gray-400 italic mb-10 text-center w-full">
                                 Panduan akan segera diselesaikan dan dipublikasikan. Terima kasih atas kesabaran Anda.
                             </p>
 
-                            <div className="panduan-divider" />
+                            <div className="border-t border-gray-100 w-full mb-10" />
 
-                            <div className="panduan-coming-soon-grid">
-                                <div className="panduan-coming-item">
-                                    <BookOpen className="panduan-coming-icon" />
-                                    <span>Panduan Penggunaan Sistem</span>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mb-10 text-left">
+                                <div className="flex flex-col items-center justify-center text-center gap-3 p-6 bg-gray-50 rounded-xl border border-gray-100 hover:bg-navy-50 hover:border-navy-100 transition-all cursor-default">
+                                    <BookOpen className="w-8 h-8 text-navy-600 mb-1" />
+                                    <span className="text-sm font-semibold text-gray-700">Panduan Penggunaan Sistem</span>
                                 </div>
-                                <div className="panduan-coming-item">
-                                    <BookOpen className="panduan-coming-icon" />
-                                    <span>Alur & Prosedur Pengajuan</span>
+                                <div className="flex flex-col items-center justify-center text-center gap-3 p-6 bg-gray-50 rounded-xl border border-gray-100 hover:bg-navy-50 hover:border-navy-100 transition-all cursor-default">
+                                    <BookOpen className="w-8 h-8 text-navy-600 mb-1" />
+                                    <span className="text-sm font-semibold text-gray-700">Alur & Prosedur Pengajuan</span>
                                 </div>
-                                <div className="panduan-coming-item">
-                                    <BookOpen className="panduan-coming-icon" />
-                                    <span>Tanya Jawab (FAQ)</span>
-                                </div>
-                                <div className="panduan-coming-item">
-                                    <BookOpen className="panduan-coming-icon" />
-                                    <span>Video Tutorial</span>
+                                <div className="flex flex-col items-center justify-center text-center gap-3 p-6 bg-gray-50 rounded-xl border border-gray-100 hover:bg-navy-50 hover:border-navy-100 transition-all cursor-default">
+                                    <BookOpen className="w-8 h-8 text-navy-600 mb-1" />
+                                    <span className="text-sm font-semibold text-gray-700">Tanya Jawab (FAQ)</span>
                                 </div>
                             </div>
 
                             <button
                                 onClick={() => navigate('/landing-page')}
-                                className="panduan-back-btn"
+                                className="inline-flex items-center justify-center px-6 py-3 bg-white border border-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-50 hover:text-navy-600 transition-colors shadow-sm gap-2"
                             >
                                 Kembali ke Beranda
                             </button>
