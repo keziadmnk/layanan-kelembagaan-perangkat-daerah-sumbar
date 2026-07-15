@@ -9,7 +9,7 @@ const SERVICES = [
         icon: Building2,
         iconBg: 'menu-icon-bg-1',
         title: 'Fasilitasi Penataan Kelembagaan Provinsi',
-        description: 'Layanan terintegrasi untuk pengawasan dan bimbingan teknis penataan kelembagaan bagi seluruh Organisasi Perangkat Daerah Provinsi di wilayah Sumatera Barat.',
+        description: 'Penataan Perangkat Daerah (Pembentukan, Penggabungan, Pemisahan OPD).\nPembentukan UPTD (Pembentukan, Penghapusan UPTD dan Perubahan Tugas dan Fungsi).',
         route: '/dashboard-provinsi',
         badge: 'Provinsi',
         badgeClass: 'menu-badge-blue',
@@ -20,7 +20,7 @@ const SERVICES = [
         icon: Landmark,
         iconBg: 'menu-icon-bg-2',
         title: 'Fasilitasi Penataan Kelembagaan Kab/Kota',
-        description: 'Layanan terintegrasi untuk pengawasan dan bimbingan teknis penataan kelembagaan bagi seluruh Kabupaten dan Kota di wilayah Sumatera Barat.',
+        description: 'Penataan Perangkat Daerah pada Kabupaten/Kota (Pembentukan, Penggabungan, Pemisahan).\n Pembentukan UPTD pada Kabupaten/Kota (Pembentukan, Penghapusan UPTD dan Perubahan Tugas dan Fungsi).',
         route: '/dashboard-kabkota',
         badge: 'Kab/Kota',
         badgeClass: 'menu-badge-gold',
@@ -31,7 +31,7 @@ const SERVICES = [
         icon: ClipboardList,
         iconBg: 'menu-icon-bg-3',
         title: 'Fasilitasi AnJab (Analisis Jabatan)',
-        description: 'Layanan terintegrasi untuk analisis jabatan dan analisis beban kerja guna optimalisasi distribusi personel dan struktur jabatan fungsional.',
+        description: 'Layanan Terintegrasi untuk Pengusulan Dokumen Penataan Jabatan yang Meliputi Dokumen Anjab & ABK, SKJ, dan Evaluasi Jabatan.',
         route: '/dashboard-anjab',
         badge: 'AnJab',
         badgeClass: 'menu-badge-teal',
@@ -91,7 +91,7 @@ const MenuLayananPage = () => {
                                         </div>
 
                                         <h4 className="menu-service-title">{service.title}</h4>
-                                        <p className="menu-service-desc">{service.description}</p>
+                                        <p className="menu-service-desc" style={{ whiteSpace: 'pre-line' }}>{service.description}</p>
 
                                         <button
                                             onClick={() => navigate(service.route)}
